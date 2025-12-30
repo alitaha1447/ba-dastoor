@@ -44,7 +44,9 @@ const Header = () => {
             {/* <nav className={`relative max-w-full  ${scrolled ? 'mx-0 px-4 sm:px-6 lg:px-0' : 'mx-6 mt-3 sm:mt-4 lg:mt-6 px-4 sm:px-6 lg:px-0'}`}> */}
             <nav className={`relative max-w-full  ${scrolled ? 'mx-0 px-4 sm:px-6 lg:px-0' : ''}`}>
                 {/* <div className={` p-3 transition-all duration-300 ${scrolled ? ' bg-[#271414fa]' : 'rounded-lg bg-[#271414c4]'}`}> */}
-                <div className={` py-3 px-6 transition-all duration-300 ${scrolled ? ' bg-[#271414fa]' : ''}`}>
+                <div className={` py-3 px-6 transition-all duration-300 ${scrolled ? ' bg-[#0f0802db]' : ''}`}>
+                    {/* #0f0802db */}
+                    {/* #271414fa */}
                     <div className="h-16 flex items-center justify-between">
                         {/* Logo */}
                         <div className="flex shrink-0">
@@ -122,7 +124,7 @@ const Header = () => {
          max-w-7xl mx-auto px-4 sm:px-6 lg:px-0 transform transition-all duration-300 ease-out
          ${openBranches ? "translate-y-0 opacity-100 pointer-events-auto"
                     : "-translate-y-6 opacity-0 pointer-events-none"}`}>
-                <div className="mt-3 p-6 w-full text-white bg-[#241616e5] rounded-lg shadow-xl border border-white/10 max-h-[450px] overflow-y-auto scrollbar-brown">
+                <div className="mt-3 p-6 w-full text-white bg-[#241616e5] rounded-lg shadow-xl border border-white/10 max-h-[480px] overflow-y-auto scrollbar-brown">
                     {/* Title & Meta */}
                     <div className="">
                         <div >

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Logo from "../assets/icons/Ba-Dastoor_Logo.svg?react"
+import Logo2 from "../assets/icons/logo-2.svg?react"
+
 import careerpageBG from "../assets/images/careerpageBG.jpg"
 
 const CareerPage = () => {
@@ -196,8 +198,11 @@ const CareerPage = () => {
                 <div className='bg-gradient-to-b from-[#f8f4f0] to-white py-16 px-4'>
                     <div className="max-w-7xl mx-auto">
                         <div className='text-center mb-16'>
-                            <div className="inline-block mb-6">
+                            {/* <div className="inline-block mb-6">
                                 <span className="text-5xl">🍽️</span>
+                            </div> */}
+                            <div className="flex justify-center mb-10">
+                                <Logo2 className="h-32 w-auto" />
                             </div>
                             <h3 className="text-[#8B4513] text-3xl md:text-4xl font-sans font-bold mb-4">
                                 Openings
@@ -245,15 +250,33 @@ const CareerPage = () => {
                                                 </div>
                                             </div>
 
-                                            <button
+                                            {/* <button
                                                 onClick={() => handlePositionClick(position)}
-                                                className="w-full bg-gradient-to-r from-[#8B4513] to-[#D2691E]
+                                                className="w-full bg-linear-to-r from-[#8B4513] to-[#D2691E]
           text-white font-medium py-2 px-3 rounded-md
           hover:from-[#A0522D] hover:to-[#CD853F]
           transition-all duration-200"
                                             >
                                                 Apply Now
+                                            </button> */}
+                                            <button
+                                                onClick={() => handlePositionClick(position)}
+                                                className="
+    w-full
+    bg-white
+    text-[#8B4513]
+    border border-[#8B4513]
+    font-medium
+    py-2 px-3
+    rounded-md
+    transition-all duration-200
+    hover:bg-[#8B4513]
+    hover:text-white
+  "
+                                            >
+                                                Apply Now
                                             </button>
+
                                         </div>
                                     </div>
                                 ))
