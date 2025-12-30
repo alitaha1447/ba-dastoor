@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { NavLink } from 'react-router';
 import Logo from "../../../assets/icons/Ba-Dastoor_Logo.svg?react"
 import { FaPhoneAlt } from "react-icons/fa";
@@ -6,6 +6,25 @@ import { FaPhoneAlt } from "react-icons/fa";
 const Header = () => {
     const [open, setOpen] = useState(false);
     const [openBranches, setOpenBranches] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            // Check if scrolled beyond 20px (you can adjust this threshold)
+            const isScrolled = window.scrollY > 20;
+            if (isScrolled !== scrolled) {
+                setScrolled(isScrolled);
+            }
+        };
+
+        // Add scroll event listener
+        window.addEventListener('scroll', handleScroll);
+
+        // Cleanup
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [scrolled]);
 
 
 
@@ -21,16 +40,19 @@ const Header = () => {
 
 
     return (
-        <header className="fixed top-0 left-0 w-full z-[999999999]">
-            <nav className="relative max-w-7xl mx-auto mt-3 sm:mt-4 lg:mt-6 px-4 sm:px-6 lg:px-0">
-                <div className="bg-[#271414c4] rounded-lg p-3">
+        <header className={`fixed top-0 left-0 w-full z-[999999999] transition-all duration-300 ${scrolled ? '' : ''}`}>
+            {/* <nav className={`relative max-w-full  ${scrolled ? 'mx-0 px-4 sm:px-6 lg:px-0' : 'mx-6 mt-3 sm:mt-4 lg:mt-6 px-4 sm:px-6 lg:px-0'}`}> */}
+            <nav className={`relative max-w-full  ${scrolled ? 'mx-0 px-4 sm:px-6 lg:px-0' : ''}`}>
+                {/* <div className={` p-3 transition-all duration-300 ${scrolled ? ' bg-[#271414fa]' : 'rounded-lg bg-[#271414c4]'}`}> */}
+                <div className={` py-3 px-6 transition-all duration-300 ${scrolled ? ' bg-[#271414fa]' : ''}`}>
                     <div className="h-16 flex items-center justify-between">
                         {/* Logo */}
                         <div className="flex shrink-0">
-                            <Logo className="h-16 w-auto" />
+                            <Logo className={`h-20 w-auto ${scrolled ? 'text-gray-900' : 'text-white'}`} />
                         </div>
                         {/* Desktop Nav */}
-                        <ul className="hidden lg:flex items-center gap-16 text-white text-sm">
+                        <ul className="hidden lg:flex items-center gap-16 text-white text-base font-normal font-sans
+">
                             {navLinks.map((item) => (
                                 <li key={item.path}>
                                     <NavLink
@@ -49,8 +71,8 @@ const Header = () => {
                         {/* Desktop Branch Button */}
                         <button
                             onClick={() => setOpenBranches(!openBranches)}
-                            className="hidden lg:flex items-center gap-2 px-5 py-2.5 
-                          rounded-lg border border-orange-600 text-white text-sm">
+                            className="hidden lg:flex items-center gap-2 px-6 py-2.5 
+                          rounded-lg border border-white text-white text-sm">
                             <span>Our Branches</span>
                             <span className="text-xs">▾</span>
                         </button>

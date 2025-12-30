@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router';
 import Logo from "../assets/icons/Ba-Dastoor_Logo.svg?react";
 import Logo2 from "../assets/icons/logo-2.svg?react"
@@ -9,7 +9,9 @@ import bannerImg3 from "../assets/images/bannerImage3.jpg"
 import charMinar from "../assets/images/charMinar.jpg"
 import backgroundLine from "../assets/images/backgroundLine.jpg"
 import { FaPhoneAlt } from "react-icons/fa";
-import GoogleReviewWidget from '../components/googleReview/GoogleReviewWidget';
+// import GoogleReviewWidget from '../components/googleReview/GoogleReviewWidget';
+import GoogleReviewsCarousel from '../components/googleReview/GoogleReviewWidget';
+import axios from 'axios';
 
 export const menuData = [
     {
@@ -96,6 +98,19 @@ export const menuData = [
 const Home = () => {
     const [open, setOpen] = useState(false);
     const [openBranches, setOpenBranches] = useState(false);
+    const [reviewCounts, setReviewCounts] = useState([])
+    const [reviews, setReviews] = useState([])
+    useEffect(() => {
+        const fetchReview = async () => {
+            const res = await axios("https://featurable.com/api/v2/widgets/1ba776cd-6be6-43ca-9379-933f0b067581");
+
+            // console.log(res?.data?.widget?.gbpLocationSummary)
+            setReviewCounts(res?.data?.widget?.gbpLocationSummary)
+            setReviews(res?.data?.widget?.reviews)
+
+        }
+        fetchReview()
+    }, []);
 
     return (
         <>
@@ -420,7 +435,7 @@ const Home = () => {
             </section>
             {/* Section-3 */}
             {/* Dish Section */}
-            <section className="relative w-full bg-[#fffefa] py-20">
+            <section className="relative w-full bg-[#fffefa] py-5">
                 {/* Background Image */}
                 <div
                     className="hidden lg:block absolute inset-0 bg-no-repeat bg-center"
@@ -478,14 +493,65 @@ const Home = () => {
                 </div>
             </section>
             {/* Review Section */}
-            <section className="py-20 bg-[#fffefa]">
+            {/* <section className="py-20 bg-[#fffefa]">
                 <h2 className="text-3xl font-serif text-center mb-10 text-[#512800]">
                     What Our Customers Say
                 </h2>
+
                 <div className="max-w-6xl mx-auto px-4">
-                    <GoogleReviewWidget />
+
+                   
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        {reviews.map((review) => (
+                            <div
+                                key={review.id}
+                                className="bg-white rounded-2xl p-6 border border-[#f1e6d3] shadow-sm hover:shadow-md transition"
+                            >
+                            
+                                <div className="flex items-center gap-4 mb-4">
+                                    <img
+                                        src={review.author.avatarUrl}
+                                        alt={review.author.name}
+                                        className="w-12 h-12 rounded-full object-cover"
+                                    />
+                                    <div>
+                                        <p className="font-semibold text-[#512800] leading-tight">
+                                            {review.author.name}
+                                        </p>
+                                        <div className="flex text-yellow-500 text-sm">
+                                            {Array.from({ length: review.rating.value }).map((_, i) => (
+                                                <span key={i}>★</span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                              
+                                <p className="text-sm text-gray-700 leading-relaxed line-clamp-5">
+                                    {review.text}
+                                </p>
+
+                              
+                                <p className="mt-4 text-xs text-gray-400">
+                                    {new Date(review.publishedAt).toLocaleDateString("en-IN", {
+                                        day: "numeric",
+                                        month: "short",
+                                        year: "numeric",
+                                    })}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+
+
+
                 </div>
-            </section>
+            </section> */}
+            <div className='relative'>
+
+                <GoogleReviewsCarousel reviewCounts={reviewCounts} reviews={reviews} />
+            </div>
+
             {/* Footer Section */}
             {/* <footer className="relative w-full px-6 py-6 sm:px-0">
                 
