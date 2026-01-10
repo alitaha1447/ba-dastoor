@@ -1,13 +1,116 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ba-dastoor</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ba-dastoor</title>
+  <style>
+    .loader-wrap {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Brand text */
+    .brand-loader {
+      display: flex;
+      gap: 6px;
+      letter-spacing: 4px;
+    }
+
+    /* Letters */
+    .brand-loader span {
+      font-size: 32px;
+      color: #c8a24d;
+      /* royal gold */
+      opacity: 0;
+      transform: translateY(12px);
+      animation: reveal 2.5s ease-in-out infinite;
+    }
+
+    /* Staggered animation */
+    .brand-loader span:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .brand-loader span:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+
+    .brand-loader span:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+
+    .brand-loader span:nth-child(4) {
+      animation-delay: 0.3s;
+    }
+
+    .brand-loader span:nth-child(5) {
+      animation-delay: 0.4s;
+    }
+
+    .brand-loader span:nth-child(6) {
+      animation-delay: 0.5s;
+    }
+
+    .brand-loader span:nth-child(7) {
+      animation-delay: 0.6s;
+    }
+
+    .brand-loader span:nth-child(8) {
+      animation-delay: 0.7s;
+    }
+
+    .brand-loader span:nth-child(9) {
+      animation-delay: 0.8s;
+    }
+
+    .brand-loader span:nth-child(10) {
+      animation-delay: 0.9s;
+    }
+
+    /* Elegant reveal */
+    @keyframes reveal {
+      0% {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      30% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      70% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <!-- loader -->
+  <div id="app-loader" class="loader-wrap">
+    <div class="brand-loader">
+      <span>B</span><span>A</span><span>-</span><span>D</span><span>A</span>
+      <span>S</span><span>T</span><span>O</span><span>O</span><span>R</span>
+    </div>
+  </div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>

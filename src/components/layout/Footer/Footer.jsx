@@ -1,8 +1,25 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Logo from "../../../assets/icons/Ba-Dastoor_Logo.svg?react";
 import bannerImg3 from "../../../assets/images/bannerImage3.jpg"
+import axios from 'axios';
+import { FaInstagram, FaLinkedinIn, FaTwitter, FaFacebookF } from "react-icons/fa";
+
 
 const Footer = () => {
+    const [socialLinks, setSocialLinks] = useState([])
+
+    const fetchSocialLinks = async () => {
+        try {
+            const res = await axios.get(`http://localhost:3000/api/socialLinks/get-socialLinks`)
+            // console.log(res)
+            setSocialLinks(res?.data?.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => { fetchSocialLinks() }, []);
+    // console.log(socialLinks)
     return (
         <footer className="relative w-full px-6 py-6 sm:px-0">
             {/* Optional subtle overlay / texture */}
@@ -17,7 +34,6 @@ const Footer = () => {
 
             {/* Subtle overlay (FIXED) */}
             <div className="absolute inset-0 bg-black/70 backdrop-blur-[5px]" />
-
 
             <div className="relative max-w-7xl mx-auto">
                 {/* Top Logo */}
@@ -82,6 +98,69 @@ const Footer = () => {
                             By subscribing, you agree to our Privacy Policy and consent to receive
                             updates from our company.
                         </p>
+                        {/* Social Media Icons */}
+                        {/* Social Media Icons */}
+                        <div className="mt-6">
+                            <h5 className="text-white text-xs font-semibold tracking-widest mb-3 uppercase">
+                                Follow Us
+                            </h5>
+
+                            <div className="flex items-center gap-4">
+                                {
+                                    socialLinks.map((link, index) => (
+                                        <>
+                                            <a
+                                                href={link?.instagram?.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="p-2 rounded-full border border-white/20 text-white 
+                       hover:bg-[#E6A24A] hover:text-[#2B2218] 
+                       transition-all duration-300 hover:scale-110"
+                                                aria-label="Instagram"
+                                            >
+                                                <FaInstagram size={16} />
+                                            </a>
+
+                                            <a
+                                                href={link?.linkedin?.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="p-2 rounded-full border border-white/20 text-white 
+             hover:bg-[#E6A24A] hover:text-[#2B2218] 
+             transition-all duration-300 hover:scale-110"
+                                                aria-label="LinkedIn"
+                                            >
+                                                <FaLinkedinIn size={16} />
+                                            </a>
+
+
+                                            <a
+                                                href={link?.instagram?.url}
+                                                className="p-2 rounded-full border border-white/20 text-white 
+                       hover:bg-[#E6A24A] hover:text-[#2B2218] 
+                       transition-all duration-300 hover:scale-110"
+                                                aria-label="Twitter"
+                                            >
+                                                <FaTwitter size={16} />
+                                            </a>
+
+                                            <a
+                                                href={link?.facebook?.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="p-2 rounded-full border border-white/20 text-white 
+                       hover:bg-[#E6A24A] hover:text-[#2B2218] 
+                       transition-all duration-300 hover:scale-110"
+                                                aria-label="Facebook"
+                                            >
+                                                <FaFacebookF size={16} />
+                                            </a>
+                                        </>
+                                    ))
+                                }
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>

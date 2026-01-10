@@ -3,177 +3,118 @@ import Logo from "../assets/icons/Ba-Dastoor_Logo.svg?react"
 import Logo2 from "../assets/icons/logo-2.svg?react"
 
 import careerpageBG from "../assets/images/careerpageBG.jpg"
+import axios from 'axios'
+import { toast } from "react-toastify";
 
 const CareerPage = () => {
-    const [showForm, setShowForm] = useState(false)
-    const [selectedPosition, setSelectedPosition] = useState(null)
+    const [isLoading, setisLoading] = useState(false)
+    const [showForm, setShowForm] = useState(false);
+    const [selectedPosition, setSelectedPosition] = useState(null);
+    const [openPositions, setOpenPositions] = useState([]);
 
-    const [openPositions, setOpenPositions] = useState([
-        {
-            id: 1,
-            title: "Executive Chef",
-            department: "Kitchen",
-            location: "Bhopal",
-            type: "Full-time",
-            experience: "8+ years",
-            description: "Lead our culinary team in creating authentic Indian cuisine with modern presentation. Responsible for menu development, kitchen operations, and maintaining quality standards.",
-            icon: "👨‍🍳",
-            salary: "₹12-18 LPA",
-            requirements: ["Culinary degree or equivalent", "Proven leadership in fine dining", "Menu innovation skills"],
-            schedule: "Flexible, including weekends"
-        },
-        {
-            id: 2,
-            title: "Sous Chef",
-            department: "Kitchen",
-            location: "Bhopal",
-            type: "Full-time",
-            experience: "5+ years",
-            description: "Assist Executive Chef in kitchen management, food preparation, staff training, and maintaining consistency in food quality and presentation.",
-            icon: "👩‍🍳",
-            salary: "₹8-12 LPA",
-            requirements: ["Extensive knowledge of Indian cuisine", "Team management experience", "Quality control expertise"],
-            schedule: "Evening shifts, weekends required"
-        },
-        {
-            id: 3,
-            title: "Restaurant Manager",
-            department: "Operations",
-            location: "Bhopal",
-            type: "Full-time",
-            experience: "6+ years",
-            description: "Oversee daily restaurant operations, manage front-of-house staff, ensure exceptional guest service, and drive profitability.",
-            icon: "💼",
-            salary: "₹10-14 LPA",
-            requirements: ["Hospitality management degree", "Fine dining experience", "Staff training expertise"],
-            schedule: "Flexible shifts"
-        },
-        {
-            id: 4,
-            title: "Service Captain",
-            department: "Front of House",
-            location: "Bhopal",
-            type: "Full-time",
-            experience: "3+ years",
-            description: "Lead service team on the floor, ensure impeccable guest service, manage reservations, and handle guest relations.",
-            icon: "🎖️",
-            salary: "₹6-9 LPA",
-            requirements: ["Fine dining service experience", "Wine and beverage knowledge", "Multilingual preferred"],
-            schedule: "Evening shifts, weekends"
-        },
-        // {
-        //     id: 5,
-        //     title: "Head Bartender/Mixologist",
-        //     department: "Beverage",
-        //     location: "Mumbai Central",
-        //     type: "Full-time",
-        //     experience: "4+ years",
-        //     description: "Create signature cocktails, manage bar operations, curate beverage menu, and train bar staff in mixology techniques.",
-        //     icon: "🍸",
-        //     salary: "₹7-10 LPA",
-        //     requirements: ["Mixology certification", "Creative cocktail development", "Inventory management"],
-        //     schedule: "Evening shifts, weekends"
-        // },
-        // {
-        //     id: 6,
-        //     title: "Pastry Chef",
-        //     department: "Kitchen",
-        //     location: "Mumbai Central",
-        //     type: "Full-time",
-        //     experience: "4+ years",
-        //     description: "Create exquisite Indian desserts, pastries, and baked goods. Develop dessert menu and maintain pastry section standards.",
-        //     icon: "🍰",
-        //     salary: "₹8-11 LPA",
-        //     requirements: ["Pastry arts training", "Indian dessert expertise", "Creative presentation skills"],
-        //     schedule: "Day shifts"
-        // },
-        // {
-        //     id: 7,
-        //     title: "Sommelier",
-        //     department: "Beverage",
-        //     location: "Mumbai Central",
-        //     type: "Full-time",
-        //     experience: "5+ years",
-        //     description: "Curate wine selection, recommend food pairings, manage wine cellar, and conduct staff training on wine service.",
-        //     icon: "🍷",
-        //     salary: "₹9-13 LPA",
-        //     requirements: ["Sommelier certification", "Extensive wine knowledge", "Food pairing expertise"],
-        //     schedule: "Evening shifts, weekends"
-        // },
-        // {
-        //     id: 8,
-        //     title: "Host/Hostess",
-        //     department: "Front of House",
-        //     location: "Mumbai Central",
-        //     type: "Full-time",
-        //     experience: "1+ years",
-        //     description: "Welcome guests, manage reservations seating, handle phone inquiries, and create positive first impressions.",
-        //     icon: "👋",
-        //     salary: "₹3-5 LPA",
-        //     requirements: ["Excellent communication", "Multitasking ability", "Positive attitude"],
-        //     schedule: "Flexible shifts, weekends"
-        // },
-        // {
-        //     id: 9,
-        //     title: "Commis Chef",
-        //     department: "Kitchen",
-        //     location: "Mumbai Central",
-        //     type: "Full-time",
-        //     experience: "1+ years",
-        //     description: "Assist chefs in food preparation, maintain kitchen cleanliness, and learn culinary techniques in a professional kitchen.",
-        //     icon: "🔪",
-        //     salary: "₹3-5 LPA",
-        //     requirements: ["Culinary training", "Willingness to learn", "Team player"],
-        //     schedule: "Flexible shifts"
-        // },
-        // {
-        //     id: 10,
-        //     title: "Steward Supervisor",
-        //     department: "Kitchen",
-        //     location: "Mumbai Central",
-        //     type: "Full-time",
-        //     experience: "2+ years",
-        //     description: "Manage kitchen stewarding team, ensure proper cleaning and sanitation, and maintain kitchen equipment.",
-        //     icon: "🧼",
-        //     salary: "₹4-6 LPA",
-        //     requirements: ["Kitchen sanitation knowledge", "Supervisory experience", "Attention to detail"],
-        //     schedule: "Evening shifts"
-        // },
-        // {
-        //     id: 11,
-        //     title: "Catering Manager",
-        //     department: "Events",
-        //     location: "Hybrid",
-        //     type: "Full-time",
-        //     experience: "4+ years",
-        //     description: "Manage off-site catering events, coordinate with clients, plan menus, and oversee event execution.",
-        //     icon: "🎉",
-        //     salary: "₹9-12 LPA",
-        //     requirements: ["Event management experience", "Client relations", "Menu planning"],
-        //     schedule: "Flexible, event-based"
-        // },
-        // {
-        //     id: 12,
-        //     title: "Banquet Captain",
-        //     department: "Events",
-        //     location: "On-site",
-        //     type: "Full-time",
-        //     experience: "3+ years",
-        //     description: "Lead banquet service team, coordinate event setups, and ensure flawless execution of large events.",
-        //     icon: "🥂",
-        //     salary: "₹6-8 LPA",
-        //     requirements: ["Banquet service experience", "Team leadership", "Event coordination"],
-        //     schedule: "Event-based, weekends"
-        // }
-    ])
+    const [formData, setFormData] = useState({
+        name: "",
+        phone: "",
+        email: "",
+        position: "",
+        experience: "",
+        message: "",
+    });
+    const [cv, setCv] = useState(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
+
+    const fetchJobList = async () => {
+        try {
+            const res = await axios.get("http://localhost:3000/api/jobs/all-jobs");
+            console.log(res?.data?.data)
+            setOpenPositions(res?.data?.data)
+        } catch (error) {
+            console.error("Error fetching job list:", error);
+            // setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        fetchJobList()
+    }, [])
+
     const handlePositionClick = (position) => {
         setSelectedPosition(position)
         setShowForm(true)
+    }
+
+    const handleFileChange = (e) => {
+        setCv(e.target.files[0]);
+    };
+
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setisLoading(true);
+        const toastId = toast.loading("Submitting...", {
+            style: {
+                backgroundColor: "#1f2937", // slate-800 (universal)
+                color: "#ffffff",
+                fontSize: "14px",
+                fontWeight: "500",
+            },
+        });
+        try {
+            const data = new FormData();
+            data.append("enquiryType", "career");
+            // text fields
+            Object.entries(formData).forEach(([key, value]) => {
+                data.append(key, value)
+            });
+            // file
+            if (cv) {
+                data.append("cv", cv);
+            }
+            const res = await axios.post('http://localhost:3000/api/enquirys/create-enquiry', data);
+            console.log(res)
+            toast.update(toastId, {
+                render: 'Your enquiry has been submitted successfully!',
+                type: 'success',
+                isLoading: false,
+                autoClose: 3000,
+            });
+            setFormData({
+                name: "",
+                phone: "",
+                email: "",
+                position: "",
+                experience: "",
+                message: "",
+            });
+            setCv(null);
+        } catch (error) {
+            console.log(error)
+            toast.update(toastId, {
+                render:
+                    error?.response?.data?.message ||
+                    "Something went wrong. Please try again.",
+                type: "error",
+                isLoading: false,
+                autoClose: 4000,
+                style: {
+                    backgroundColor: "#7a1c1c",
+                    color: "#ffffff",
+                },
+            });
+        } finally {
+            setisLoading(false)
+        }
     }
 
     return (
@@ -213,21 +154,102 @@ const CareerPage = () => {
                             </p>
                         </div>
                         {/* Position card */}
-                        <div
-                            // className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-16"
+                        {/* <div
                             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mb-16"
                         >
                             {
                                 openPositions.map((position) => (
                                     <div
-                                        key={position.id}
+                                        key={position._id}
                                         className="group bg-white rounded-xl shadow-md overflow-hidden
       hover:shadow-lg transition-all duration-300
       transform hover:-translate-y-1 border border-[#f0e6d6]"
                                     >
                                         <div className="pt-6 pb-4 px-4">
                                             <h3 className="text-lg font-semibold text-gray-800 mb-1 text-center font-serif">
-                                                {position.title}
+                                                {position.jobTitle}
+                                            </h3>
+
+                                            <div className="flex flex-wrap justify-center gap-2 mb-3">
+                                                <div className="flex items-center text-gray-600">
+                                                    <svg className="w-3.5 h-3.5 mr-1 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path
+                                                            fillRule="evenodd"
+                                                            d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                                                            clipRule="evenodd"
+                                                        />
+                                                    </svg>
+                                                    <span className="text-xs">{position.location}</span>
+                                                </div>
+
+                                                <div className="flex items-center text-gray-600">
+                                                    <svg className="w-3.5 h-3.5 mr-1 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z" />
+                                                    </svg>
+                                                    <span className="text-xs">{position.experience}</span>
+                                                </div>
+                                            </div>
+
+                                          
+                                            <button
+                                                onClick={() => handlePositionClick(position)}
+                                                className="
+    w-full
+    bg-white
+    text-[#8B4513]
+    border border-[#8B4513]
+    font-medium
+    py-2 px-3
+    rounded-md
+    transition-all duration-200
+    hover:bg-[#8B4513]
+    hover:text-white
+  "
+                                            >
+                                                Apply Now
+                                            </button>
+
+                                        </div>
+                                    </div>
+                                ))
+                            }
+
+                        </div> */}
+                        {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-6">
+                            
+                            <div className="bg-white rounded-xl shadow-md border border-[#e7d8c6] p-6 hover:shadow-xl transition">
+                                <h3 className="text-xl font-semibold text-[#3b2a18]">
+                                    Receptionist
+                                </h3>
+
+                                <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
+                                    📍 Ashoka Garden, Bhopal
+                                </div>
+
+                                <div className="mt-6">
+                                    <button className="w-full border border-[#c99a4d] text-[#c99a4d] py-2 rounded-lg hover:bg-[#c99a4d] hover:text-white transition">
+                                        Apply Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div> */}
+                        <div
+                            // className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-16"
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
+
+                        // grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-6
+                        >
+                            {
+                                openPositions.map((position) => (
+                                    <div
+                                        key={position._id}
+                                        className="group bg-white rounded-xl shadow-md overflow-hidden
+      hover:shadow-lg transition-all duration-300
+      transform hover:-translate-y-1 border border-[#f0e6d6]"
+                                    >
+                                        <div className="pt-6 pb-4 px-4">
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-1 text-center font-serif">
+                                                {position.jobTitle}
                                             </h3>
 
                                             <div className="flex flex-wrap justify-center gap-2 mb-3">
@@ -316,32 +338,67 @@ const CareerPage = () => {
                         <h3 className="text-[#FFD700] text-[2rem] tracking-widest mb-8">
                             JOIN THE BA-DASTOOR TEAM
                         </h3>
-                        <form className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <input className="career-input" placeholder="Enter your Name" />
-                            <input className="career-input" placeholder="Mobile Number" />
-                            <input
+                        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <input name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                className="career-input" placeholder="Enter your Name" />
+                            <input type='number' name="phone"
+                                value={formData.phone}
+                                onChange={handleChange} className="career-input" placeholder="Mobile Number" />
+                            <input name="email"
+                                value={formData.email}
+                                onChange={handleChange}
                                 className="career-input"
                                 placeholder="Email (Optional)"
                             />
-                            <input
+                            <input name="position"
+                                value={formData.position}
+                                onChange={handleChange}
                                 className="career-input"
                                 placeholder="Position Applied For"
                             />
-                            <input
+                            <input name="experience"
+                                value={formData.experience}
+                                onChange={handleChange}
                                 className="career-input"
                                 placeholder="Years of Experience"
                             />
-                            <label className="career-upload">
-                                <span>Upload CV</span>
-                                <input type="file" className="hidden" />
+
+                            <label className="career-upload cursor-pointer flex items-center justify-between px-4 py-3 border border-gray-300 rounded-md">
+                                <span className="text-gray-600">
+                                    {cv ? cv.name : "Upload CV"}
+                                </span>
+
+                                <input
+                                    type="file"
+                                    name="cv"
+                                    className="hidden"
+                                    accept=".pdf,.doc,.docx"
+                                    onChange={handleFileChange}
+                                />
                             </label>
-                            <textarea
+
+
+                            <textarea type='text' name='message'
+                                value={formData.message}
+                                onChange={handleChange}
                                 className="career-textarea sm:col-span-2"
                                 placeholder="Additional Information"
                                 rows="3"
                             />
                             <div className="sm:col-span-2 flex justify-center mt-6">
-                                <button className="career-btn">Submit</button>
+                                <button type='submit' disabled={isLoading} className={`career-btn ${isLoading ? "opacity-70 cursor-not-allowed" : ""
+                                    }`}>
+                                    {isLoading ? (
+                                        <>
+                                            <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                            Submit...
+                                        </>
+                                    ) : (
+                                        "Submit"
+                                    )}
+                                </button>
                             </div>
                         </form>
                     </div>
