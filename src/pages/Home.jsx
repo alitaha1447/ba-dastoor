@@ -73,12 +73,12 @@ const Home = () => {
 
 
     // const fetchSelectedDesktopBanners = async () => {
-    //     const res = await axios.get(`http://localhost:3000/api/banners/get-selected-desktopBanner?page=${page}`);
+    //     const res = await axios.get(`https://ba-dastoor-backend.vercel.app/api/banners/get-selected-desktopBanner?page=${page}`);
     //     setDesktopBanners(res?.data?.data);
     // }
 
     //     const fetchMobileBanners = async () => {
-    //         const res = await axios.get(`http://localhost:3000/api/banners/mobile/get-mobileBanner?page=${page}`);
+    //         const res = await axios.get(`https://ba-dastoor-backend.vercel.app/api/banners/mobile/get-mobileBanner?page=${page}`);
     //         setMobileBanner(res?.data?.data)
     //     }
 
@@ -104,12 +104,12 @@ const Home = () => {
     //  WITHOUT OPTIMIZE CODE
 
     // const fetchContent = async () => {
-    //     const res = await axios.get(`http://localhost:3000/api/generalContent/get-content?page=${page}`);
+    //     const res = await axios.get(`https://ba-dastoor-backend.vercel.app/api/generalContent/get-content?page=${page}`);
     //     setContent(res?.data?.data)
     // }
 
     // const fetchMenuLists = async () => {
-    //     const res = await axios.get(`http://localhost:3000/api/categories/get-categorywithdishes`);
+    //     const res = await axios.get(`https://ba-dastoor-backend.vercel.app/api/categories/get-categorywithdishes`);
     //     setMenuLists(res?.data?.data || [])
     // }
 
@@ -123,8 +123,8 @@ const Home = () => {
         const fetchBanners = async () => {
             try {
                 const [desktopRes, mobileRes] = await Promise.all([
-                    axios.get(`http://localhost:3000/api/banners/get-selected-desktopBanner?page=${page}`),
-                    axios.get(`http://localhost:3000/api/banners/mobile/get-mobileBanner?page=${page}`)
+                    axios.get(`https://ba-dastoor-backend.vercel.app/api/banners/get-selected-desktopBanner?page=${page}`),
+                    axios.get(`https://ba-dastoor-backend.vercel.app/api/banners/mobile/get-mobileBanner?page=${page}`)
                 ]);
 
                 setDesktopBanners(desktopRes?.data?.data || []);
@@ -139,8 +139,8 @@ const Home = () => {
 
     useEffect(() => {
         Promise.all([
-            axios.get(`http://localhost:3000/api/generalContent/get-content?page=${page}`),
-            axios.get(`http://localhost:3000/api/categories/get-categorywithdishes`)
+            axios.get(`https://ba-dastoor-backend.vercel.app/api/generalContent/get-content?page=${page}`),
+            axios.get(`https://ba-dastoor-backend.vercel.app/api/categories/get-categorywithdishes`)
         ]).then(([contentRes, menuRes]) => {
             setContent(contentRes.data.data);
             setMenuLists(menuRes.data.data || []);
