@@ -29,6 +29,19 @@ const Home = () => {
     const location = useLocation();
     const menuRef = useRef(null);
 
+    const [isMobileView, setIsMobileView] = useState(window.innerWidth < 768);
+
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobileView(window.innerWidth < 768);
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+
     useEffect(() => {
         if (location.state?.scrollTo === "menu") {
             // Small delay to ensure DOM is ready
@@ -59,43 +72,82 @@ const Home = () => {
     const page = location.pathname === "/" ? "home" : location.pathname.replace("/", "");
 
 
-    const fetchSelectedDesktopBanners = async () => {
-        const res = await axios.get(`http://localhost:3000/api/banners/get-selected-desktopBanner?page=${page}`);
-        console.log(';;;;;;;;;;;,,,,,,,,,,')
-        console.log(res?.data?.data)
-        setDesktopBanners(res?.data?.data);
+    // const fetchSelectedDesktopBanners = async () => {
+    //     const res = await axios.get(`http://localhost:3000/api/banners/get-selected-desktopBanner?page=${page}`);
+    //     setDesktopBanners(res?.data?.data);
+    // }
 
-    }
+    //     const fetchMobileBanners = async () => {
+    //         const res = await axios.get(`http://localhost:3000/api/banners/mobile/get-mobileBanner?page=${page}`);
+    //         setMobileBanner(res?.data?.data)
+    //     }
 
+    // useEffect(() => {
+    //     fetchSelectedDesktopBanners()
+    // }, [page]);
+
+    // useEffect(() => {
+    //     fetchMobileBanners()
+    // }, [page]);
+
+    // OPTIMIZE CODE
+    // useEffect(() => {
+    //     if (isMobileView) {
+    //         fetchMobileBanners();
+    //     } else {
+    //         fetchSelectedDesktopBanners();
+    //     }
+    // }, [page, isMobileView]);
+
+    // ----------------- //
+
+    //  WITHOUT OPTIMIZE CODE
+
+    // const fetchContent = async () => {
+    //     const res = await axios.get(`http://localhost:3000/api/generalContent/get-content?page=${page}`);
+    //     setContent(res?.data?.data)
+    // }
+
+    // const fetchMenuLists = async () => {
+    //     const res = await axios.get(`http://localhost:3000/api/categories/get-categorywithdishes`);
+    //     setMenuLists(res?.data?.data || [])
+    // }
+
+    // useEffect(() => { fetchContent() }, [page])
+    // useEffect(() => { fetchMenuLists() }, []);
+
+    //  // OPTIMIZE CODE
+
+    // OPTIMIZE CODE FOR BANNER IMAGES
     useEffect(() => {
-        fetchSelectedDesktopBanners()
+        const fetchBanners = async () => {
+            try {
+                const [desktopRes, mobileRes] = await Promise.all([
+                    axios.get(`http://localhost:3000/api/banners/get-selected-desktopBanner?page=${page}`),
+                    axios.get(`http://localhost:3000/api/banners/mobile/get-mobileBanner?page=${page}`)
+                ]);
+
+                setDesktopBanners(desktopRes?.data?.data || []);
+                setMobileBanner(mobileRes?.data?.data || []);
+            } catch (err) {
+                console.error("Banner fetch error", err);
+            }
+        };
+
+        fetchBanners();
     }, [page]);
 
-    const fetchMobileBanners = async () => {
-        const res = await axios.get(`http://localhost:3000/api/banners/mobile/get-mobileBanner?page=${page}`);
-        // console.log(res?.data?.data)
-        setMobileBanner(res?.data?.data)
-    }
-
     useEffect(() => {
-        fetchMobileBanners()
+        Promise.all([
+            axios.get(`http://localhost:3000/api/generalContent/get-content?page=${page}`),
+            axios.get(`http://localhost:3000/api/categories/get-categorywithdishes`)
+        ]).then(([contentRes, menuRes]) => {
+            setContent(contentRes.data.data);
+            setMenuLists(menuRes.data.data || []);
+        });
     }, [page]);
 
-    const fetchContent = async () => {
-        const res = await axios.get(`http://localhost:3000/api/generalContent/get-content?page=${page}`);
-        console.log(res?.data?.data)
-        setContent(res?.data?.data)
-    }
-    useEffect(() => { fetchContent() }, [page])
-
-
-    const fetchMenuLists = async () => {
-        const res = await axios.get(`http://localhost:3000/api/categories/get-categorywithdishes`);
-        console.log(res?.data?.data)
-        setMenuLists(res?.data?.data || [])
-    }
-
-    useEffect(() => { fetchMenuLists() }, []);
+    // ----------------- //
 
     useEffect(() => {
         const fetchReview = async () => {
@@ -112,7 +164,6 @@ const Home = () => {
         (item) => item.isSelected === true
     );
 
-    console.log(selectedDesktopBanners)
 
     const imageBanners = selectedDesktopBanners.filter(
         (item) => item.desktop?.mediaType === "image"
@@ -122,39 +173,103 @@ const Home = () => {
     const videoBanner = selectedDesktopBanners.find(
         (item) => item.desktop?.mediaType === "video"
     );
+    // Mobile
+    const selectedMobileBanners = mobileBanner.filter(
+        (item) => item.isSelected === true
+    );
+    const imageMobileBanners = selectedMobileBanners.filter(
+        (item) => item.mobile?.mediaType === "image"
+    );
+    const hasMobileImages = Array.isArray(imageMobileBanners) && imageMobileBanners.length > 0;
+
+    const videoMobileBanner = selectedMobileBanners.find(
+        (item) => item.mobile?.mediaType === "video"
+    );
 
     const [current, setCurrent] = useState(0);
+    // const activeBanners = isMobileView ? imageMobileBanners : imageBanners;
+
+    // OPTIMIZE CODE
+    const activeBanners = React.useMemo(() => {
+        return isMobileView ? imageMobileBanners : imageBanners;
+    }, [isMobileView, imageMobileBanners, imageBanners]);
+    const activeBannersLength = activeBanners ? activeBanners.length : 0;
     // Auto slide
+    // useEffect(() => {
+    //     if (activeBannersLength <= 1) return;
+
+    //     const interval = setInterval(() => {
+    //         setCurrent(prev =>
+    //             prev === activeBannersLength - 1 ? 0 : prev + 1
+    //         );
+    //     }, 3000);
+
+    //     return () => clearInterval(interval);
+    // }, [activeBannersLength, isMobileView]);
+    // OPTIMIZE CODE
     useEffect(() => {
-        if (!imageBanners.length) return;
+        if (activeBannersLength <= 1) return;
 
         const interval = setInterval(() => {
-            setCurrent(prev =>
-                prev === imageBanners.length - 1 ? 0 : prev + 1
-            );
-        }, 3000); // Changed to 3 seconds for better UX
-
+            setCurrent(c => (c + 1) % activeBannersLength);
+        }, 3000);
 
         return () => clearInterval(interval);
-    }, [imageBanners.length,]);
+    }, [activeBannersLength]);
+    useEffect(() => {
+        setCurrent(0);
+    }, [isMobileView])
+
+    // useEffect(() => {
+    //     if (!imageBanners.length) return;
+
+    //     const interval = setInterval(() => {
+    //         setCurrent(prev =>
+    //             prev === imageBanners.length - 1 ? 0 : prev + 1
+    //         );
+    //     }, 3000); // Changed to 3 seconds for better UX
+
+
+    //     return () => clearInterval(interval);
+    // }, [imageBanners.length,]);
 
     return (
         <>
-            <div className="relative w-full h-[100svh] overflow-hidden bg-gray-200">
+            <div className="relative w-full h-screen overflow-hidden bg-gray-200">
                 {/* 🖼️ IMAGE CAROUSEL (Desktop) */}
                 {hasDesktopImages && (
                     imageBanners.map((item, index) => (
                         <div
                             key={`desktop-${item?._id || index}`}
-                            className={`w-full h-full hidden md:block absolute inset-0 bg-no-repeat bg-center transition-opacity duration-700
-                ${index === current ? 'opacity-100' : 'opacity-0'}
-                bg-cover`}
-                            style={{
-                                backgroundImage: item?.desktop?.url
-                                    ? `url(${item.desktop.url})`
-                                    : 'none',
-                            }}
-                        />
+                            className={`
+        w-full h-full hidden md:block absolute inset-0
+        transition-opacity duration-700
+        ${index === current ? "opacity-100" : "opacity-0"}
+    `}
+                        >
+                            <img
+                                src={item?.desktop?.url}
+                                loading="lazy"
+                                alt="Banner"
+                                className="
+            w-full h-full
+            object-cover
+            object-center
+        "
+                            />
+                        </div>
+
+                        //         <div
+                        //             key={`desktop-${item?._id || index}`}
+                        //             className={`w-full h-full hidden md:block absolute inset-0 bg-no-repeat bg-center transition-opacity duration-700
+                        // ${index === current ? 'opacity-100' : 'opacity-0'}
+                        // bg-cover`}
+                        //             style={{
+                        //                 backgroundImage: item?.desktop?.url
+                        //                     ? `url(${item.desktop.url})`
+                        //                     : 'none',
+                        //             }}
+                        //         />
                     ))
                 )}
                 {/* 🎥 VIDEO (NO CAROUSEL AT ALL) */}
@@ -210,45 +325,64 @@ const Home = () => {
                     />
                 ))} */}
                 {/* 📱 MOBILE BANNER */}
-                {mobileBanner?.length > 0 ? (
-                    mobileBanner.length === 1 ? (
-                        // ✅ SINGLE IMAGE (NO CAROUSEL)
+                {/* {hasMobileImages && (
+                    imageBanners.map((item, index) => (
                         <div
-                            className="block md:hidden absolute inset-0 bg-no-repeat bg-center bg-contain"
+                            key={`desktop-${item?._id || index}`}
+                            className={`w-full h-full hidden md:block absolute inset-0 bg-no-repeat bg-center transition-opacity duration-700
+                ${index === current ? 'opacity-100' : 'opacity-0'}
+                bg-cover`}
                             style={{
-                                backgroundImage: mobileBanner[0]?.mobile?.url
-                                    ? `url(${mobileBanner[0].mobile.url})`
-                                    : "none",
+                                backgroundImage: item?.desktop?.url
+                                    ? `url(${item.desktop.url})`
+                                    : 'none',
                             }}
                         />
-                    ) : (
-                        // 🔁 MULTIPLE IMAGES (CAROUSEL)
-                        mobileBanner.map((item, index) => (
+                    ))
+                )} */}
+                {
+                    hasMobileImages ? (
+                        imageMobileBanners.length === 1 ? (
+                            // ✅ SINGLE IMAGE (NO CAROUSEL)
                             <div
-                                key={`mobile-${item?._id || index}`}
-                                className={`block md:hidden absolute inset-0
-                bg-no-repeat bg-center bg-cover
-                transition-opacity duration-700 ease-in-out
-                ${index === current ? "opacity-100" : "opacity-0"}`}
+                                className="block md:hidden absolute inset-0 bg-no-repeat bg-center bg-cover"
                                 style={{
-                                    backgroundImage: item?.mobile?.url
-                                        ? `url(${item.mobile.url})`
+                                    backgroundImage: imageMobileBanners[0]?.mobile?.url
+                                        ? `url(${imageMobileBanners[0].mobile.url})`
                                         : "none",
                                 }}
                             />
-                        ))
+                        ) : (
+                            // 🔁 MULTIPLE IMAGES (CAROUSEL)
+                            imageMobileBanners.map((item, index) => (
+                                <div
+                                    key={`mobile-${item?._id || index}`}
+                                    className={`block md:hidden absolute inset-0
+                    bg-no-repeat bg-center bg-cover
+                    transition-opacity duration-700 ease-in-out
+                    ${index === current ? "opacity-100" : "opacity-0"}`}
+                                    style={{
+                                        backgroundImage: item?.mobile?.url
+                                            ? `url(${item.mobile.url})`
+                                            : "none",
+                                    }}
+                                />
+                            ))
+                        )
+                    ) : (
+                        // ❌ NO MOBILE IMAGE → FALLBACK
+                        <div className="block md:hidden absolute inset-0 bg-gray-400" />
                     )
-                ) : (
-                    // ❌ NO IMAGE → FALLBACK
-                    <div className="block md:hidden absolute inset-0 bg-gray-400" />
-                )}
+                }
+
+
 
 
                 {/* Overlay for better text visibility */}
                 {/* <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" /> */}
 
                 {/* Call to Action Button */}
-                <div className="relative h-full flex items-end justify-center pb-10 sm:pb-16 lg:pb-20 px-3 sm:px-4 z-20">
+                <div className="relative h-full flex items-end justify-center pb-10 sm:pb-16 lg:pb-20 px-3 sm:px-4 z-0">
                     <Link
                         // href="/contact"
                         className="bg-[#FFD900] text-[#4D3F31] px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-3.5 text-sm sm:text-base lg:text-lg font-semibold sm:font-bold rounded-md sm:rounded-lg text-center shadow-md hover:shadow-lg hover:scale-105 transition-all"
@@ -262,7 +396,7 @@ const Home = () => {
             </div>
 
             {/* Section-2 */}
-            <section className="w-full bg-[#F3F1F2] py-10 sm:py-24">
+            <section className="w-full bg-[white] py-10 sm:py-24">
                 <div className="max-w-6xl mx-auto px-4 text-center">
 
                     {/* Logo */}

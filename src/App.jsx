@@ -8,6 +8,7 @@ import AboutUs from './pages/AboutUs'
 import Gallery from './pages/Gallery'
 import CareerPage from './pages/CareerPage'
 import CateringEnquiry from './pages/CateringEnquiry'
+import Franchise from './pages/Franchise';
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/career" element={<CareerPage />} />
           <Route path="/catering-enquiry" element={<CateringEnquiry />} />
+          <Route path="/franchise" element={<Franchise />} />
         </Route>
       </Routes>
       <ToastContainer

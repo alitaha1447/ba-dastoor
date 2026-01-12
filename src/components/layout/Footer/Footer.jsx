@@ -3,10 +3,16 @@ import Logo from "../../../assets/icons/Ba-Dastoor_Logo.svg?react";
 import bannerImg3 from "../../../assets/images/bannerImage3.jpg"
 import axios from 'axios';
 import { FaInstagram, FaLinkedinIn, FaTwitter, FaFacebookF } from "react-icons/fa";
-
+import { useNavigate } from 'react-router';
 
 const Footer = () => {
     const [socialLinks, setSocialLinks] = useState([])
+    const navigate = useNavigate();
+
+    const goHome = () => {
+        navigate("/");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
 
     const fetchSocialLinks = async () => {
         try {
@@ -42,7 +48,7 @@ const Footer = () => {
                 </div>
 
                 {/* Footer Content */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 px-2 md:grid-cols-3 gap-6 text-sm">
 
                     {/* Quick Links */}
                     <div>
@@ -50,8 +56,8 @@ const Footer = () => {
                             Quick Links
                         </h4>
                         <ul className="space-y-2.5 text-white">
-                            <li className="hover:text-white transition cursor-pointer">Home</li>
-                            <li className="hover:text-white transition cursor-pointer">About Us</li>
+                            <li onClick={goHome} className="hover:text-white transition cursor-pointer">Home</li>
+                            <li onClick={() => navigate('/about')} className="hover:text-white transition cursor-pointer">About Us</li>
                             <li className="hover:text-white transition cursor-pointer">Enquiry</li>
                             <li className="hover:text-white transition cursor-pointer">Franchise</li>
                         </ul>
@@ -64,8 +70,8 @@ const Footer = () => {
                         </h4>
                         <ul className="space-y-2.5 text-[#CFC8BD]">
                             <li className="hover:text-white transition cursor-pointer">Menu</li>
-                            <li className="hover:text-white transition cursor-pointer">Catering Services</li>
-                            <li className="hover:text-white transition cursor-pointer">Career</li>
+                            <li onClick={() => navigate('/catering-enquiry')} className="hover:text-white transition cursor-pointer">Catering Services</li>
+                            <li onClick={() => navigate('/career')} className="hover:text-white transition cursor-pointer">Career</li>
                             <li className="hover:text-white transition cursor-pointer">Contact Us</li>
                         </ul>
                     </div>
@@ -81,7 +87,7 @@ const Footer = () => {
                         </p>
 
                         {/* Input */}
-                        <div className="flex items-center gap-2 mb-3">
+                        {/* <div className="flex items-center gap-2 mb-3">
                             <input
                                 type="email"
                                 placeholder="Enter your e-mail"
@@ -97,7 +103,7 @@ const Footer = () => {
                         <p className="text-xs text-[#CFC8BD]/70 leading-relaxed">
                             By subscribing, you agree to our Privacy Policy and consent to receive
                             updates from our company.
-                        </p>
+                        </p> */}
                         {/* Social Media Icons */}
                         {/* Social Media Icons */}
                         <div className="mt-6">
@@ -108,7 +114,7 @@ const Footer = () => {
                             <div className="flex items-center gap-4">
                                 {
                                     socialLinks.map((link, index) => (
-                                        <>
+                                        <div key={index} className='flex flex-row space-x-4'>
                                             <a
                                                 href={link?.instagram?.url}
                                                 target="_blank"
@@ -155,7 +161,7 @@ const Footer = () => {
                                             >
                                                 <FaFacebookF size={16} />
                                             </a>
-                                        </>
+                                        </div>
                                     ))
                                 }
                             </div>
@@ -166,8 +172,9 @@ const Footer = () => {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="border-t border-[#CFC8BD]/20 mt-12 pt-5 text-center text-xs text-[#CFC8BD]/60">
-                    © {new Date().getFullYear()} Ba-Dastoor. All rights reserved.
+                <div className="border-t border-[#CFC8BD]/20 mt-12 pt-5 text-center text-xs text-[#d79f23]">
+                    © {new Date().getFullYear()} <span className='text-[#e7b038] font-semibold'>Ba-Dastoor.</span> All Rights Reserved.
+                    Designed & Developed by <span className='text-[#e7b038] font-semibold'>Eagle Cloud Solutions Pvt. Ltd.</span>
                 </div>
             </div>
         </footer>

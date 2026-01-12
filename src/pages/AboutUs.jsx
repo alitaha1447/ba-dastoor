@@ -179,7 +179,7 @@ const AboutUs = () => {
                 <div className="flex flex-col md:flex-row gap-10">
 
                     {/* 🌸 PINK SECTION — 60% */}
-                    <div className="relative md:w-3/5 bg-white shadow-2xl rounded-2xl p-6 md:p-8 overflow-hidden">
+                    <div className="relative md:w-3/5 bg-white shadow-2xl rounded-2xl p-6 md:p-8 overflow-hidden  md:h-[380px]">
 
                         <div className="relative flex flex-col md:flex-row md:items-center">
 
@@ -208,19 +208,8 @@ const AboutUs = () => {
                         </div>
                     </div>
 
-                    {/* 🔴 RED SECTION — 40% */}
-                    {/* <div className="md:w-2/5 bg-red-600 text-white p-6 md:p-8 flex items-center">
-                        <div>
-                            <h3 className="text-2xl md:text-3xl font-[Playfair_Display] mb-4">
-                                Our Team
-                            </h3>
-                            <p className="text-white/90 leading-relaxed">
-                                {aboutUs?.employeeDescription}
-                            </p>
-                        </div>
-                    </div> */}
                     {/* 🔴 RED SECTION — 40% : CHEF SPOTLIGHT */}
-                    <div className="md:w-2/5 relative overflow-hidden rounded-xl shadow-2xl">
+                    <div className="md:w-2/5 relative overflow-hidden rounded-xl  p-6 md:p-8  shadow-2xl md:h-[380px]">
 
                         {/* Chef Image */}
                         <img
@@ -235,7 +224,7 @@ const AboutUs = () => {
                         {/* Blurred Content */}
                         <div className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-white/10 p-5 md:p-6 rounded-lg">
                             <h3 className="text-2xl md:text-3xl font-[Playfair_Display] text-white mb-3">
-                                Our Chef
+                                {team?.role}
                             </h3>
                             <p className="text-white text-lg leading-relaxed">
                                 {team?.description}

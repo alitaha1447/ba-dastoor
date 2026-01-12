@@ -193,3 +193,7 @@
 .catering-btn {
     @apply px-8 py-2 rounded-full border border-white text-white text-sm tracking-wide hover:bg-white hover:text-black transition;
 }
+
+.franchise-btn {
+    @apply px-8 py-2 rounded-full border border-white text-white text-sm tracking-wide hover:bg-white hover:text-black transition;
+}

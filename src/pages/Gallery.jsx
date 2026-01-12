@@ -5,6 +5,7 @@ import galleryBg from '../assets/images/5317656.jpg'
 // import galleryBg from '../assets/images/5317656.jpg'
 import frame3 from '../assets/images/frame3.jpeg'
 import frame4 from '../assets/images/frame4.jpeg'
+import { useLocation } from 'react-router';
 import axios from 'axios';
 
 const Gallery = () => {
@@ -12,6 +13,14 @@ const Gallery = () => {
 
     // const [currentPage, setCurrentPage] = useState(1);
     // const [totalPages, setTotalPages] = useState(1);
+
+    const [desktopBanner, setDesktopBanners] = useState([]);
+    const [mobileBanner, setMobileBanner] = useState([])
+
+    const location = useLocation();
+    console.log(location)
+    const page = location.pathname === "/gallery" && "gallery"
+
 
     const [activeTab, setActiveTab] = useState("image")
 
@@ -26,6 +35,34 @@ const Gallery = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
+
+    const fetchSelectedDesktopBanners = async () => {
+        const res = await axios.get(`http://localhost:3000/api/banners/get-selected-desktopBanner?page=${page}`);
+        setDesktopBanners(res?.data?.data);
+    }
+
+    useEffect(() => { fetchSelectedDesktopBanners() }, [page]);
+
+    const fetchMobileBanners = async () => {
+        const res = await axios.get(`http://localhost:3000/api/banners/mobile/get-mobileBanner?page=${page}`);
+        setMobileBanner(res?.data?.data)
+    }
+
+    useEffect(() => { fetchMobileBanners() }, [page]);
+
+    const selectedDesktopBanners = desktopBanner.filter(
+        (item) => item.isSelected === true
+    );
+    const imageBanners = selectedDesktopBanners.filter(
+        (item) => item.desktop?.mediaType === "image"
+    );
+
+    const selectedMobileBanners = mobileBanner.filter(
+        (item) => item.isSelected === true
+    );
+    const imageMobileBanners = selectedMobileBanners.filter(
+        (item) => item.mobile?.mediaType === "image"
+    );
 
 
     /* ------------------ IMAGE / VIDEO BOX ------------------ */
@@ -186,6 +223,8 @@ const Gallery = () => {
         }
     };
 
+    console.log(gallerySlots)
+
     /* ------------------ FETCH VIDEO GALLERY ------------------ */
     const fetchGalleryVideo = async () => {
         try {
@@ -252,20 +291,20 @@ const Gallery = () => {
         : [];
 
 
-    const CornerCurve = ({ className }) => (
-        <svg
-            viewBox="0 0 40 40"
-            fill="none"
-            className={className}
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-                d="M40 0 H20 C8 0 0 8 0 20 V40"
-                stroke="#C9A24D"
-                strokeWidth="2"
-            />
-        </svg>
-    );
+    // const CornerCurve = ({ className }) => (
+    //     <svg
+    //         viewBox="0 0 40 40"
+    //         fill="none"
+    //         className={className}
+    //         xmlns="http://www.w3.org/2000/svg"
+    //     >
+    //         <path
+    //             d="M40 0 H20 C8 0 0 8 0 20 V40"
+    //             stroke="#C9A24D"
+    //             strokeWidth="2"
+    //         />
+    //     </svg>
+    // );
 
     // -----------------
     const GoldFrame = ({ children, className = "" }) => {
@@ -299,7 +338,7 @@ const Gallery = () => {
     return (
         <>
             {/* 🔹 PAGE HEADER */}
-            <div className="relative h-[35vh] sm:h-[38vh] md:h-[40vh] w-full">
+            {/* <div className="relative h-[35vh] sm:h-[38vh] md:h-[40vh] w-full">
                 <div
                     className="h-full bg-cover bg-center"
                     style={{ backgroundImage: `url(${careerpageBG})` }}
@@ -313,6 +352,49 @@ const Gallery = () => {
                         </div>
                     </div>
                 </div>
+            </div> */}
+            <div className='relative hidden lg:block h-[40vh] w-full overflow-hidden'>
+                {imageBanners &&
+                    imageBanners.map((item, index) => (
+                        <div
+                            key={`desktop-${index}`}
+                            className="absolute inset-0 bg-cover bg-center bg-no-repeat h-full w-full"
+                            style={{
+                                backgroundImage: `url(${item?.desktop?.url})`,
+                                backgroundPosition: "center 30%",
+                            }}
+                        >
+
+                            <div className="relative z-10 flex items-center justify-center h-full">
+                                <h1 className="text-white text-5xl font-semibold">
+                                    Gallery
+                                </h1>
+                            </div>
+                        </div>
+                    ))}
+            </div>
+            <div className="block lg:hidden">
+                {imageMobileBanners &&
+                    imageMobileBanners.map((item, index) => (
+                        <div
+                            key={`mobile-${index}`}
+                            className="relative  h-[180px]  w-full bg-cover bg-center "
+                            style={{
+                                backgroundImage: `url(${item?.mobile?.url})`,
+                                // backgroundPosition: "center 20%",
+                            }}
+                        >
+                            <div className="absolute inset-0 bg-black/25" />
+
+                            <div className="relative z-10 h-full flex flex-col justify-end p-4">
+                                <h1 className="text-white text-2xl font-semibold">
+                                    Gallery
+                                </h1>
+
+                            </div>
+
+                        </div>
+                    ))}
             </div>
             <div className="relative max-w-full overflow-hidden">
                 <div
@@ -416,11 +498,14 @@ const Gallery = () => {
                 </div>
 
             </section> */}
-                <section className="relative px-4 py-12 max-w-6xl mx-auto space-y-4"            >
+                <section className="relative px-4 py-12 max-w-6xl mx-auto space-y-4">
                     {/* 🔲 Overlay for blur + opacity */}
 
 
                     {/* 🔹 Content */}
+                    {/* {
+                        gallerySlots.map((ImGlass.index))
+                    } */}
                     {activeTab === "image" ? (
                         imageItems.length > 0 ? (
                             <>
@@ -486,7 +571,47 @@ const Gallery = () => {
                         )
                     )}
 
+                    <div className="flex justify-center mt-8">
+                        <button
+                            className="
+      px-8 py-2
+      border border-[#C9A24D]
+      text-[#bd9133]
+      text-sm font-medium
+      rounded-full
+      transition
+      hover:bg-[#C9A24D]
+      hover:text-white
+      cursor-pointer
+    "
+                        >
+                            View More
+                        </button>
+                    </div>
+
                 </section>
+                {/*  */}
+                <div className="text-center bg-gradient-to-r from-[#f8f4f0] to-[#f0e6d6] rounded-2xl p-12 z-50 m-6">
+                    <div className="max-w-3xl mx-auto">
+                        <h4 className="text-2xl md:text-3xl font-serif text-[#8B4513] mb-4">
+                            Events & Celebrations
+                        </h4>
+                        <p className="text-gray-600 text-lg mb-8 font-serif">
+                            From intimate family gatherings to grand celebrations, our restaurant provides the perfect setting for memorable moments. Every event is hosted with warmth, elegance, and attention to details making each occasion truly special.
+                        </p>
+                        {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <button
+                                // onClick={() => setShowForm(true)}
+                                className="bg-[#8B4513] text-white py-3 px-8 rounded-lg hover:bg-[#A0522D] transition-colors duration-300 text-lg "
+                            >
+                                Submit General Application
+                            </button>
+                            <button className="bg-transparent border-2 border-[#8B4513] text-[#8B4513] font-semibold py-3 px-8 rounded-lg hover:bg-[#8B4513] hover:text-white transition-colors duration-300 text-lg">
+                                Meet Our Team
+                            </button>
+                        </div> */}
+                    </div>
+                </div>
             </div>
             {/* 🔥 MODAL CALLED HERE */}
             {zoomMedia && (
