@@ -48,7 +48,7 @@ const CareerPage = () => {
     }, []);
 
     const fetchSelectedDesktopBanners = async () => {
-        const res = await axios.get(`http://localhost:3000/api/banners/get-selected-desktopBanner?page=${page}`);
+        const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/get-selected-desktopBanner?page=${page}`);
         setDesktopBanners(res?.data?.data);
     }
 
@@ -56,7 +56,7 @@ const CareerPage = () => {
     console.log(desktopBanner[0]?.desktop?.url)
 
     const fetchMobileBanners = async () => {
-        const res = await axios.get(`http://localhost:3000/api/banners/mobile/get-mobileBanner?page=${page}`);
+        const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${page}`);
         setMobileBanner(res?.data?.data)
     }
 
@@ -93,7 +93,7 @@ const CareerPage = () => {
 
     const fetchJobList = async () => {
         try {
-            const res = await axios.get("http://localhost:3000/api/jobs/all-jobs");
+            const res = await axios.get("https://ba-dastoor-backend.onrender.com/api/jobs/all-jobs");
             console.log(res?.data?.data)
             setOpenPositions(res?.data?.data)
         } catch (error) {
@@ -139,7 +139,7 @@ const CareerPage = () => {
                 enquiryType: "career",
                 ...formData,
             };
-            const res = await axios.post('http://localhost:3000/api/enquirys/create-enquiry', payload);
+            const res = await axios.post('https://ba-dastoor-backend.onrender.com/api/enquirys/create-enquiry', payload);
             console.log(res)
             toast.update(toastId, {
                 render: 'Your enquiry has been submitted successfully!',

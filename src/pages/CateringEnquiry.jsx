@@ -30,14 +30,14 @@ const CateringEnquiry = () => {
     }, []);
 
     const fetchSelectedDesktopBanners = async () => {
-        const res = await axios.get(`http://localhost:3000/api/banners/get-selected-desktopBanner?page=${page}`);
+        const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/get-selected-desktopBanner?page=${page}`);
         setDesktopBanners(res?.data?.data);
     }
 
     useEffect(() => { fetchSelectedDesktopBanners() }, [page]);
 
     const fetchMobileBanners = async () => {
-        const res = await axios.get(`http://localhost:3000/api/banners/mobile/get-mobileBanner?page=${page}`);
+        const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${page}`);
         setMobileBanner(res?.data?.data)
     }
 
@@ -64,7 +64,7 @@ const CateringEnquiry = () => {
 
     useEffect(() => {
         const fetchBranches = async () => {
-            const res = await axios.get('http://localhost:3000/api/branches/get-branches');
+            const res = await axios.get('https://ba-dastoor-backend.onrender.com/api/branches/get-branches');
             setBranches(res?.data?.data)
         }
         fetchBranches()
@@ -108,7 +108,7 @@ const CateringEnquiry = () => {
                 ...formData,
             };
 
-            const res = await axios.post(`http://localhost:3000/api/enquirys/create-enquiry`, payload);
+            const res = await axios.post(`https://ba-dastoor-backend.onrender.com/api/enquirys/create-enquiry`, payload);
             // console.log(res)
             // alert("Your enquiry has been submitted successfully!");
             toast.update(toastId, {

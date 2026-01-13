@@ -37,14 +37,14 @@ const Gallery = () => {
     }, []);
 
     const fetchSelectedDesktopBanners = async () => {
-        const res = await axios.get(`http://localhost:3000/api/banners/get-selected-desktopBanner?page=${page}`);
+        const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/get-selected-desktopBanner?page=${page}`);
         setDesktopBanners(res?.data?.data);
     }
 
     useEffect(() => { fetchSelectedDesktopBanners() }, [page]);
 
     const fetchMobileBanners = async () => {
-        const res = await axios.get(`http://localhost:3000/api/banners/mobile/get-mobileBanner?page=${page}`);
+        const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${page}`);
         setMobileBanner(res?.data?.data)
     }
 
@@ -215,7 +215,7 @@ const Gallery = () => {
     const fetchGalleryImg = async () => {
         try {
             const res = await axios.get(
-                "http://localhost:3000/api/newGalleryImg/new-get-galleryImg"
+                "https://ba-dastoor-backend.onrender.com/api/newGalleryImg/new-get-galleryImg"
             );
             setGallerySlots(res?.data?.data || []);
         } catch (error) {
@@ -229,7 +229,7 @@ const Gallery = () => {
     const fetchGalleryVideo = async () => {
         try {
             const res = await axios.get(
-                "http://localhost:3000/api/newGalleryVideo/new-get-galleryVideo"
+                "https://ba-dastoor-backend.onrender.com/api/newGalleryVideo/new-get-galleryVideo"
             );
             setGalleryVideoSlots(res?.data?.data || []);
         } catch (error) {

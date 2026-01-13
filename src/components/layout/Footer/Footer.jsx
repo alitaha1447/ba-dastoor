@@ -16,7 +16,7 @@ const Footer = () => {
 
     const fetchSocialLinks = async () => {
         try {
-            const res = await axios.get(`http://localhost:3000/api/socialLinks/get-socialLinks`)
+            const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/socialLinks/get-socialLinks`)
             // console.log(res)
             setSocialLinks(res?.data?.data)
         } catch (error) {

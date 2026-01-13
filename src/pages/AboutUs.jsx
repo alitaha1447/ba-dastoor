@@ -26,7 +26,7 @@ const AboutUs = () => {
     }, []);
 
     const fetchDesktopBanners = async () => {
-        const res = await axios.get(`http://localhost:3000/api/banners/get-desktopBanner?page=${page}`);
+        const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/get-desktopBanner?page=${page}`);
         console.log(res?.data?.data)
         setDesktopBanners(res?.data?.data)
     }
@@ -36,7 +36,7 @@ const AboutUs = () => {
     }, [page]);
 
     const fetchMobileBanners = async () => {
-        const res = await axios.get(`http://localhost:3000/api/banners/mobile/get-mobileBanner?page=${page}`);
+        const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${page}`);
         console.log(res?.data?.data)
         setMobileBanner(res?.data?.data)
     }
@@ -47,7 +47,7 @@ const AboutUs = () => {
 
     const fetchAboutUs = async () => {
         try {
-            const res = await axios.get(`http://localhost:3000/api/aboutUs/get-aboutus`)
+            const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/aboutUs/get-aboutus`)
             console.log(res?.data?.data)
             setAboutUs(res?.data?.data)
         } catch (error) {
@@ -60,7 +60,7 @@ const AboutUs = () => {
     const fetchTeam = async () => {
         console.log('..............')
         try {
-            const res = await axios.get(`http://localhost:3000/api/team/get-team`)
+            const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/team/get-team`)
             console.log(res)
             console.log(res?.data?.data)
             console.log('..............')
@@ -75,7 +75,7 @@ const AboutUs = () => {
     console.log(team)
     const fetchGeneralContent = async (p) => {
         try {
-            const res = await axios.get(`http://localhost:3000/api/generalContent/get-content?page=${p}`)
+            const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/generalContent/get-content?page=${p}`)
             console.log(res?.data?.data)
             setGeneralContent(res?.data?.data)
 
