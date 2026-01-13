@@ -123,7 +123,7 @@ const Home = () => {
         const fetchBanners = async () => {
             try {
                 const [desktopRes, mobileRes] = await Promise.all([
-                    axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/get-selected-desktopBanner?page=${page}`),
+                    axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/get-desktopBanner?page=${page}`),
                     axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${page}`)
                 ]);
 
