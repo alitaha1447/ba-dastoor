@@ -13,6 +13,9 @@ import frame2 from "../assets/images/frame2.jpeg"
 
 import GoogleReviewsCarousel from '../components/googleReview/GoogleReviewWidget';
 import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import { fetchDesktopBanners, fetchMobileBanners } from '../api/banner/bannerApi';
+import { useInView } from "react-intersection-observer";
 
 
 const Home = () => {
@@ -20,8 +23,8 @@ const Home = () => {
     const [avgRating, setAvgRating] = useState(null)
     const [reviews, setReviews] = useState([]);
 
-    const [desktopBanner, setDesktopBanners] = useState([])
-    const [mobileBanner, setMobileBanner] = useState([])
+    // const [desktopBanner, setDesktopBanners] = useState([])
+    // const [mobileBanner, setMobileBanner] = useState([])
     const [content, setContent] = useState({})
 
     const [menuLists, setMenuLists] = useState([])
@@ -30,6 +33,29 @@ const Home = () => {
     const menuRef = useRef(null);
 
     const [isMobileView, setIsMobileView] = useState(window.innerWidth < 768);
+
+    const page = location.pathname === "/" ? "home" : location.pathname.replace("/", "");
+
+
+    const { data: desktopBanner = [] } = useQuery({
+        queryKey: ["desktop-banners", page],
+        queryFn: () => fetchDesktopBanners(page)
+    })
+    const { data: mobileBanner = [] } = useQuery({
+        queryKey: ["mobile-banners", page],
+        queryFn: () => fetchMobileBanners(page)
+    })
+
+    const [refRight, inViewRight] = useInView({
+        triggerOnce: false,
+        threshold: 0.5,
+        rootMargin: "0px 0px -20% 0px",
+    });
+    const [refLeft, inViewLeft] = useInView({
+        triggerOnce: false,
+        threshold: 0.5,
+        rootMargin: "0px 0px -20% 0px",
+    });
 
 
     useEffect(() => {
@@ -69,7 +95,6 @@ const Home = () => {
     }, []);
 
 
-    const page = location.pathname === "/" ? "home" : location.pathname.replace("/", "");
 
 
     // const fetchSelectedDesktopBanners = async () => {
@@ -119,23 +144,23 @@ const Home = () => {
     //  // OPTIMIZE CODE
 
     // OPTIMIZE CODE FOR BANNER IMAGES
-    useEffect(() => {
-        const fetchBanners = async () => {
-            try {
-                const [desktopRes, mobileRes] = await Promise.all([
-                    axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/get-desktopBanner?page=${page}`),
-                    axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${page}`)
-                ]);
+    // useEffect(() => {
+    //     const fetchBanners = async () => {
+    //         try {
+    //             const [desktopRes, mobileRes] = await Promise.all([
+    //                 axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/get-desktopBanner?page=${page}`),
+    //                 axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${page}`)
+    //             ]);
 
-                setDesktopBanners(desktopRes?.data?.data || []);
-                setMobileBanner(mobileRes?.data?.data || []);
-            } catch (err) {
-                console.error("Banner fetch error", err);
-            }
-        };
+    //             // setDesktopBanners(desktopRes?.data?.data || []);
+    //             setMobileBanner(mobileRes?.data?.data || []);
+    //         } catch (err) {
+    //             console.error("Banner fetch error", err);
+    //         }
+    //     };
 
-        fetchBanners();
-    }, [page]);
+    //     fetchBanners();
+    // }, [page]);
 
     useEffect(() => {
         Promise.all([
@@ -400,7 +425,9 @@ const Home = () => {
                 <div className="max-w-6xl mx-auto px-4 text-center">
 
                     {/* Logo */}
-                    <div className="flex justify-center mb-10">
+                    <div className={`flex justify-center mb-10 transform transition-all duration-700 ease-out
+                        
+                        `}>
                         {/* <Logo2 className="h-32 w-auto" /> */}
                         <img
                             src={content?.logo?.url}   // replace with your image import
@@ -423,13 +450,24 @@ const Home = () => {
                     </p>
 
                     {/* Image */}
-                    <div className="w-full overflow-hidden rounded-2xl shadow-lg">
-                        <img
-                            src={content?.media?.url}   // replace with your image import
-                            alt="Ba-Dastoor Heritage"
-                            className="w-full object-fill"
-                        />
+                    <div className="
+    w-full
+    aspect-[4/3] sm:aspect-[16/9]
+    max-h-[260px] sm:max-h-[360px] lg:max-h-[420px]
+    overflow-hidden
+    rounded-2xl
+    shadow-lg
+">
+                        {content?.media?.url && (
+                            <img
+                                src={content.media.url}
+                                alt="Ba-Dastoor Heritage"
+                                className="w-full h-full object-cover"
+                            />
+                        )}
                     </div>
+
+
 
                 </div>
             </section>

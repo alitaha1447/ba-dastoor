@@ -4,6 +4,8 @@ import formBg2 from "../assets/images/formBg2.jpeg";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useLocation } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { fetchDesktopBanners, fetchMobileBanners } from "../api/banner/bannerApi";
 
 const Franchise = () => {
     const [isLoading, setisLoading] = useState(false)
@@ -14,28 +16,41 @@ const Franchise = () => {
     }
     const [formData, setFormData] = useState(initialState);
 
-
-    const [desktopBanner, setDesktopBanners] = useState([]);
-    const [mobileBanner, setMobileBanner] = useState([])
+    const resetForm = () => {
+        setFormData(initialState);
+    }
+    // const [desktopBanner, setDesktopBanners] = useState([]);
+    // const [mobileBanner, setMobileBanner] = useState([])
 
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
-    const fetchSelectedDesktopBanners = async () => {
-        const res = await axios.get(`http://localhost:3000/api/banners/get-selected-desktopBanner?page=career`);
-        setDesktopBanners(res?.data?.data);
-    }
+    // const fetchSelectedDesktopBanners = async () => {
+    //     const res = await axios.get(`http://localhost:3000/api/banners/get-selected-desktopBanner?page=home`);
+    //     setDesktopBanners(res?.data?.data);
+    // }
 
-    useEffect(() => { fetchSelectedDesktopBanners() }, []);
+    // useEffect(() => { fetchSelectedDesktopBanners() }, []);
 
-    const fetchMobileBanners = async () => {
-        const res = await axios.get(`http://localhost:3000/api/banners/mobile/get-mobileBanner?page=career`);
-        setMobileBanner(res?.data?.data)
-    }
+    // const fetchMobileBanners = async () => {
+    //     const res = await axios.get(`http://localhost:3000/api/banners/mobile/get-mobileBanner?page=home`);
+    //     setMobileBanner(res?.data?.data)
+    // }
+    // console.log(mobileBanner)
+    // useEffect(() => { fetchMobileBanners() }, []);
 
-    useEffect(() => { fetchMobileBanners() }, []);
+    const { data: desktopBanner = [] } = useQuery({
+        queryKey: ["desktop-banners", 'home'],
+        queryFn: () => fetchDesktopBanners('home'),
+    });
+
+    const { data: mobileBanner = [] } = useQuery({
+        queryKey: ["mobile-banners", 'home'],
+        queryFn: () => fetchMobileBanners('home'),
+    });
+
 
 
     const selectedDesktopBanners = desktopBanner.filter(
@@ -59,100 +74,138 @@ const Franchise = () => {
         })
     }
 
+    // CARAOUSEL
+    const [current, setCurrent] = useState(0);
+    useEffect(() => {
+        const desktopVisible = window.matchMedia("(min-width: 1024px)").matches;
+        const banners = desktopVisible ? imageBanners : imageMobileBanners;
+
+        if (banners.length <= 1) return;
+
+        const id = setInterval(() => {
+            setCurrent(i => (i + 1) % banners.length);
+        }, 3000); // ✅ now 8000 REALLY means 8 seconds
+
+        return () => clearInterval(id);
+    }, [imageBanners.length, imageMobileBanners.length]);
+
+
+    // useEffect(() => {
+    //     if (imageBanners.length <= 1) return;
+
+    //     const id = setInterval(() => {
+    //         setCurrent(i => (i + 1) % imageBanners.length);
+    //     }, 3000);
+
+    //     return () => clearInterval(id);
+    // }, [imageBanners.length]);
+
+    // useEffect(() => {
+    //     if (imageMobileBanners.length <= 1) return;
+
+    //     const id = setInterval(() => {
+    //         setCurrent(i => (i + 1) % imageMobileBanners.length);
+    //     }, 3000);
+
+    //     return () => clearInterval(id);
+    // }, [imageMobileBanners.length]);
+
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // setisLoading(true)
-        // const toastId = toast.loading("Processing...", {
-        //     style: {
-        //         backgroundColor: "#1f2937", // slate-800 (universal)
-        //         color: "#ffffff",
-        //         fontSize: "14px",
-        //         fontWeight: "500",
-        //     },
-        // });
+        setisLoading(true)
+        const toastId = toast.loading("Processing...", {
+            style: {
+                backgroundColor: "#1f2937", // slate-800 (universal)
+                color: "#ffffff",
+                fontSize: "14px",
+                fontWeight: "500",
+            },
+        });
 
-        // try {
-        //     const payload = {
-        //         enquiryType: "catering", // 🔑 mandatory
-        //         ...formData,
-        //     };
+        try {
+            const payload = {
+                enquiryType: "franchise", // 🔑 mandatory
+                ...formData,
+            };
 
-        //     const res = await axios.post(`http://localhost:3000/api/enquirys/create-enquiry`, payload);
-        //     // console.log(res)
-        //     // alert("Your enquiry has been submitted successfully!");
-        //     toast.update(toastId, {
-        //         render: 'Your enquiry has been submitted successfully!',
-        //         type: 'success',
-        //         isLoading: false,
-        //         autoClose: 3000,
-        //     });
-        //     resetForm();
-        // } catch (error) {
-        //     console.log(error)
-        //     toast.update(toastId, {
-        //         render:
-        //             error?.response?.data?.message ||
-        //             "Something went wrong. Please try again.",
-        //         type: "error",
-        //         isLoading: false,
-        //         autoClose: 4000,
-        //         style: {
-        //             backgroundColor: "#7a1c1c",
-        //             color: "#ffffff",
-        //         },
-        //     });
-        // } finally {
-        //     setisLoading(false)
-        // }
+            const res = await axios.post(`http://localhost:3000/api/enquirys/create-enquiry`, payload);
+            // console.log(res)
+            // alert("Your enquiry has been submitted successfully!");
+            toast.update(toastId, {
+                render: 'Your enquiry has been submitted successfully!',
+                type: 'success',
+                isLoading: false,
+                autoClose: 3000,
+            });
+            resetForm();
+        } catch (error) {
+            console.log(error)
+            toast.update(toastId, {
+                render:
+                    error?.response?.data?.message ||
+                    "Something went wrong. Please try again.",
+                type: "error",
+                isLoading: false,
+                autoClose: 4000,
+                style: {
+                    backgroundColor: "#7a1c1c",
+                    color: "#ffffff",
+                },
+            });
+        } finally {
+            setisLoading(false)
+        }
     }
 
     return (
         <>
             <div className='relative hidden lg:block h-[40vh] w-full overflow-hidden'>
-                {imageBanners &&
-                    imageBanners.map((item, index) => (
-                        <div
-                            key={`desktop-${index}`}
-                            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                            style={{
-                                backgroundImage: `url(${item?.desktop?.url})`,
-                                backgroundPosition: "center 30%",
-                            }}
-                        >
-                            <div className="absolute inset-0 bg-black/30" />
-
-                            <div className="relative z-10 flex items-center justify-center h-full">
-                                <h1 className="text-white text-5xl font-semibold">
-                                    Franchise
-                                </h1>
-                            </div>
+                {imageBanners.map((item, index) => (
+                    <div
+                        key={item?._id || index}
+                        className={`absolute inset-0 transition-opacity duration-700
+            ${index === current ? "opacity-100" : "opacity-0"}`}
+                        style={{
+                            backgroundImage: `url(${item?.desktop?.url})`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                        }}
+                    >
+                        <div className="absolute inset-0 bg-black/25" />
+                        <div className="relative z-10 h-full flex justify-center items-center p-4">
+                            <h1 className="text-white text-2xl font-semibold">
+                                Franchise
+                            </h1>
                         </div>
-                    ))}
+                    </div>
+                ))}
+
             </div>
             {/* MOBILE BANNER */}
-            <div className="block lg:hidden">
-                {imageMobileBanners &&
-                    imageMobileBanners.map((item, index) => (
-                        <div
-                            key={`mobile-${index}`}
-                            className="relative  h-[180px]  w-full bg-cover bg-center "
-                            style={{
-                                backgroundImage: `url(${item?.mobile?.url})`,
-                                // backgroundPosition: "center 20%",
-                            }}
-                        >
-                            <div className="absolute inset-0 bg-black/25" />
-
-                            <div className="relative z-10 h-full flex flex-col justify-end p-4">
-                                <h1 className="text-white text-2xl font-semibold">
-                                    Franchise
-                                </h1>
-
-                            </div>
-
+            <div className="relative block lg:hidden h-[180px] w-full overflow-hidden">
+                {imageMobileBanners.map((item, index) => (
+                    <div
+                        key={item?._id || index}
+                        className={`absolute inset-0 transition-opacity duration-700
+            ${index === current ? "opacity-100" : "opacity-0"}`}
+                        style={{
+                            backgroundImage: `url(${item?.mobile?.url})`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                        }}
+                    >
+                        <div className="absolute inset-0 bg-black/25" />
+                        <div className="relative z-10 h-full flex flex-col justify-end items-center p-4">
+                            <h1 className="text-white text-2xl font-semibold">
+                                Franchise
+                            </h1>
                         </div>
-                    ))}
+                    </div>
+                ))}
             </div>
+
             {/*  */}
             <section className="w-full py-8 px-4 relative">
                 <div

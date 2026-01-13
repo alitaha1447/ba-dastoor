@@ -174,7 +174,11 @@ const Footer = () => {
                 {/* Bottom Bar */}
                 <div className="border-t border-[#CFC8BD]/20 mt-12 pt-5 text-center text-xs text-[#d79f23]">
                     © {new Date().getFullYear()} <span className='text-[#e7b038] font-semibold'>Ba-Dastoor.</span> All Rights Reserved.
-                    Designed & Developed by <span className='text-[#e7b038] font-semibold'>Eagle Cloud Solutions Pvt. Ltd.</span>
+                    Designed & Developed by <span className='text-[#e7b038] font-semibold'>
+                        <a href="https://eaglecloudsolutions.com/" target="_blank" rel="noopener noreferrer">
+                            Eagle Cloud Solutions Pvt. Ltd.
+                        </a>
+                    </span>
                 </div>
             </div>
         </footer>

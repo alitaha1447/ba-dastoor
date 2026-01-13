@@ -165,11 +165,11 @@ const AboutUs = () => {
                 {/* Heading */}
                 <div className="relative z-10 max-w-3xl mx-auto mb-16 text-center">
                     <h1
-                        className="text-2xl sm:text-3xl md:text-4xl font-serif tracking-wide text-[#2E2A27] mb-6"
+                        className="text-2xl sm:text-3xl md:text-4xl font-serif text-[#2E2A27] mb-6"
                     >
                         {aboutUs?.aboutUsHeading}
                     </h1>
-                    <p className="max-w-3xl mx-auto text-sm sm:text-base leading-relaxed text-[#5A5551] mb-14">
+                    <p className="max-w-3xl mx-auto text-sm sm:text-base leading-relxed text-[#5A5551] mb-14">
 
                         {aboutUs?.aboutUsPara}
                     </p>
@@ -196,7 +196,7 @@ const AboutUs = () => {
                             <div
                                 className="bg-white max-w-xs p-5 md:p-6 shadow-2xl z-20 relative mt-5 md:absolute md:left-0 md:top-[43%] md:-translate-y-1/2  "
                             >
-                                <h2 className="text-xl md:text-2xl font-[Playfair_Display] mb-3">
+                                <h2 className="text-xl md:text-2xl  mb-3">
                                     {aboutUs?.heading}
                                 </h2>
 

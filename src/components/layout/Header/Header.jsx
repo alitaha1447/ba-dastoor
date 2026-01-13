@@ -144,13 +144,13 @@ const Header = () => {
                                 className={`h-16 w-auto cursor-pointer`}
                             />
                         </div>
-                        <ul className="hidden lg:flex items-center gap-16 text-white text-base font-normal font-san">
+                        <ul className="hidden lg:flex items-center gap-16 text-white text-base font-normal font-san cursor-pointer">
                             {navLinks.map((item) => (
                                 <li key={item.path}>
                                     {item.label === "Menu" ? (
                                         <button
                                             onClick={handleMenuClick}
-                                            className="transition hover:text-[#e7b038]"
+                                            className="transition hover:text-[#e7b038] cursor-pointer"
                                         >
                                             Menu
                                         </button>

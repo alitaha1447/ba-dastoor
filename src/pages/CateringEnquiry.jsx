@@ -4,6 +4,8 @@ import cateringBg from "../assets/images/cateringBg.jpeg"
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useLocation } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { fetchDesktopBanners, fetchMobileBanners } from "../api/banner/bannerApi";
 
 const CateringEnquiry = () => {
     const [isLoading, setisLoading] = useState(false)
@@ -18,8 +20,8 @@ const CateringEnquiry = () => {
     const [formData, setFormData] = useState(initialState);
     const [branches, setBranches] = useState([]);
 
-    const [desktopBanner, setDesktopBanners] = useState([]);
-    const [mobileBanner, setMobileBanner] = useState([])
+    // const [desktopBanner, setDesktopBanners] = useState([]);
+    // const [mobileBanner, setMobileBanner] = useState([])
 
     const location = useLocation();
     const page = location.pathname === "/catering-enquiry" && "catering"
@@ -29,19 +31,30 @@ const CateringEnquiry = () => {
         window.scrollTo(0, 0);
     }, []);
 
-    const fetchSelectedDesktopBanners = async () => {
-        const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/get-selected-desktopBanner?page=${page}`);
-        setDesktopBanners(res?.data?.data);
-    }
+    const { data: desktopBanner = [] } = useQuery({
+        queryKey: ["desktop-banners", page],
+        queryFn: () => fetchDesktopBanners(page),
+    });
 
-    useEffect(() => { fetchSelectedDesktopBanners() }, [page]);
+    const { data: mobileBanner = [] } = useQuery({
+        queryKey: ["mobile-banners", page],
+        queryFn: () => fetchMobileBanners(page),
+    });
 
-    const fetchMobileBanners = async () => {
-        const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${page}`);
-        setMobileBanner(res?.data?.data)
-    }
 
-    useEffect(() => { fetchMobileBanners() }, [page]);
+    // const fetchSelectedDesktopBanners = async () => {
+    //     const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/get-selected-desktopBanner?page=${page}`);
+    //     setDesktopBanners(res?.data?.data);
+    // }
+
+    // useEffect(() => { fetchSelectedDesktopBanners() }, [page]);
+
+    // const fetchMobileBanners = async () => {
+    //     const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${page}`);
+    //     setMobileBanner(res?.data?.data)
+    // }
+
+    // useEffect(() => { fetchMobileBanners() }, [page]);
 
     const selectedDesktopBanners = desktopBanner.filter(
         (item) => item.isSelected === true
@@ -56,6 +69,22 @@ const CateringEnquiry = () => {
     const imageMobileBanners = selectedMobileBanners.filter(
         (item) => item.mobile?.mediaType === "image"
     );
+
+    // CARAOUSEL
+    const [current, setCurrent] = useState(0);
+    useEffect(() => {
+        const desktopVisible = window.matchMedia("(min-width: 1024px)").matches;
+        const banners = desktopVisible ? imageBanners : imageMobileBanners;
+
+        if (banners.length <= 1) return;
+
+        const id = setInterval(() => {
+            setCurrent(i => (i + 1) % banners.length);
+        }, 3000); // ✅ now 8000 REALLY means 8 seconds
+
+        return () => clearInterval(id);
+    }, [imageBanners.length, imageMobileBanners.length]);
+
 
     const resetForm = () => {
         setFormData(initialState);
@@ -109,7 +138,7 @@ const CateringEnquiry = () => {
             };
 
             const res = await axios.post(`https://ba-dastoor-backend.onrender.com/api/enquirys/create-enquiry`, payload);
-            // console.log(res)
+            console.log(res)
             // alert("Your enquiry has been submitted successfully!");
             toast.update(toastId, {
                 render: 'Your enquiry has been submitted successfully!',
@@ -159,28 +188,26 @@ const CateringEnquiry = () => {
                         </div>
                     ))}
             </div>
-            <div className="block lg:hidden">
-                {imageMobileBanners &&
-                    imageMobileBanners.map((item, index) => (
-                        <div
-                            key={`mobile-${index}`}
-                            className="relative  h-[180px]  w-full bg-cover bg-center "
-                            style={{
-                                backgroundImage: `url(${item?.mobile?.url})`,
-                                // backgroundPosition: "center 20%",
-                            }}
-                        >
-                            <div className="absolute inset-0 bg-black/25" />
-
-                            <div className="relative z-10 h-full flex flex-col justify-end p-4">
-                                <h1 className="text-white text-2xl font-semibold">
-                                    Career
-                                </h1>
-
-                            </div>
-
+            <div className="relative block lg:hidden h-[180px] w-full overflow-hidden">
+                {imageMobileBanners.map((item, index) => (
+                    <div
+                        key={item?._id || index}
+                        className={`absolute inset-0 transition-opacity duration-700
+            ${index === current ? "opacity-100" : "opacity-0"}`}
+                        style={{
+                            backgroundImage: `url(${item?.mobile?.url})`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                        }}
+                    >
+                        <div className="absolute inset-0 bg-black/25" />
+                        <div className="relative z-10 h-full flex flex-col justify-end items-center p-4">
+                            <h1 className="text-white text-2xl font-semibold">
+                                Catering
+                            </h1>
                         </div>
-                    ))}
+                    </div>
+                ))}
             </div>
             <section className=" min-h-screen py-14 px-4 relative">
                 <div
@@ -190,12 +217,11 @@ const CateringEnquiry = () => {
                 <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-start relative z-10">
 
                     {/* ================= LEFT SIDE ================= */}
-                    <div className="">
+                    <div className="order-2 lg:order-1">
                         {/* Map */}
-                        <div className="w-full h-[250px] rounded-xl overflow-hidden shadow-lg mb-6">
+                        <div className="order-2 lg:order-1 w-full h-[250px] rounded-xl overflow-hidden shadow-lg mb-6">
                             <iframe
                                 title="Ba-Dastoor Location"
-                                // src="https://www.google.com/maps?q=Kohefiza+Bhopal&output=embed"
                                 src={mapUrl}
                                 className="w-full h-full border-0"
                                 loading="lazy"
@@ -203,32 +229,33 @@ const CateringEnquiry = () => {
                         </div>
 
                         {/* Heading */}
-                        <h3 className="text-[#F39100] text-center font-semibold text-lg mb-4">
-                            Our Branches
-                        </h3>
+                        <div className="order-1 lg:order-2">
+                            <h3 className="text-[#615751] text-center font-bold text-xl mb-4">
+                                Our Branches
+                            </h3>
 
-                        {/* Branches */}
-                        <div className="space-y-4 text-sm text-[#512800] ">
-                            {branches.map((branch, index, arr) => {
-                                // console.log(branch?.embedUrl)
-                                return (
-                                    <div
-                                        key={branch._id}
-                                        onClick={() => handleSetMap(branch?.embedUrl)}
-                                        className={`cursor-pointer p-2 pb-2 hover:bg-gray-200 ${index !== arr.length - 1 ? "border-b border-[#E6DED4]" : ""
-                                            }`}
-                                    >
-                                        <p className="">{branch.branchName}</p>
-                                        <p>{branch.address}</p>
-                                    </div>
-                                )
-                            })}
+                            {/* Branches */}
+                            <div className="space-y-4 text-sm text-[#615751] max-h-[220px] overflow-y-auto scrollbar-thin-custom border border-[#d2ba96] p-2 rounded-lg">
+                                {branches.map((branch, index, arr) => {
+                                    // console.log(branch?.embedUrl)
+                                    return (
+                                        <div
+                                            key={branch._id}
+                                            onClick={() => handleSetMap(branch?.embedUrl)}
+                                            className={`cursor-pointer  p-2 pb-2 hover:bg-gray-200 ${index !== arr.length - 1 ? "border-b border-[#E6DED4]" : ""
+                                                }`}
+                                        >
+                                            <p className="font-bold">{branch.branchName}</p>
+                                            <p className="font-semibold">{branch.address}</p>
+                                        </div>
+                                    )
+                                })}
+                            </div>
                         </div>
-
                     </div>
 
                     {/* ================= RIGHT SIDE ================= */}
-                    <div className="bg-[#6F6A68] rounded-2xl px-6 py-10 sm:px-10 shadow-lg">
+                    <div className="order-1 lg:order-2 bg-[#6F6A68] rounded-2xl px-6 py-10 sm:px-10 shadow-lg">
                         {/* Logo */}
                         <div className="flex justify-center mb-6">
                             <Logo className="h-30 w-auto text-white" />

@@ -7,6 +7,9 @@ import frame3 from '../assets/images/frame3.jpeg'
 import frame4 from '../assets/images/frame4.jpeg'
 import { useLocation } from 'react-router';
 import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import { fetchDesktopBanners, fetchMobileBanners } from '../api/banner/bannerApi';
+
 
 const Gallery = () => {
     // const [galleryImg, setGalleryImg] = useState([]);
@@ -14,8 +17,8 @@ const Gallery = () => {
     // const [currentPage, setCurrentPage] = useState(1);
     // const [totalPages, setTotalPages] = useState(1);
 
-    const [desktopBanner, setDesktopBanners] = useState([]);
-    const [mobileBanner, setMobileBanner] = useState([])
+    // const [desktopBanner, setDesktopBanners] = useState([]);
+    // const [mobileBanner, setMobileBanner] = useState([])
 
     const location = useLocation();
     console.log(location)
@@ -31,24 +34,33 @@ const Gallery = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [zoomMedia, setZoomMedia] = useState(null); // 🔥 SINGLE MODAL STATE
 
+    const { data: desktopBanner = [] } = useQuery({
+        queryKey: ["desktop-banners", page],
+        queryFn: () => fetchDesktopBanners(page),
+    });
+
+    const { data: mobileBanner = [] } = useQuery({
+        queryKey: ["mobile-banners", page],
+        queryFn: () => fetchMobileBanners(page),
+    });
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
-    const fetchSelectedDesktopBanners = async () => {
-        const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/get-selected-desktopBanner?page=${page}`);
-        setDesktopBanners(res?.data?.data);
-    }
+    // const fetchSelectedDesktopBanners = async () => {
+    //     const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/get-selected-desktopBanner?page=${page}`);
+    //     setDesktopBanners(res?.data?.data);
+    // }
 
-    useEffect(() => { fetchSelectedDesktopBanners() }, [page]);
+    // useEffect(() => { fetchSelectedDesktopBanners() }, [page]);
 
-    const fetchMobileBanners = async () => {
-        const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${page}`);
-        setMobileBanner(res?.data?.data)
-    }
+    // const fetchMobileBanners = async () => {
+    //     const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${page}`);
+    //     setMobileBanner(res?.data?.data)
+    // }
 
-    useEffect(() => { fetchMobileBanners() }, [page]);
+    // useEffect(() => { fetchMobileBanners() }, [page]);
 
     const selectedDesktopBanners = desktopBanner.filter(
         (item) => item.isSelected === true
@@ -63,6 +75,21 @@ const Gallery = () => {
     const imageMobileBanners = selectedMobileBanners.filter(
         (item) => item.mobile?.mediaType === "image"
     );
+
+    const [current, setCurrent] = useState(0);
+    useEffect(() => {
+        const desktopVisible = window.matchMedia("(min-width: 1024px)").matches;
+        const banners = desktopVisible ? imageBanners : imageMobileBanners;
+
+        if (banners.length <= 1) return;
+
+        const id = setInterval(() => {
+            setCurrent(i => (i + 1) % banners.length);
+        }, 3000); // ✅ now 8000 REALLY means 8 seconds
+
+        return () => clearInterval(id);
+    }, [imageBanners.length, imageMobileBanners.length]);
+
 
 
     /* ------------------ IMAGE / VIDEO BOX ------------------ */
@@ -373,20 +400,22 @@ const Gallery = () => {
                         </div>
                     ))}
             </div>
-            <div className="block lg:hidden">
+            <div className="relative block lg:hidden h-[180px] w-full overflow-hidden">
                 {imageMobileBanners &&
                     imageMobileBanners.map((item, index) => (
                         <div
                             key={`mobile-${index}`}
-                            className="relative  h-[180px]  w-full bg-cover bg-center "
+                            className={`absolute inset-0 transition-opacity duration-700
+            ${index === current ? "opacity-100" : "opacity-0"}`}
                             style={{
                                 backgroundImage: `url(${item?.mobile?.url})`,
-                                // backgroundPosition: "center 20%",
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
                             }}
                         >
                             <div className="absolute inset-0 bg-black/25" />
 
-                            <div className="relative z-10 h-full flex flex-col justify-end p-4">
+                            <div className="relative z-10 h-full flex flex-col justify-end items-center p-4">
                                 <h1 className="text-white text-2xl font-semibold">
                                     Gallery
                                 </h1>
