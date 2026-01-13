@@ -64,7 +64,7 @@ const Header = () => {
     useEffect(() => {
         const fetchBranches = async () => {
             const res = await axios.get(
-                "http://localhost:3000/api/branches/get-branches"
+                "https://ba-dastoor-backend.onrender.com/api/branches/get-branches"
             );
             setBranches(res?.data?.data);
         };
