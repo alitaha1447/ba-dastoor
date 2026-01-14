@@ -292,12 +292,22 @@ const CateringEnquiry = () => {
                                 placeholder="Event Type"
                             />
 
-                            <input type="date" name="eventDate"
-                                value={formData.eventDate}
-                                onChange={handleChange}
-                                className="catering-input"
-                                placeholder="Event Date"
-                            />
+                            <div className="relative">
+                                <input
+                                    type="date"
+                                    name="eventDate"
+                                    value={formData.eventDate}
+                                    onChange={handleChange}
+                                    className="catering-input peer"
+                                />
+                                <label
+                                    className="absolute left-3 top-2 text-gray-400 text-sm
+      peer-focus:-top-2 peer-focus:text-xs peer-focus:text-gold
+      peer-valid:-top-2 peer-valid:text-xs bg-white px-1 transition-all rounded-xl">
+                                    Event Date
+                                </label>
+                            </div>
+
                             <input type="number" name="guests" value={formData.guests} onChange={handleChange}
                                 className="catering-input"
                                 placeholder="Number of Guests"

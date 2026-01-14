@@ -91,7 +91,7 @@ const AboutUs = () => {
     );
     const hasDesktopImages = Array.isArray(imageBanners) && imageBanners.length > 0;
 
-
+    console.log('general content --> ', generalContent)
     return (
         <div className="w-full overflow-hidden bg-white">
 
@@ -309,11 +309,28 @@ const AboutUs = () => {
                                 muted
                                 playsInline
                             /> */}
-                            <img
+                            {/* <img
                                 src={generalContent?.media?.url}
                                 alt="Head Chef"
                                 className="w-full h-full md:h-full object-cover"
-                            />
+                            /> */}
+                            {generalContent?.media?.mediaType === "video" ? (
+                                <video
+                                    className="w-full h-full object-cover"
+                                    src={generalContent?.media?.url}
+                                    controls
+                                    autoPlay
+                                    loop
+                                    muted
+                                    playsInline
+                                />
+                            ) : generalContent?.media?.mediaType === "image" ? (
+                                <img
+                                    src={generalContent?.media?.url}
+                                    alt={generalContent?.heading || "Content media"}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : null}
                         </div>
                     </div>
 

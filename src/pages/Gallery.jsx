@@ -21,7 +21,6 @@ const Gallery = () => {
     // const [mobileBanner, setMobileBanner] = useState([])
 
     const location = useLocation();
-    console.log(location)
     const page = location.pathname === "/gallery" && "gallery"
 
 
@@ -29,10 +28,20 @@ const Gallery = () => {
 
     // const pagesCacheRef = React.useRef({});
 
+    // images
     const [gallerySlots, setGallerySlots] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [loading, setLoading] = useState(false);
+    // videos
     const [galleryVideoSlots, setGalleryVideoSlots] = useState([]);
+    // const [newGalleryVideoSlots, setNewGallerySlots] = useState([]);
+
     const [activeIndex, setActiveIndex] = useState(0);
     const [zoomMedia, setZoomMedia] = useState(null); // 🔥 SINGLE MODAL STATE
+
+    const hasFetchedRef = useRef(false);
+
 
     const { data: desktopBanner = [] } = useQuery({
         queryKey: ["desktop-banners", page],
@@ -94,6 +103,7 @@ const Gallery = () => {
 
     /* ------------------ IMAGE / VIDEO BOX ------------------ */
     const ImageBox = ({ src, animation = "left" }) => {
+        const [loaded, setLoaded] = useState(false);
         if (!src?.url) return null;
 
         const animationClass = {
@@ -106,7 +116,7 @@ const Gallery = () => {
 
 
         return (
-            <div className={`group w-full h-full overflow-hidden border border-[#C9A24D] rounded-lg cursor-pointer`}
+            <div className={`group w-full h-full overflow-hidden border border-[#C9A24D] rounded-lg cursor-pointer flex items-center justify-center bg-[#fafafa]`}
                 onClick={() =>
                     setZoomMedia({
                         url: src.url,
@@ -114,6 +124,12 @@ const Gallery = () => {
                     })
                 }
             >
+                {/* 🔄 SPINNER (stays until FULLY loaded) */}
+                {/* {!loaded && (
+                    <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70">
+                        <span className="w-6 h-6 border-2 border-[#C9A24D] border-t-transparent rounded-full animate-spin" />
+                    </div>
+                )} */}
                 {src.mediaType === "video" ? (
                     <video
                         src={src.url}
@@ -121,15 +137,19 @@ const Gallery = () => {
                         loop
                         autoPlay
                         playsInline
+                        // onLoad={() => setLoaded(true)}
                         className={`w-full h-full object-cover ${animationClass}`}
                     />
                 ) : (
                     <img
                         src={src.url}
-                        alt="Gallery"
-                        className={`w-full h-full object-cover ${animationClass} transition-transform duration-500 ease-out
-                        group-hover:scale-110`}
+                        loading="lazy"
+                        decoding="async"
+                        // onLoad={() => setLoaded(true)}
+                        className={`w-full h-full object-cover transition-opacity duration-300 
+                            `}
                     />
+                    // ${loaded ? "opacity-100" : "opacity-0"}
                 )}
             </div >
         );
@@ -239,14 +259,22 @@ const Gallery = () => {
 
 
     /* ------------------ FETCH IMAGE GALLERY ------------------ */
-    const fetchGalleryImg = async () => {
+    const fetchGalleryImg = async (page = 1) => {
         try {
+            setLoading(true);
             const res = await axios.get(
-                "https://ba-dastoor-backend.onrender.com/api/newGalleryImg/new-get-galleryImg"
+                `http://localhost:3000/api/newGalleryImg/new-get-galleryImg?page=${page}`
             );
-            setGallerySlots(res?.data?.data || []);
+            const newData = res?.data?.data || [];
+            // console.log(newData)
+            // ✅ APPEND instead of replace
+            setGallerySlots((prev) => [...prev, ...newData]);
+            setTotalPages(res?.data?.totalPages || 1);
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
+
         }
     };
 
@@ -264,49 +292,63 @@ const Gallery = () => {
         }
     };
 
-    // useEffect(() => {
-    //     fetchGalleryImg();
-    //     fetchGalleryVideo();
-    // }, []);
-
     useEffect(() => {
-        if (activeTab === "image" && gallerySlots.length === 0) {
-            fetchGalleryImg();
-        }
+        if (hasFetchedRef.current) return;
+        hasFetchedRef.current = true;
 
-        if (activeTab === "video" && galleryVideoSlots.length === 0) {
-            fetchGalleryVideo();
-        }
+        fetchGalleryImg(1);
+    }, []);
+    useEffect(() => {
+        // fetchGalleryImg(1);
+        fetchGalleryVideo();
+    }, []);
 
-        setActiveIndex(0);
-    }, [activeTab]);
+    const handleViewMore = () => {
+        if (currentPage < 10 && !loading) {
+            const nextPage = currentPage + 1;
+            setCurrentPage(nextPage);
+            fetchGalleryImg(nextPage);
+        }
+    }
+
+    // useEffect(() => {
+    //     if (activeTab === "image" && gallerySlots.length === 0) {
+    //         fetchGalleryImg();
+    //     }
+
+    //     if (activeTab === "video" && galleryVideoSlots.length === 0) {
+    //         fetchGalleryVideo();
+    //     }
+
+    //     setActiveIndex(0);
+    // }, [activeTab]);
 
 
     /* ------------------ AUTO SLIDER ------------------ */
-    useEffect(() => {
-        const source =
-            activeTab === "image" ? gallerySlots : galleryVideoSlots;
+    // useEffect(() => {
+    //     const source =
+    //         activeTab === "image" ? gallerySlots : galleryVideoSlots;
 
-        if (source.length <= 1) return;
+    //     if (source.length <= 1) return;
 
-        const interval = setInterval(() => {
-            setActiveIndex(prev =>
-                prev === source.length - 1 ? 0 : prev + 1
-            );
-        }, 6000);
+    //     const interval = setInterval(() => {
+    //         setActiveIndex(prev =>
+    //             prev === source.length - 1 ? 0 : prev + 1
+    //         );
+    //     }, 6000);
 
-        return () => clearInterval(interval);
-    }, [gallerySlots, galleryVideoSlots, activeTab]);
+    //     return () => clearInterval(interval);
+    // }, [gallerySlots, galleryVideoSlots, activeTab]);
 
 
     /* ------------------ IMAGE DATA ------------------ */
-    const activeImageGallery = gallerySlots[activeIndex];
-    const imageItems = activeImageGallery
-        ? [
-            activeImageGallery.primaryImage,
-            ...activeImageGallery.siblings
-        ].map(img => ({ ...img, mediaType: "image" }))
-        : [];
+    // const activeImageGallery = gallerySlots[activeIndex];
+    // const imageItems = activeImageGallery
+    //     ? [
+    //         activeImageGallery.primaryImage,
+    //         ...activeImageGallery.siblings
+    //     ].map(img => ({ ...img, mediaType: "image" }))
+    //     : [];
 
     /* ------------------ VIDEO DATA ------------------ */
     const activeVideoGallery = galleryVideoSlots[activeIndex];
@@ -536,83 +578,99 @@ const Gallery = () => {
                         gallerySlots.map((ImGlass.index))
                     } */}
                     {activeTab === "image" ? (
-                        imageItems.length > 0 ? (
+                        gallerySlots.length > 0 ? (
                             <>
-                                <div className="grid grid-cols-3 gap-4">
-                                    <GoldFrame className="col-span-2 h-50">
-                                        <ImageBox src={imageItems[0]} animation="left" />
-                                    </GoldFrame>
-                                    <GoldFrame className="col-span-1 h-50">
-                                        <ImageBox src={imageItems[1]} animation="right" />
-                                    </GoldFrame>
+                                {gallerySlots.map((gallery, galleryIndex) => {
+                                    const imageItems = [
+                                        gallery.primaryImage,
+                                        ...gallery.siblings,
+                                    ];
 
+                                    return (
+                                        <div key={gallery._id} className="mb-10">
+                                            <div
+                                                className="
+                grid gap-2
 
+                grid-cols-2
+                auto-rows-[140px]
 
-                                </div>
+                lg:grid-cols-3
+                lg:auto-rows-[200px]
+              "
+                                            >
+                                                <GoldFrame className="col-span-2 lg:col-span-2 lg:row-span-2">
+                                                    <ImageBox src={imageItems[0]} animation="left" />
+                                                </GoldFrame>
 
-                                <div className="grid grid-cols-3 gap-4 auto-rows-[110px]">
-                                    {/* <div className="row-span-2">
-                                    </div> */}
-                                    <GoldFrame className="row-span-2">
-                                        <ImageBox src={imageItems[1]} animation="right" />
-                                    </GoldFrame>
+                                                <GoldFrame>
+                                                    <ImageBox src={imageItems[1]} animation="right" />
+                                                </GoldFrame>
 
-                                    <GoldFrame className="row-span-2">
-                                        <ImageBox src={imageItems[3]} animation="left" />
-                                    </GoldFrame>
-                                    <GoldFrame className="row-span-2 grid grid-rows-2 gap-4">
-                                        <ImageBox src={imageItems[4]} animation="right" />
-                                        <ImageBox src={imageItems[5]} animation="top" />
-                                    </GoldFrame>
-                                </div>
+                                                <GoldFrame>
+                                                    <ImageBox src={imageItems[2]} animation="top" />
+                                                </GoldFrame>
+
+                                                <GoldFrame className="col-span-2 lg:col-span-1 lg:row-span-1">
+                                                    <ImageBox src={imageItems[3]} animation="left" />
+                                                </GoldFrame>
+
+                                                <GoldFrame>
+                                                    <ImageBox src={imageItems[4]} animation="top" />
+                                                </GoldFrame>
+
+                                                <GoldFrame>
+                                                    <ImageBox src={imageItems[5]} animation="right" />
+                                                </GoldFrame>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </>
                         ) : (
                             <EmptyState text="No images found" />
                         )
+                    ) : videoItems.length > 0 ? (
+                        <>
+                            <div className="grid grid-cols-3 gap-4">
+                                <GoldFrame className="col-span-2 h-50">
+                                    <ImageBox src={videoItems[0]} animation="left" />
+                                </GoldFrame>
+
+                                <GoldFrame className="col-span-1 h-50">
+                                    <ImageBox src={videoItems[1]} animation="right" />
+                                </GoldFrame>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-4 auto-rows-[110px]">
+                                <GoldFrame className="row-span-2">
+                                    <ImageBox src={videoItems[2]} animation="top" />
+                                </GoldFrame>
+                                <GoldFrame className="row-span-2">
+                                    <ImageBox src={videoItems[3]} animation="left" />
+                                </GoldFrame>
+                                <GoldFrame className="row-span-2 grid grid-rows-2 gap-4">
+                                    <ImageBox src={videoItems[4]} animation="right" />
+                                    <ImageBox src={videoItems[5]} animation="top" />
+                                </GoldFrame>
+                            </div>
+                        </>
                     ) : (
-                        videoItems.length > 0 ? (
-                            <>
-                                <div className="grid grid-cols-3 gap-4">
-                                    <GoldFrame className="col-span-2 h-50">
-                                        <ImageBox src={videoItems[0]} animation="left" />
-                                    </GoldFrame>
-
-                                    <GoldFrame className="col-span-1 h-50">
-                                        <ImageBox src={videoItems[1]} animation="right" />
-                                    </GoldFrame>
-                                </div>
-
-                                <div className="grid grid-cols-3 gap-4 auto-rows-[110px]">
-                                    <GoldFrame className="row-span-2">
-                                        <ImageBox src={videoItems[2]} animation="top" />
-                                    </GoldFrame>
-                                    <GoldFrame className="row-span-2">
-                                        <ImageBox src={videoItems[3]} animation="left" />
-                                    </GoldFrame>
-                                    <GoldFrame className="row-span-2 grid grid-rows-2 gap-4">
-                                        <ImageBox src={videoItems[4]} animation="right" />
-                                        <ImageBox src={videoItems[5]} animation="top" />
-                                    </GoldFrame>
-                                </div>
-                            </>
-                        ) : (
-                            <EmptyState text="No videos found" />
-                        )
+                        <EmptyState text="No videos found" />
                     )}
+
 
                     <div className="flex justify-center mt-8">
                         <button
-                            className="
-      px-8 py-2
-      border border-[#C9A24D]
-      text-[#bd9133]
-      text-sm font-medium
-      rounded-full
-      transition
-      hover:bg-[#C9A24D]
-      hover:text-white
-      cursor-pointer
-    "
+                            onClick={handleViewMore}
+                            disabled={loading || currentPage >= totalPages}
+                            className="px-8 py-2 border border-[#C9A24D] text-[#bd9133] text-sm font-medium
+                                    rounded-full
+                                    transition
+                                    hover:bg-[#C9A24D]
+                                    hover:text-white
+                                    cursor-pointer
+                                        "
                         >
                             View More
                         </button>

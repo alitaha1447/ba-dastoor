@@ -13,6 +13,7 @@ const Franchise = () => {
         name: "",
         email: "",
         phone: "",
+        city: ""
     }
     const [formData, setFormData] = useState(initialState);
 
@@ -20,7 +21,11 @@ const Franchise = () => {
         setFormData(initialState);
     }
     // const [desktopBanner, setDesktopBanners] = useState([]);
-    // const [mobileBanner, setMobileBanner] = useState([])
+    // const [mobileBanner, setMobileBanner] = useState([]);
+
+    const location = useLocation();
+
+    const page = location.pathname === "/career" && "career"
 
 
     useEffect(() => {
@@ -265,6 +270,11 @@ const Franchise = () => {
                                 onChange={handleChange}
                                 className="catering-input"
                                 placeholder="Email"
+                            />
+                            <input name="city" value={formData.city} required
+                                onChange={handleChange}
+                                className="catering-input"
+                                placeholder="City"
                             />
 
                             <div className=" col-span-full flex justify-center">

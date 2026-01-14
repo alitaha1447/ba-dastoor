@@ -463,10 +463,7 @@ const Home = () => {
                     </p>
 
                     {/* Image */}
-                    <div className="
-    w-full
-    aspect-[4/3] sm:aspect-[16/9]
-    max-h-[260px] sm:max-h-[360px] lg:max-h-[420px]
+                    <div className=" w-full  aspect-[4/3] sm:aspect-[16/9]  max-h-[260px] sm:max-h-[360px] lg:max-h-[420px]
     overflow-hidden
     rounded-2xl
     shadow-lg

@@ -58,8 +58,8 @@ const Footer = () => {
                         <ul className="space-y-2.5 text-white">
                             <li onClick={goHome} className="hover:text-white transition cursor-pointer">Home</li>
                             <li onClick={() => navigate('/about')} className="hover:text-white transition cursor-pointer">About Us</li>
-                            <li className="hover:text-white transition cursor-pointer">Enquiry</li>
-                            <li className="hover:text-white transition cursor-pointer">Franchise</li>
+                            <li onClick={() => navigate('/gallery')} className="hover:text-white transition cursor-pointer">Gallery</li>
+                            <li onClick={() => navigate('/franchise')} className="hover:text-white transition cursor-pointer">Franchise</li>
                         </ul>
                     </div>
 
@@ -72,7 +72,7 @@ const Footer = () => {
                             <li className="hover:text-white transition cursor-pointer">Menu</li>
                             <li onClick={() => navigate('/catering-enquiry')} className="hover:text-white transition cursor-pointer">Catering Services</li>
                             <li onClick={() => navigate('/career')} className="hover:text-white transition cursor-pointer">Career</li>
-                            <li className="hover:text-white transition cursor-pointer">Contact Us</li>
+                            {/* <li className="hover:text-white transition cursor-pointer">Contact Us</li> */}
                         </ul>
                     </div>
 
