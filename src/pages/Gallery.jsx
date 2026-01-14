@@ -263,7 +263,7 @@ const Gallery = () => {
         try {
             setLoading(true);
             const res = await axios.get(
-                `http://localhost:3000/api/newGalleryImg/new-get-galleryImg?page=${page}`
+                `https://ba-dastoor-backend.onrender.com/api/newGalleryImg/new-get-galleryImg?page=${page}`
             );
             const newData = res?.data?.data || [];
             // console.log(newData)
