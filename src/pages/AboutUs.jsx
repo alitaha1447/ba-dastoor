@@ -188,13 +188,18 @@ const AboutUs = () => {
                                 <img
                                     src={aboutUs?.ownerImage?.url}
                                     alt="Owner"
-                                    className="w-full h-[300px] md:h-[340px] object-cover shadow-xl"
+                                    className="w-full h-[300px] md:h-[340px]  object-cover shadow-xl"
                                 />
+                            </div>
+                            <div className="absolute top-4 right-4">
+                                <h3 className="text-white text-2xl md:text-3xl font-[Playfair_Display] drop-shadow-lg">
+                                    {aboutUs?.ownerName}
+                                </h3>
                             </div>
 
                             {/* OVERLAY CARD */}
                             <div
-                                className="bg-white max-w-xs p-5 md:p-6 shadow-2xl z-20 relative mt-5 md:absolute md:left-0 md:top-[43%] md:-translate-y-1/2  "
+                                className="bg-white max-w-xs p-4 shadow-2xl z-20 relative mt-5 md:absolute md:left-0 md:top-[43%] md:-translate-y-1/2  "
                             >
                                 <h2 className="text-xl md:text-2xl  mb-3">
                                     {aboutUs?.heading}
@@ -223,9 +228,22 @@ const AboutUs = () => {
 
                         {/* Blurred Content */}
                         <div className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-white/10 p-5 md:p-6 rounded-lg">
-                            <h3 className="text-2xl md:text-3xl font-[Playfair_Display] text-white mb-3">
-                                {team?.role}
-                            </h3>
+                            <div className="flex items-center gap-3 mb-3 whitespace-nowrap overflow-hidden">
+
+                                {/* Name */}
+                                <h3 className="text-2xl md:text-3xl font-[Playfair_Display] text-white truncate">
+                                    {team?.teamName}
+                                </h3>
+
+                                {/* Separator */}
+                                <span className="text-white/70 text-xl shrink-0">|</span>
+
+                                {/* Role */}
+                                <h4 className="text-lg md:text-xl font-[Playfair_Display] text-white/80 truncate">
+                                    {team?.role}
+                                </h4>
+
+                            </div>
                             <p className="text-white text-lg leading-relaxed">
                                 {team?.description}
                             </p>
@@ -270,7 +288,7 @@ const AboutUs = () => {
 
                     {/* VIDEO BOX */}
                     <div className="w-full max-w-5xl px-4">
-                        <div className="relative overflow-hidden rounded-2xl shadow-2xl bg-black  h-[220px] sm:h-[260px] md:h-[300px] lg:h-[340px]      ">
+                        <div className="relative overflow-hidden rounded-2xl shadow-2xl   h-[220px] sm:h-[260px] md:h-[300px] lg:h-[340px]      ">
                             {/* <video
                                 className="w-full h-full object-cover"
                                 src={video1}
@@ -282,7 +300,7 @@ const AboutUs = () => {
                             // muted
 
                             /> */}
-                            <video
+                            {/* <video
                                 className=" w-full h-full object-cover"
                                 src={generalContent?.media?.url}
                                 controls
@@ -290,6 +308,11 @@ const AboutUs = () => {
                                 loop
                                 muted
                                 playsInline
+                            /> */}
+                            <img
+                                src={generalContent?.media?.url}
+                                alt="Head Chef"
+                                className="w-full h-full md:h-full object-cover"
                             />
                         </div>
                     </div>

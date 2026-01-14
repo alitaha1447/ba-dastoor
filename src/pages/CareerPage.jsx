@@ -154,23 +154,23 @@ const CareerPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setisLoading(true);
-        console.log('first')
-        // const toastId = toast.loading("Submitting...", {
-        //     style: {
-        //         backgroundColor: "#1f2937", // slate-800 (universal)
-        //         color: "#ffffff",
-        //         fontSize: "14px",
-        //         fontWeight: "500",
-        //     },
-        // });
+
+        const toastId = toast.loading("Submitting...", {
+            style: {
+                backgroundColor: "#1f2937", // slate-800 (universal)
+                color: "#ffffff",
+                fontSize: "14px",
+                fontWeight: "500",
+            },
+        });
         try {
             const payload = {
                 enquiryType: "career",
                 ...formData,
             };
-            const res = await axios.post('http://localhost:3000/api/enquirys/create-enquiry', payload);
-            console.log(res)
-            toast.update({
+            const res = await axios.post('https://ba-dastoor-backend.onrender.com/api/enquirys/create-enquiry', payload);
+
+            toast.update(toastId, {
                 render: 'Your enquiry has been submitted successfully!',
                 type: 'success',
                 isLoading: false,
@@ -187,7 +187,7 @@ const CareerPage = () => {
             // setCv(null);
         } catch (error) {
             console.log(error)
-            toast.update({
+            toast.update(toastId, {
                 render:
                     error?.response?.data?.message ||
                     "Something went wrong. Please try again.",
@@ -285,62 +285,135 @@ const CareerPage = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mb-8"                       >
                                     {
                                         openPositions.map((position) => (
-                                            <div className='group relative w-full min-h-[220px] flex items-center justify-center'
+                                            <div
+                                                key={position._id}
+                                                className="group relative w-full min-h-[220px] cursor-pointer overflow-hidden rounded-lg"
                                                 style={{
                                                     backgroundImage: `url(${jobImg})`,
                                                     backgroundSize: "contain",
                                                     backgroundRepeat: "no-repeat",
                                                     backgroundPosition: "center",
-                                                }}>
-                                                <div className='flex flex-col justify-between items-center'>
-
-                                                    <h3 className="relative bottom-5 lg:bottom-6 text-lg font-semibold text-gray-800 mb-1 text-center font-serif">
+                                                }}
+                                            >
+                                                {/* Default Content */}
+                                                <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-3">
+                                                    <h3 className="relative bottom-11 text-lg font-semibold text-gray-800 font-serif">
                                                         {position.jobTitle}
                                                     </h3>
-                                                    {/* <p className="text-sm text-gray-600 mb-3 text-center font-serif line-clamp-3 px-6">
-                                                        {position.description}
-                                                    </p> */}
-                                                    <div className="">
-                                                        {/* <p className=" font-semibold text-gray-800 mb-1 text-center font-serif">
-                                                            {position.description}
-                                                        </p> */}
 
-                                                        <div className="relative bottom-2 lg:bottom-2  flex flex-wrap justify-center gap-2 mt-3 mb-3">
-                                                            <div className="flex items-center text-gray-600">
-                                                                <svg className="w-3.5 h-3.5 mr-1 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path
-                                                                        fillRule="evenodd"
-                                                                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                                                                        clipRule="evenodd"
-                                                                    />
-                                                                </svg>
-                                                                <span className="text-xs">{position.location}</span>
-                                                            </div>
-
-                                                            <div className="flex items-center text-gray-600">
-                                                                <svg className="w-3.5 h-3.5 mr-1 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z" />
-                                                                </svg>
-                                                                <span className="text-xs">{position.experience}</span>
-                                                            </div>
+                                                    <div className="relative bottom-0 flex flex-wrap justify-center gap-2">
+                                                        <div className="flex items-center text-gray-600">
+                                                            <svg className="w-3.5 h-3.5 mr-1 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path
+                                                                    fillRule="evenodd"
+                                                                    d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                                                                    clipRule="evenodd"
+                                                                />
+                                                            </svg>
+                                                            <span className="text-sm">{position.location}</span>
                                                         </div>
 
-
-                                                        <button
-                                                            onClick={() => handlePositionClick(position)}
-                                                            className="w-full border border-[#C9A24D] text-[#bd9133]
-                                                 font-medium
-                                                 py-1 px-0
-                                                 rounded-md
-                                                 
-                                              hover:bg-[#C9A24D] hover:text-white transition-colors duration-300
-                                                 "
-                                                        >
-                                                            Apply Now
-                                                        </button>
+                                                        <div className="flex items-center text-gray-600">
+                                                            <svg className="w-3.5 h-3.5 mr-1 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051l4.75-2.05 4.75 2.05 2.644-1.131a1 1 0 000-1.838l-7-3z" />
+                                                            </svg>
+                                                            <span className="text-xs">{position.experience}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
+
+                                                {/* 🔥 Hover Slide-Up Modal */}
+                                                <div
+                                                    className="
+          absolute inset-0 z-20
+          bg-black/10 backdrop-blur-sm
+          flex flex-col justify-between
+          px-4 py-4
+          translate-y-full opacity-0
+          group-hover:translate-y-0 group-hover:opacity-100
+          transition-all duration-300 ease-out
+        "
+                                                >
+                                                    <div>
+                                                        <h4 className="text-md font-semibold text-[black] mb-2 text-center">
+                                                            Job Description
+                                                        </h4>
+                                                        <p className="text-xs text-[#8B4513] line-clamp-5 text-center">
+                                                            {position.description}
+                                                        </p>
+                                                    </div>
+
+                                                    <button
+                                                        onClick={() => handlePositionClick(position)}
+                                                        className="
+            mt-4 w-full
+            border border-[#C9A24D]
+            text-[#C9A24D]
+            text-sm font-medium
+            py-1.5 rounded-md
+            hover:bg-[#C9A24D]
+            hover:text-black
+            transition-colors duration-200
+          "
+                                                    >
+                                                        Apply Now
+                                                    </button>
+                                                </div>
                                             </div>
+                                            // ------------------------------------
+                                            // <div className='group relative w-full min-h-[220px] flex items-center justify-center cursor-pointer'
+                                            //     style={{
+                                            //         backgroundImage: `url(${jobImg})`,
+                                            //         backgroundSize: "contain",
+                                            //         backgroundRepeat: "no-repeat",
+                                            //         backgroundPosition: "center",
+                                            //     }}>
+                                            //     <div className='flex flex-col justify-between items-center'>
+
+                                            //         <h3 className="relative bottom-5 lg:bottom-6 text-lg font-semibold text-gray-800 mb-1 text-center font-serif">
+                                            //             {position.jobTitle}
+                                            //         </h3>
+
+                                            //         <div className="">
+
+
+                                            //             <div className="relative bottom-2 lg:bottom-2  flex flex-wrap justify-center gap-2 mt-3 mb-3">
+                                            //                 <div className="flex items-center text-gray-600">
+                                            //                     <svg className="w-3.5 h-3.5 mr-1 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
+                                            //                         <path
+                                            //                             fillRule="evenodd"
+                                            //                             d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                                            //                             clipRule="evenodd"
+                                            //                         />
+                                            //                     </svg>
+                                            //                     <span className="text-sm">{position.location}</span>
+                                            //                 </div>
+
+                                            //                 <div className="flex items-center text-gray-600">
+                                            //                     <svg className="w-3.5 h-3.5 mr-1 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
+                                            //                         <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z" />
+                                            //                     </svg>
+                                            //                     <span className="text-xs">{position.experience}</span>
+                                            //                 </div>
+                                            //             </div>
+
+
+                                            //             <button
+                                            //                 onClick={() => handlePositionClick(position)}
+                                            //                 className="w-full border border-[#C9A24D] text-[#bd9133]
+                                            //      font-medium
+                                            //      py-1 px-0
+                                            //      rounded-md
+
+                                            //   hover:bg-[#C9A24D] hover:text-white transition-colors duration-300
+                                            //      "
+                                            //             >
+                                            //                 Apply Now
+                                            //             </button>
+                                            //         </div>
+                                            //     </div>
+                                            // </div>
+                                            // -----------------------
                                             //                                         <div
                                             //                                             key={position._id}
                                             //                                             className=" group relative

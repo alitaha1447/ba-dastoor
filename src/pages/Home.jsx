@@ -26,6 +26,7 @@ const Home = () => {
     // const [desktopBanner, setDesktopBanners] = useState([])
     // const [mobileBanner, setMobileBanner] = useState([])
     const [content, setContent] = useState({})
+    const [mainContent, setMainContent] = useState({})
 
     const [menuLists, setMenuLists] = useState([])
 
@@ -161,6 +162,18 @@ const Home = () => {
 
     //     fetchBanners();
     // }, [page]);
+
+    const fetchMainContent = async () => {
+        try {
+            const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/content/get-content`);
+            setMainContent(res?.data?.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(() => { fetchMainContent() }, [])
+
+    console.log('==>', mainContent)
 
     useEffect(() => {
         Promise.all([
@@ -487,13 +500,10 @@ const Home = () => {
                     <div className="relative z-10 flex items-center justify-center h-full px-4">
                         <div className="text-center max-w-4xl mx-auto">
                             <h1 style={{ fontFamily: "Cinzel" }} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl  text-white mb-4">
-                                Hand Crafted Menu
+                                {mainContent?.heading}
                             </h1>
                             <p style={{ fontFamily: "Cinzel" }} className="max-w-3xl mx-auto  text-sm sm:text-base md:text-lg lg:text-xl text-white/90">
-                                Indulge in a culinary journey where every meal is a masterpiece,
-                                meticulously crafted by our expert chefs. Experience authentic flavors,
-                                exceptional taste, and a personalized dining experience that caters to
-                                your every need.
+                                {mainContent?.paragraph}
                             </p>
                         </div>
                     </div>

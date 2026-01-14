@@ -130,7 +130,7 @@ const Franchise = () => {
                 ...formData,
             };
 
-            const res = await axios.post(`http://localhost:3000/api/enquirys/create-enquiry`, payload);
+            const res = await axios.post(`https://ba-dastoor-backend.onrender.com/api/enquirys/create-enquiry`, payload);
             // console.log(res)
             // alert("Your enquiry has been submitted successfully!");
             toast.update(toastId, {
@@ -267,12 +267,13 @@ const Franchise = () => {
                                 placeholder="Email"
                             />
 
-                            <div className=" flex justify-center items-center">
+                            <div className=" col-span-full flex justify-center">
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className={`w-full border-2 text-sm text-[white] border-white hover:bg-white hover:text-black transition px-8 py-2 rounded-full flex items-center justify-center gap-2  ${isLoading ? "opacity-70 cursor-not-allowed" : "cursor-pointer"
-                                        }`}
+                                    className={`border-2 text-sm text-white border-white hover:bg-white hover:text-black transition px-8 py-2 rounded-full inline-flex items-center gap-2
+            ${isLoading ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}
+        `}
                                 >
                                     {isLoading ? (
                                         <>
