@@ -191,14 +191,14 @@ const AboutUs = () => {
         {/* TWO SECTIONS */}
         <div className="flex flex-col md:flex-row gap-10">
           {/* 🌸 PINK SECTION — 60% */}
-          <div className="relative md:w-3/5 bg-white shadow-2xl rounded-2xl p-6 md:p-8 overflow-hidden  md:h-[380px]">
+          <div className=" md:w-3/5 bg-white shadow-2xl rounded-2xl p-6 md:p-8 overflow-hidden  md:h-[380px]">
             <div className="relative flex flex-col md:flex-row md:items-center">
               {/* IMAGE */}
-              <div className="w-full md:w-[70%] md:ml-auto">
+              <div className="relative w-full md:w-[70%] md:ml-auto">
                 <img
                   src={aboutUs?.ownerImage?.url}
                   alt="Owner"
-                  className="w-full h-[300px] md:h-[340px]  object-cover shadow-xl"
+                  className="w-full h-[300px] md:h-[540px]  object-cover shadow-xl"
                 />
               </div>
               {/* <div className="absolute top-4 right-4">
@@ -206,7 +206,7 @@ const AboutUs = () => {
                                     {aboutUs?.ownerName}
                                 </h3>
                             </div> */}
-              <div className="absolute top-4 right-4">
+              {/* <div className="absolute top-4 right-4">
                 <div
                   className="
         px-4 py-2
@@ -220,15 +220,33 @@ const AboutUs = () => {
                     {aboutUs?.ownerName}
                   </h3>
                 </div>
-              </div>
+              </div> */}
 
               {/* OVERLAY CARD */}
-              <div className="bg-white max-w-xs p-4 shadow-2xl z-20 relative mt-5 md:absolute md:left-0 md:top-[43%] md:-translate-y-1/2  ">
-                <h2 className="text-xl md:text-2xl  mb-3">
+              <div className="bg-[#000000d1] rounded-lg max-w-xs p-4 shadow-2xl z-20 relative mt-5 md:absolute md:left-0 md:top-[43%] md:-translate-y-3/4  ">
+                <div
+                  className=" px-4 py-2
+        rounded-lg
+        bg-black/50
+        backdrop-blur-md
+        shadow-lg"
+                >
+                  <h3 className="text-white text-2xl md:text-3xl font-[Playfair_Display]">
+                    {aboutUs?.ownerName}
+                  </h3>
+                </div>
+                <h2
+                  class="text-xl md:text-xl  mb-3"
+                  style={{ color: "#faffce" }}
+                >
                   {aboutUs?.heading}
                 </h2>
-
-                <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+                {/* class="text-gray-600 leading-relaxed text-sm md:text-base"
+                style=" color: #d7cfcf; */}
+                <p
+                  className=" leading-relaxed text-sm md:text-base"
+                  style={{ color: "#d7cfcf" }}
+                >
                   {aboutUs?.description}
                 </p>
               </div>

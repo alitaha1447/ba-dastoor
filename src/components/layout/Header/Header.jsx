@@ -13,6 +13,9 @@ import {
   Camera,
   MessageCircle,
   MapPin,
+  Pizza,
+  Store,
+  HandPlatter,
 } from "lucide-react";
 
 import axios from "axios";
@@ -38,7 +41,8 @@ const Header = () => {
     "About Us": User,
     Menu: Compass,
     Gallery: Camera,
-    "Catering Enquiry": MessageCircle,
+    Catering: HandPlatter,
+    Franchise: Store,
     Career: Heart,
   };
 
@@ -579,9 +583,16 @@ const Header = () => {
                         <p>{branch?.contact}</p>
                       </div>
 
-                      <span className="flex flex-row items-center gap-2">
+                      <span
+                        onClick={() =>
+                          setOpenMapBranchId(
+                            openMapBranchId === branch._id ? null : branch._id
+                          )
+                        }
+                        className="flex flex-row items-center gap-2 border border-gray-200 rounded-sm px-3 py-1 cursor-pointer"
+                      >
                         Location
-                        <MapPin
+                        {/* <MapPin
                           style={{ cursor: "pointer" }}
                           className={`transition-transform duration-300 ${
                             openMapBranchId === branch._id
@@ -594,7 +605,7 @@ const Header = () => {
                               openMapBranchId === branch._id ? null : branch._id
                             )
                           }
-                        />
+                        /> */}
                       </span>
                     </div>
                     {/* {openMap && (

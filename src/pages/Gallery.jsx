@@ -107,18 +107,18 @@ const Gallery = () => {
     const videoRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
 
-    const handleMouseEnter = () => {
-      if (!videoRef.current) return;
-      videoRef.current.play();
-      setIsPlaying(true);
-    };
+    // const handleMouseEnter = () => {
+    //   if (!videoRef.current) return;
+    //   videoRef.current.play();
+    //   setIsPlaying(true);
+    // };
 
-    const handleMouseLeave = () => {
-      if (!videoRef.current) return;
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-      setIsPlaying(false);
-    };
+    // const handleMouseLeave = () => {
+    //   if (!videoRef.current) return;
+    //   videoRef.current.pause();
+    //   videoRef.current.currentTime = 0;
+    //   setIsPlaying(false);
+    // };
 
     const animationClass = {
       left: "animate-slideInLeft",
@@ -127,9 +127,19 @@ const Gallery = () => {
     }[animation];
 
     // const isImage = src.mediaType !== "video";
+    // const handleClick = () => {
+    //   if (mediaType !== "image") return; // 🔥 image only zoom
+    //   setZoomMedia({ url: src.url, type: "image" });
+    // };
+
     const handleClick = () => {
-      if (mediaType !== "image") return; // 🔥 image only zoom
-      setZoomMedia({ url: src.url, type: "image" });
+      if (mediaType === "image") {
+        setZoomMedia({ url: src.url, type: "image" });
+      }
+
+      if (mediaType === "video") {
+        setZoomMedia({ url: src.url, type: "video" });
+      }
     };
 
     return (
@@ -143,7 +153,9 @@ const Gallery = () => {
                     <div className="absolute inset-0 z-10 bg-gray-100 animate-pulse" />
                 )} */}
         {src.mediaType === "video" ? (
-          <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+          <div
+          //  onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
+          >
             <video
               ref={videoRef}
               src={src.url}
@@ -449,9 +461,9 @@ const Gallery = () => {
 
             {/* <div className="absolute inset-0 bg-black/25" /> */}
 
-            <div className="absolute inset-0 flex items-center justify-center">
-              <h1 className="text-white text-2xl font-semibold">Catering</h1>
-            </div>
+            {/* <div className="absolute inset-0 flex items-center justify-center">
+              <h1 className="text-white text-2xl font-semibold">Gallery</h1>
+            </div> */}
           </div>
         )}
       </div>
@@ -470,11 +482,19 @@ const Gallery = () => {
 
             {/* <div className="absolute inset-0 bg-black/25" /> */}
 
-            <div className="absolute bottom-4 w-full text-center">
+            {/* <div className="absolute bottom-4 w-full text-center">
               <h1 className="text-white text-2xl font-semibold">Catering</h1>
-            </div>
+            </div> */}
           </div>
         )}
+      </div>
+      <div className="mt-4 mb-2   flex justify-center flex-col text-center">
+        <p className="font-serif text-[#C9A24D] text-2xl sm:text-4xl">
+          Celebrations, the Ba-Dastoor Way
+        </p>
+        <p className="font-serif text-[#C9A24D] text-xl sm:text-xl">
+          Legacy in Every Frame
+        </p>
       </div>
       <div className="relative max-w-full overflow-hidden">
         <div
@@ -548,7 +568,7 @@ const Gallery = () => {
           </div>
         </div>
 
-        <section className="relative px-4 py-12 max-w-6xl mx-auto">
+        <section className="relative px-4 py-6 max-w-6xl mx-auto">
           {/* ================= IMAGE TAB ================= */}
           {activeTab === "image" &&
             (imageLoading ? (
