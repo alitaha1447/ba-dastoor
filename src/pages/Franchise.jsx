@@ -25,7 +25,8 @@ const Franchise = () => {
 
     const location = useLocation();
 
-    const page = location.pathname === "/career" && "career"
+    const page = location.pathname === "/franchise" && "franchise"
+    const [loaded, setLoaded] = useState(false);
 
 
     useEffect(() => {
@@ -47,13 +48,13 @@ const Franchise = () => {
     // useEffect(() => { fetchMobileBanners() }, []);
 
     const { data: desktopBanner = [] } = useQuery({
-        queryKey: ["desktop-banners", 'home'],
-        queryFn: () => fetchDesktopBanners('home'),
+        queryKey: ["desktop-banners", page],
+        queryFn: () => fetchDesktopBanners(page),
     });
 
     const { data: mobileBanner = [] } = useQuery({
-        queryKey: ["mobile-banners", 'home'],
-        queryFn: () => fetchMobileBanners('home'),
+        queryKey: ["mobile-banners", page],
+        queryFn: () => fetchMobileBanners(page),
     });
 
 
@@ -166,49 +167,49 @@ const Franchise = () => {
 
     return (
         <>
-            <div className='relative hidden lg:block h-[40vh] w-full overflow-hidden'>
-                {imageBanners.map((item, index) => (
-                    <div
-                        key={item?._id || index}
-                        className={`absolute inset-0 transition-opacity duration-700
-            ${index === current ? "opacity-100" : "opacity-0"}`}
-                        style={{
-                            backgroundImage: `url(${item?.desktop?.url})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                        }}
-                    >
-                        <div className="absolute inset-0 bg-black/25" />
-                        <div className="relative z-10 h-full flex justify-center items-center p-4">
-                            <h1 className="text-white text-2xl font-semibold">
-                                Franchise
-                            </h1>
-                        </div>
-                    </div>
-                ))}
+            <div className="relative hidden lg:block h-[40vh] w-full overflow-hidden">
+                {imageBanners?.length > 0 && imageBanners[current] && (
+                    <div className="absolute inset-0">
+                        <img
+                            src={imageBanners[current].desktop.url}
+                            onLoad={() => setLoaded(true)}
+                            className={`w-full h-full object-cover transition-all duration-700
+    ${loaded ? "opacity-100 blur-0" : "opacity-0 blur-md"}`}
+                            loading="eager"
+                        />
 
-            </div>
-            {/* MOBILE BANNER */}
-            <div className="relative block lg:hidden h-[180px] w-full overflow-hidden">
-                {imageMobileBanners.map((item, index) => (
-                    <div
-                        key={item?._id || index}
-                        className={`absolute inset-0 transition-opacity duration-700
-            ${index === current ? "opacity-100" : "opacity-0"}`}
-                        style={{
-                            backgroundImage: `url(${item?.mobile?.url})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                        }}
-                    >
-                        <div className="absolute inset-0 bg-black/25" />
-                        <div className="relative z-10 h-full flex flex-col justify-end items-center p-4">
+                        {/* <div className="absolute inset-0 bg-black/25" /> */}
+
+                        <div className="absolute inset-0 flex items-center justify-center">
                             <h1 className="text-white text-2xl font-semibold">
-                                Franchise
+                                Catering
                             </h1>
                         </div>
                     </div>
-                ))}
+                )}
+            </div>
+
+            <div className="relative block lg:hidden h-[180px] w-full overflow-hidden">
+                {imageMobileBanners?.length > 0 && imageMobileBanners[current] && (
+                    <div className="absolute inset-0">
+                        <img
+                            src={imageMobileBanners[current].mobile.url}
+                            onLoad={() => setLoaded(true)}
+                            alt="Catering Banner"
+                            className={`w-full h-full object-cover transition-all duration-700
+    ${loaded ? "opacity-100 blur-0" : "opacity-0 blur-md"}`}
+                            loading="eager"
+                        />
+
+                        {/* <div className="absolute inset-0 bg-black/25" /> */}
+
+                        <div className="absolute bottom-4 w-full text-center">
+                            <h1 className="text-white text-2xl font-semibold">
+                                Catering
+                            </h1>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/*  */}
