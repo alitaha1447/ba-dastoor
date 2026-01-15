@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import axios from "axios";
 import Logo2 from "../assets/icons/logo-2.svg?react";
 import video1 from "../assets/video/taj.mp4";
 import chef from "../assets/images/chef.jpg";
+import { useInView } from "react-intersection-observer";
 
 const AboutUs = () => {
   const location = useLocation();
@@ -23,6 +24,23 @@ const AboutUs = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  //   ---------ANIMATION EFFECT------------
+  const { ref: headingRef, inView: headingInView } = useInView({
+    threshold: 0.1, // lower threshold
+    rootMargin: "-80px 0px", // 👈 KEY FIX
+    triggerOnce: false,
+  });
+
+  const { ref: leftCardRef, inView: leftCardInView } = useInView({
+    threshold: 0.3,
+    triggerOnce: false,
+  });
+
+  const { ref: rightCardRef, inView: rightCardInView } = useInView({
+    threshold: 0.2,
+    triggerOnce: false,
+  });
 
   const fetchDesktopBanners = async () => {
     const res = await axios.get(
@@ -65,14 +83,10 @@ const AboutUs = () => {
   }, []);
 
   const fetchTeam = async () => {
-    console.log("..............");
     try {
       const res = await axios.get(
         `https://ba-dastoor-backend.onrender.com/api/team/get-team`
       );
-      console.log(res);
-      console.log(res?.data?.data);
-      console.log("..............");
       setTeam(res?.data?.data);
     } catch (error) {
       console.log(error);
@@ -83,7 +97,6 @@ const AboutUs = () => {
     fetchTeam();
   }, []);
 
-  console.log(team);
   const fetchGeneralContent = async (p) => {
     try {
       const res = await axios.get(
@@ -106,11 +119,10 @@ const AboutUs = () => {
   const hasDesktopImages =
     Array.isArray(imageBanners) && imageBanners.length > 0;
 
-  console.log("general content --> ", generalContent);
   return (
     <div className="w-full overflow-hidden bg-white">
       {/* ================= HERO ================= */}
-      <section className="relative h-[85vh] w-screen">
+      <section className="relative h-[100vh] w-screen">
         {/* <img
                     src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb"
                     alt="Luxury Hotel"
@@ -179,7 +191,14 @@ const AboutUs = () => {
       {/* ================= HERITAGE ================= */}
       <section className="relative max-w-7xl mx-auto px-6 py-12 bg-white">
         {/* Heading */}
-        <div className="relative z-10 max-w-3xl mx-auto mb-16 text-center">
+        <div
+          ref={headingRef}
+          className={`relative z-10 max-w-3xl mx-auto mb-16 text-center  transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]  ${
+            headingInView
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 -translate-y-10"
+          }`}
+        >
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif text-[#2E2A27] mb-6">
             {aboutUs?.aboutUsHeading}
           </h1>
@@ -191,7 +210,14 @@ const AboutUs = () => {
         {/* TWO SECTIONS */}
         <div className="flex flex-col md:flex-row gap-10">
           {/* 🌸 PINK SECTION — 60% */}
-          <div className=" md:w-3/5 bg-white shadow-2xl rounded-2xl p-6 md:p-8 overflow-hidden  md:h-[380px]">
+          <div
+            ref={leftCardRef}
+            className={` md:w-3/5 bg-white shadow-2xl rounded-2xl p-6 md:p-8 overflow-hidden md:h-[380px]   transition-all duration-700 ease-out  ${
+              leftCardInView
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-14"
+            }`}
+          >
             <div className="relative flex flex-col md:flex-row md:items-center">
               {/* IMAGE */}
               <div className="relative w-full md:w-[70%] md:ml-auto">
@@ -254,7 +280,14 @@ const AboutUs = () => {
           </div>
 
           {/* 🔴 RED SECTION — 40% : CHEF SPOTLIGHT */}
-          <div className="md:w-2/5 relative overflow-hidden rounded-xl  p-6 md:p-8  shadow-2xl md:h-[380px]">
+          <div
+            ref={rightCardRef}
+            className={`md:w-2/5 relative overflow-hidden rounded-xl  p-6 md:p-8  shadow-2xl md:h-[380px] transition-all duration-700 ease-out ${
+              rightCardInView
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-14"
+            }`}
+          >
             {/* Chef Image */}
             <img
               src={team?.teamImage?.url}

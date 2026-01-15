@@ -3,7 +3,6 @@ import Logo from "../assets/icons/Ba-Dastoor_Logo.svg?react";
 import Logo2 from "../assets/icons/logo-2.svg?react";
 import { SquareArrowOutUpRight } from "lucide-react";
 
-import careerpageBG from "../assets/images/careerpageBG.jpg";
 import careerBg from "../assets/images/careerBg.jpeg";
 import jobImg from "../assets/images/jobImg.jpeg";
 
@@ -11,6 +10,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useLocation } from "react-router";
 import { useQuery } from "@tanstack/react-query";
+import JobApplication from "../components/customModals/JobApplication";
 import {
   fetchDesktopBanners,
   fetchMobileBanners,
@@ -34,6 +34,7 @@ const CareerPage = () => {
   // const [desktopBanner, setDesktopBanners] = useState([]);
   // const [mobileBanner, setMobileBanner] = useState([])
   const [activeJobId, setActiveJobId] = useState(null);
+  const [openJobModal, setOpenJobModal] = useState(false);
 
   const location = useLocation();
 
@@ -210,6 +211,17 @@ const CareerPage = () => {
     }
   };
 
+  const handleOpenModal = () => {
+    setOpenJobModal(true);
+  };
+
+  // const handleCloseModal = (galleryImg) => {
+  //   // console.log(galleryImg)
+  //   setSelectedImg(galleryImg);
+  //   setShowGalleryModal(true);
+  //   setModalMode("edit");
+  // };
+
   return (
     <>
       <div className="relative hidden lg:block h-[40vh] w-full overflow-hidden">
@@ -246,9 +258,9 @@ const CareerPage = () => {
 
             {/* <div className="absolute inset-0 bg-black/25" /> */}
 
-            <div className="absolute bottom-4 w-full text-center">
+            {/* <div className="absolute bottom-4 w-full text-center">
               <h1 className="text-white text-2xl font-semibold">Catering</h1>
-            </div>
+            </div> */}
           </div>
         )}
       </div>
@@ -334,7 +346,8 @@ const CareerPage = () => {
                         {/* Apply Button */}
 
                         <button
-                          onClick={() => handlePositionClick(position)}
+                          // onClick={() => handlePositionClick(position)}
+                          onClick={() => handleOpenModal(true)}
                           className="relative top-2 mt-6 px-8 border border-[#C9A24D] text-[#C9A24D] text-sm font-medium py-1.5 rounded-md hover:bg-[#C9A24D] hover:text-black transition-colors duration-200"
                         >
                           Apply Now
@@ -415,7 +428,8 @@ const CareerPage = () => {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                       <button
-                        onClick={() => setShowForm(true)}
+                        // onClick={() => setShowForm(true)}
+                        onClick={() => handleOpenModal(true)}
                         className=" border border-[#C9A24D] text-[#bd9133] py-3 px-8 rounded-lg hover:bg-[#C9A24D] hover:text-white transition-colors duration-300 text-lg "
                       >
                         Submit General Application
@@ -511,6 +525,15 @@ const CareerPage = () => {
           )}
         </div>
       </section>
+      {/* JOB MODAL */}
+      {openJobModal && (
+        <JobApplication
+          isModalOpen={openJobModal}
+          closeModal={() => setOpenJobModal(false)}
+          // selectedImg={selectedImg}
+          // refreshList={fetchGalleyImg}
+        />
+      )}
     </>
   );
 };

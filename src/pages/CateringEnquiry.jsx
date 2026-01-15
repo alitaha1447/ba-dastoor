@@ -188,9 +188,9 @@ const CateringEnquiry = () => {
 
             {/* <div className="absolute inset-0 bg-black/25" /> */}
 
-            <div className="absolute inset-0 flex items-center justify-center">
+            {/* <div className="absolute inset-0 flex items-center justify-center">
               <h1 className="text-white text-2xl font-semibold">Catering</h1>
-            </div>
+            </div> */}
           </div>
         )}
       </div>
@@ -209,9 +209,9 @@ const CateringEnquiry = () => {
 
             {/* <div className="absolute inset-0 bg-black/25" /> */}
 
-            <div className="absolute bottom-4 w-full text-center">
+            {/* <div className="absolute bottom-4 w-full text-center">
               <h1 className="text-white text-2xl font-semibold">Catering</h1>
-            </div>
+            </div> */}
           </div>
         )}
       </div>
@@ -271,11 +271,11 @@ const CateringEnquiry = () => {
             </div>
 
             {/* Title */}
-            {/* <div className="flex justify-center mb-8">
+            <div className="flex justify-center mb-8">
               <span className="bg-[#3e3e3e] text-[#FFD900] px-4 py-2 rounded-md text-xs tracking-widest">
                 CATERING ENQUIRY
               </span>
-            </div> */}
+            </div>
 
             {/* Form */}
             <form

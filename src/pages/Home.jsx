@@ -59,11 +59,11 @@ const Home = () => {
   //     rootMargin: "0px 0px -20% 0px",
   //   });
 
+  //   ---------ANIMATION EFFECT------------
   const { ref: logoRef, inView: logoInView } = useInView({
     threshold: 0.4,
     triggerOnce: false,
   });
-
   const { ref: headingRef, inView: headingInView } = useInView({
     threshold: 0.4,
     triggerOnce: false,
@@ -487,7 +487,7 @@ const Home = () => {
             className={`text-2xl sm:text-3xl md:text-4xl font-serif tracking-wide text-[#2E2A27] mb-6  transition-all duration-700 ease-out ${
               headingInView
                 ? "opacity-100 translate-x-0"
-                : "opacity-0 -translate-x-24"
+                : "opacity-0 -translate-x-12"
             }`}
           >
             {content?.heading}
