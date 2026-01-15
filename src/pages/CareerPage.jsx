@@ -348,7 +348,7 @@ const CareerPage = () => {
                         <button
                           // onClick={() => handlePositionClick(position)}
                           onClick={() => handleOpenModal(true)}
-                          className="relative top-2 mt-6 px-8 border border-[#C9A24D] text-[#C9A24D] text-sm font-medium py-1.5 rounded-md hover:bg-[#C9A24D] hover:text-black transition-colors duration-200"
+                          className="relative top-2 mt-6 px-8 border border-[#C9A24D] text-[#C9A24D] text-sm font-medium py-1.5 rounded-md hover:bg-[#C9A24D] hover:text-black transition-colors duration-200 cursor-pointer"
                         >
                           Apply Now
                         </button>
@@ -363,7 +363,7 @@ const CareerPage = () => {
                             className="mt-2 relative top-2
       flex items-center gap-1
       text-xs text-[#bd9133]
-      hover:underline"
+      hover:underline cursor-pointer"
                           >
                             <span>View More</span>
                             <SquareArrowOutUpRight size={12} />
@@ -430,7 +430,7 @@ const CareerPage = () => {
                       <button
                         // onClick={() => setShowForm(true)}
                         onClick={() => handleOpenModal(true)}
-                        className=" border border-[#C9A24D] text-[#bd9133] py-3 px-8 rounded-lg hover:bg-[#C9A24D] hover:text-white transition-colors duration-300 text-lg "
+                        className=" border border-[#C9A24D] text-[#bd9133] py-3 px-8 rounded-lg hover:bg-[#C9A24D] hover:text-white transition-colors duration-300 text-lg cursor-pointer"
                       >
                         Submit General Application
                       </button>

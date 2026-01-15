@@ -538,7 +538,7 @@ const Gallery = () => {
                 className={`relative z-10 flex-1 px-4 py-1.5
                                         text-sm rounded-full
                                         transition-colors duration-200
-                                        text-center whitespace-nowrap
+                                        text-center whitespace-nowrap  cursor-pointer
                                         ${
                                           activeTab === "image"
                                             ? "text-[#C9A24D] font-semibold ring-1 ring-[#C9A24D]"
@@ -555,7 +555,7 @@ const Gallery = () => {
                 className={`relative z-10 flex-1 px-4 py-1.5
                                         text-sm rounded-full
                                         transition-colors duration-200
-                                        text-center whitespace-nowrap
+                                        text-center whitespace-nowrap  cursor-pointer
                                         ${
                                           activeTab === "video"
                                             ? "text-[#C9A24D] font-semibold ring-1 ring-[#C9A24D]"

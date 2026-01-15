@@ -461,7 +461,7 @@ const Home = () => {
       </div>
 
       {/* Section-2 */}
-      <section className="w-full bg-[white] py-10 sm:py-12">
+      <section className="w-full bg-[white] py-10 sm:py-12 overflow-hidden">
         <div className="max-w-6xl mx-auto px-4 text-center">
           {/* Logo */}
           <div

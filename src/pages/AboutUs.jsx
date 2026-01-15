@@ -31,6 +31,12 @@ const AboutUs = () => {
     rootMargin: "-80px 0px", // 👈 KEY FIX
     triggerOnce: false,
   });
+  const { ref: headingSecondaryRef, inView: headingSecondaryInView } =
+    useInView({
+      threshold: 0.1, // lower threshold
+      rootMargin: "-80px 0px", // 👈 KEY FIX
+      triggerOnce: false,
+    });
 
   const { ref: leftCardRef, inView: leftCardInView } = useInView({
     threshold: 0.3,
@@ -189,7 +195,7 @@ const AboutUs = () => {
       </section>
 
       {/* ================= HERITAGE ================= */}
-      <section className="relative max-w-7xl mx-auto px-6 py-12 bg-white">
+      <section className="relative max-w-7xl mx-auto px-6 py-12 bg-white overflow-hidden">
         {/* Heading */}
         <div
           ref={headingRef}
@@ -333,7 +339,14 @@ const AboutUs = () => {
         {/* CONTENT */}
         <div className="relative z-10 w-full flex flex-col items-center">
           {/* HEADING */}
-          <div className="max-w-3xl mx-auto mb-14 text-center px-4">
+          <div
+            ref={headingSecondaryRef}
+            className={`max-w-3xl mx-auto mb-14 text-center px-4 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              headingSecondaryInView
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 -translate-y-10"
+            }`}
+          >
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif tracking-wide text-[white] mb-6">
               {generalContent?.heading}
             </h1>

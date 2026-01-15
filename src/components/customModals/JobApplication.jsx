@@ -63,7 +63,7 @@ const JobApplication = ({ closeModal, isModalOpen }) => {
 
   return (
     <div className="fixed inset-0 bg-[#5f493a]/50 bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="relative  bg-[#5f493a] rounded-2xl w-full max-w-2xl max-h-[70vh] overflow-y-auto scrollbar-thin-custom">
+      <div className="relative  bg-[#52453f] rounded-2xl w-full max-w-2xl max-h-[70vh] overflow-y-auto scrollbar-thin-custom">
         <button
           type="button"
           onClick={closeModal}
@@ -71,19 +71,16 @@ const JobApplication = ({ closeModal, isModalOpen }) => {
     absolute top-4 right-4
     w-10 h-10
     flex items-center justify-center
-    rounded-full
-    bg-amber-200
-    text-gray-700
-    hover:bg-amber-300
-    hover:scale-105
+   
     transition
     z-10
   "
         >
-          <X className="w-5 h-5" />
+          <X color="#f1e6db" className="w-5 h-5" />
         </button>
 
-        <div className="bg-[#7c5647] py-14 px-4">
+        <div className="bg-[] py-14 px-4">
+          {/* <div className="bg-[#52453f] py-14 px-4"> */}
           <div className="max-w-3xl mx-auto text-center">
             <div className="flex justify-center mb-6">
               <Logo className="h-30 w-auto" />
