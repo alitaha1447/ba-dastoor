@@ -198,7 +198,7 @@ const AboutUs = () => {
                 <img
                   src={aboutUs?.ownerImage?.url}
                   alt="Owner"
-                  className="w-full h-[300px] md:h-[540px]  object-cover shadow-xl"
+                  className="w-full h-[400px] md:h-[540px]  object-cover shadow-xl"
                 />
               </div>
               {/* <div className="absolute top-4 right-4">
