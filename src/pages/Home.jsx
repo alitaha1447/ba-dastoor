@@ -48,15 +48,33 @@ const Home = () => {
     queryFn: () => fetchMobileBanners(page),
   });
 
-  const [refRight, inViewRight] = useInView({
+  //   const [refRight, inViewRight] = useInView({
+  //     triggerOnce: false,
+  //     threshold: 0.5,
+  //     rootMargin: "0px 0px -20% 0px",
+  //   });
+  //   const [refLeft, inViewLeft] = useInView({
+  //     triggerOnce: false,
+  //     threshold: 0.5,
+  //     rootMargin: "0px 0px -20% 0px",
+  //   });
+
+  const { ref: logoRef, inView: logoInView } = useInView({
+    threshold: 0.4,
     triggerOnce: false,
-    threshold: 0.5,
-    rootMargin: "0px 0px -20% 0px",
   });
-  const [refLeft, inViewLeft] = useInView({
+
+  const { ref: headingRef, inView: headingInView } = useInView({
+    threshold: 0.4,
     triggerOnce: false,
-    threshold: 0.5,
-    rootMargin: "0px 0px -20% 0px",
+  });
+  const { ref: descRef, inView: descInView } = useInView({
+    threshold: 0.4,
+    triggerOnce: false,
+  });
+  const { ref: imageRef, inView: imageInView } = useInView({
+    threshold: 0.3,
+    triggerOnce: false,
   });
 
   useEffect(() => {
@@ -429,7 +447,7 @@ const Home = () => {
         {/* <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" /> */}
 
         {/* Call to Action Button */}
-        <div className="relative h-full flex items-end justify-center pb-10 sm:pb-16 lg:pb-20 px-3 sm:px-4 z-0">
+        {/* <div className="relative h-full flex items-end justify-center pb-10 sm:pb-16 lg:pb-20 px-3 sm:px-4 z-0">
           <Link
             // href="/contact"
             className="bg-[#FFD900] text-[#4D3F31] px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-3.5 text-sm sm:text-base lg:text-lg font-semibold sm:font-bold rounded-md sm:rounded-lg text-center shadow-md hover:shadow-lg hover:scale-105 transition-all"
@@ -439,17 +457,20 @@ const Home = () => {
               8269245564
             </p>
           </Link>
-        </div>
+        </div> */}
       </div>
 
       {/* Section-2 */}
-      <section className="w-full bg-[white] py-10 sm:py-24">
+      <section className="w-full bg-[white] py-10 sm:py-12">
         <div className="max-w-6xl mx-auto px-4 text-center">
           {/* Logo */}
           <div
-            className={`flex justify-center mb-10 transform transition-all duration-700 ease-out
-                        
-                        `}
+            ref={logoRef}
+            className={`flex justify-center mb-10 transition-all duration-700 ease-out ${
+              logoInView
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 -translate-y-12"
+            }`}
           >
             {/* <Logo2 className="h-32 w-auto" /> */}
             <img
@@ -461,22 +482,44 @@ const Home = () => {
           </div>
 
           {/* Heading */}
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif tracking-wide text-[#2E2A27] mb-6">
+          <h1
+            ref={headingRef}
+            className={`text-2xl sm:text-3xl md:text-4xl font-serif tracking-wide text-[#2E2A27] mb-6  transition-all duration-700 ease-out ${
+              headingInView
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-24"
+            }`}
+          >
             {content?.heading}
           </h1>
 
           {/* Description */}
-          <p className="max-w-3xl mx-auto text-sm sm:text-base leading-relaxed text-[#5A5551] mb-14">
+          <p
+            ref={descRef}
+            className={`
+            max-w-3xl mx-auto text-sm sm:text-base leading-relaxed
+            text-[#5A5551] mb-14
+            transition-all duration-700 ease-out
+            ${
+              descInView
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-12"
+            }
+          `}
+          >
             {content?.description}
           </p>
 
           {/* Image */}
           <div
-            className=" w-full  aspect-[4/3] sm:aspect-[16/9]  max-h-[260px] sm:max-h-[360px] lg:max-h-[420px]
+            ref={imageRef}
+            className={` w-full  aspect-[4/3] sm:aspect-[16/9]  max-h-[260px] sm:max-h-[360px] lg:max-h-[420px]
     overflow-hidden
     rounded-2xl
-    shadow-lg
-"
+    shadow-lg    transition-all duration-700 ease-out ${
+      imageInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+    }
+`}
           >
             {content?.media?.url && (
               <img

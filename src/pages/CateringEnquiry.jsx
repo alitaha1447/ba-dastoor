@@ -271,11 +271,11 @@ const CateringEnquiry = () => {
             </div>
 
             {/* Title */}
-            <div className="flex justify-center mb-8">
+            {/* <div className="flex justify-center mb-8">
               <span className="bg-[#3e3e3e] text-[#FFD900] px-4 py-2 rounded-md text-xs tracking-widest">
                 CATERING ENQUIRY
               </span>
-            </div>
+            </div> */}
 
             {/* Form */}
             <form
