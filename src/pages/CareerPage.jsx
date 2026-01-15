@@ -416,21 +416,22 @@ const CareerPage = () => {
                   ))}
                 </div>
 
-                <div className="text-center bg-gradient-to-r from-[#f8f4f0] to-[#f0e6d6] rounded-2xl p-12 z-50">
+                <div className="text-center bg-gradient-to-r from-[#f8f4f0] to-[#f0e6d6] rounded-2xl  p-5 sm:p-8 md:p-12 z-50">
                   <div className="max-w-3xl mx-auto">
-                    <h4 className="text-2xl md:text-3xl font-serif text-[#bd9133] mb-4">
+                    <h4 className="text-xl md:text-2xl lg:text-3xl font-serif text-[#bd9133]  mb-3 sm:mb-4">
                       Passion for Hospitality?
                     </h4>
-                    <p className="text-gray-600 text-lg mb-8 font-serif">
+                    <p className="text-gray-600 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 font-serif">
                       Even if you don't see the perfect role, we're always
                       looking for talented individuals passionate about food,
                       service, and creating memorable experiences.
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                       <button
                         // onClick={() => setShowForm(true)}
                         onClick={() => handleOpenModal(true)}
-                        className=" border border-[#C9A24D] text-[#bd9133] py-3 px-8 rounded-lg hover:bg-[#C9A24D] hover:text-white transition-colors duration-300 text-lg cursor-pointer"
+                        className=" w-full sm:w-auto border border-[#C9A24D] text-[#bd9133]  py-2.5 sm:py-3
+          px-6 sm:px-8   text-base sm:text-lg rounded-lg hover:bg-[#C9A24D] hover:text-white transition-colors duration-300 cursor-pointer"
                       >
                         Submit General Application
                       </button>

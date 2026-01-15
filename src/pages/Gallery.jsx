@@ -752,12 +752,12 @@ const Gallery = () => {
         </section>
 
         {/*  */}
-        <div className="text-center bg-gradient-to-r from-[#f8f4f0] to-[#f0e6d6] rounded-2xl p-12 z-50 m-6">
+        <div className="text-center bg-gradient-to-r from-[#f8f4f0] to-[#f0e6d6] rounded-2xl  p-4 sm:p-6 md:p-8 lg:p-12 z-50   m-3 sm:m-4 md:m-6">
           <div className="max-w-3xl mx-auto">
             <h4 className="text-2xl md:text-3xl font-serif text-[#8B4513] mb-4">
               Events & Celebrations
             </h4>
-            <p className="text-gray-600 text-lg mb-8 font-serif">
+            <p className="text-gray-600 text-base sm:text-lg  mb-4 sm:mb-0 font-serif">
               From intimate family gatherings to grand celebrations, our
               restaurant provides the perfect setting for memorable moments.
               Every event is hosted with warmth, elegance, and attention to

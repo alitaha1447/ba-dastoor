@@ -24,7 +24,7 @@ const JobApplication = ({ closeModal, isModalOpen }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setisLoading(true);
 
@@ -42,6 +42,25 @@ const JobApplication = ({ closeModal, isModalOpen }) => {
         ...formData,
       };
       console.log(payload);
+      const res = await axios.post(
+        "https://ba-dastoor-backend.onrender.com/api/enquirys/create-enquiry",
+        payload
+      );
+      toast.update(toastId, {
+        render: "Your enquiry has been submitted successfully!",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
+      setFormData({
+        name: "",
+        phone: "",
+        email: "",
+        position: "",
+        experience: "",
+        message: "",
+      });
+      closeModal();
     } catch (error) {
       console.log(error);
       toast.update(toastId, {
@@ -67,31 +86,24 @@ const JobApplication = ({ closeModal, isModalOpen }) => {
         <button
           type="button"
           onClick={closeModal}
-          className="
-    absolute top-4 right-4
-    w-10 h-10
-    flex items-center justify-center
-   
-    transition
-    z-10
-  "
+          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center     transition    z-10  "
         >
           <X color="#f1e6db" className="w-5 h-5" />
         </button>
 
-        <div className="bg-[] py-14 px-4">
+        <div className="bg-[] py-6 lg:py-14 px-4">
           {/* <div className="bg-[#52453f] py-14 px-4"> */}
           <div className="max-w-3xl mx-auto text-center">
-            <div className="flex justify-center mb-6">
-              <Logo className="h-30 w-auto" />
+            <div className="flex justify-center mb-4 sm:mb-6">
+              <Logo className="h-16 sm:h-20 md:h-24 w-auto" />
             </div>
 
-            <h3 className="text-[#FFD700] text-[2rem] tracking-widest mb-8">
+            <h3 className="text-[#FFD700] text-base sm:text-xl md:text-2xl tracking-widest mb-4 sm:mb-8">
               JOIN THE BA-DASTOOR TEAM
             </h3>
             <form
               onSubmit={handleSubmit}
-              className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
             >
               <input
                 name="name"
@@ -139,7 +151,7 @@ const JobApplication = ({ closeModal, isModalOpen }) => {
                 placeholder="Additional Information"
                 rows="3"
               />
-              <div className="sm:col-span-2 flex justify-center mt-6">
+              <div className="sm:col-span-2 flex justify-center mt-4 sm:mt-6">
                 <button
                   type="submit"
                   disabled={isLoading}
