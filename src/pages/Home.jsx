@@ -1,11 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useLocation } from "react-router";
-import Logo2 from "../assets/icons/logo-2.svg?react";
-import bannerImg2 from "../assets/images/bannerImage2.jpg";
 import bannerImg3 from "../assets/images/bannerImage3.jpg";
-import charMinar from "../assets/images/charMinar.jpg";
-import galleryBg from "../assets/images/5317656.jpg";
-import bg1 from "../assets/images/WhatsApp Image1 2026-01-10 at 16.03.43.jpeg";
 import underLine from "../assets/images/underLine.png";
 import menuBG from "../assets/images/menuBG.jpeg";
 import frame2 from "../assets/images/frame2.jpeg";
@@ -24,8 +19,6 @@ const Home = () => {
   const [avgRating, setAvgRating] = useState(null);
   const [reviews, setReviews] = useState([]);
 
-  // const [desktopBanner, setDesktopBanners] = useState([])
-  // const [mobileBanner, setMobileBanner] = useState([])
   const [content, setContent] = useState({});
   const [mainContent, setMainContent] = useState({});
 
@@ -47,17 +40,6 @@ const Home = () => {
     queryKey: ["mobile-banners", page],
     queryFn: () => fetchMobileBanners(page),
   });
-
-  //   const [refRight, inViewRight] = useInView({
-  //     triggerOnce: false,
-  //     threshold: 0.5,
-  //     rootMargin: "0px 0px -20% 0px",
-  //   });
-  //   const [refLeft, inViewLeft] = useInView({
-  //     triggerOnce: false,
-  //     threshold: 0.5,
-  //     rootMargin: "0px 0px -20% 0px",
-  //   });
 
   //   ---------ANIMATION EFFECT------------
   const { ref: logoRef, inView: logoInView } = useInView({
@@ -110,71 +92,6 @@ const Home = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  // const fetchSelectedDesktopBanners = async () => {
-  //     const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/get-selected-desktopBanner?page=${page}`);
-  //     setDesktopBanners(res?.data?.data);
-  // }
-
-  //     const fetchMobileBanners = async () => {
-  //         const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${page}`);
-  //         setMobileBanner(res?.data?.data)
-  //     }
-
-  // useEffect(() => {
-  //     fetchSelectedDesktopBanners()
-  // }, [page]);
-
-  // useEffect(() => {
-  //     fetchMobileBanners()
-  // }, [page]);
-
-  // OPTIMIZE CODE
-  // useEffect(() => {
-  //     if (isMobileView) {
-  //         fetchMobileBanners();
-  //     } else {
-  //         fetchSelectedDesktopBanners();
-  //     }
-  // }, [page, isMobileView]);
-
-  // ----------------- //
-
-  //  WITHOUT OPTIMIZE CODE
-
-  // const fetchContent = async () => {
-  //     const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/generalContent/get-content?page=${page}`);
-  //     setContent(res?.data?.data)
-  // }
-
-  // const fetchMenuLists = async () => {
-  //     const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/categories/get-categorywithdishes`);
-  //     setMenuLists(res?.data?.data || [])
-  // }
-
-  // useEffect(() => { fetchContent() }, [page])
-  // useEffect(() => { fetchMenuLists() }, []);
-
-  //  // OPTIMIZE CODE
-
-  // OPTIMIZE CODE FOR BANNER IMAGES
-  // useEffect(() => {
-  //     const fetchBanners = async () => {
-  //         try {
-  //             const [desktopRes, mobileRes] = await Promise.all([
-  //                 axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/get-desktopBanner?page=${page}`),
-  //                 axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${page}`)
-  //             ]);
-
-  //             // setDesktopBanners(desktopRes?.data?.data || []);
-  //             setMobileBanner(mobileRes?.data?.data || []);
-  //         } catch (err) {
-  //             console.error("Banner fetch error", err);
-  //         }
-  //     };
-
-  //     fetchBanners();
-  // }, [page]);
 
   const fetchMainContent = async () => {
     try {
@@ -256,18 +173,7 @@ const Home = () => {
     return isMobileView ? imageMobileBanners : imageBanners;
   }, [isMobileView, imageMobileBanners, imageBanners]);
   const activeBannersLength = activeBanners ? activeBanners.length : 0;
-  // Auto slide
-  // useEffect(() => {
-  //     if (activeBannersLength <= 1) return;
 
-  //     const interval = setInterval(() => {
-  //         setCurrent(prev =>
-  //             prev === activeBannersLength - 1 ? 0 : prev + 1
-  //         );
-  //     }, 3000);
-
-  //     return () => clearInterval(interval);
-  // }, [activeBannersLength, isMobileView]);
   // OPTIMIZE CODE
   useEffect(() => {
     if (activeBannersLength <= 1) return;
@@ -281,18 +187,6 @@ const Home = () => {
   useEffect(() => {
     setCurrent(0);
   }, [isMobileView]);
-
-  // useEffect(() => {
-  //     if (!imageBanners.length) return;
-
-  //     const interval = setInterval(() => {
-  //         setCurrent(prev =>
-  //             prev === imageBanners.length - 1 ? 0 : prev + 1
-  //         );
-  //     }, 3000); // Changed to 3 seconds for better UX
-
-  //     return () => clearInterval(interval);
-  // }, [imageBanners.length,]);
 
   return (
     <>
@@ -344,61 +238,6 @@ const Home = () => {
           />
         )}
 
-        {/* Desktop Images */}
-        {/* {hasDesktopImages ? (
-                    imageBanners.map((item, index) => (
-                        <div
-                            key={`desktop-${item?._id || index}`}
-                            className={`hidden md:block absolute inset-0 bg-no-repeat bg-center transition-opacity duration-700 ${index === current ? 'opacity-100' : 'opacity-0'
-                                } bg-cover`}
-                            style={{
-                                backgroundImage: item?.desktop?.url ? `url(${item.desktop.url})` : 'none',
-                            }}
-                        />
-                    ))
-                ) : (
-                    <div className="hidden md:block absolute inset-0 bg-gray-400" />
-                )} */}
-
-        {/* 🎥 VIDEO (NO CAROUSEL AT ALL) */}
-        {/* {videoBanner && (
-                    <video
-                        className="hidden md:block absolute inset-0 w-full h-full object-cover"
-                        src={videoBanner.desktop.url}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                    />
-                )} */}
-
-        {/* Mobile Images */}
-        {/* {mobileBanner.map((item, index) => (
-                    <div
-                        key={`mobile-${item?._id || index}`}
-                        className={`block md:hidden absolute inset-0 bg-no-repeat bg-center transition-opacity duration-700 ${index === current ? 'opacity-100' : 'opacity-0'
-                            } bg-cover`}
-                        style={{
-                            backgroundImage: item?.mobile?.url ? `url(${item.mobile.url})` : 'none',
-                        }}
-                    />
-                ))} */}
-        {/* 📱 MOBILE BANNER */}
-        {/* {hasMobileImages && (
-                    imageBanners.map((item, index) => (
-                        <div
-                            key={`desktop-${item?._id || index}`}
-                            className={`w-full h-full hidden md:block absolute inset-0 bg-no-repeat bg-center transition-opacity duration-700
-                ${index === current ? 'opacity-100' : 'opacity-0'}
-                bg-cover`}
-                            style={{
-                                backgroundImage: item?.desktop?.url
-                                    ? `url(${item.desktop.url})`
-                                    : 'none',
-                            }}
-                        />
-                    ))
-                )} */}
         {hasMobileImages ? (
           imageMobileBanners.length === 1 ? (
             // ✅ SINGLE IMAGE (NO CAROUSEL)
@@ -442,22 +281,6 @@ const Home = () => {
             playsInline
           />
         )}
-
-        {/* Overlay for better text visibility */}
-        {/* <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" /> */}
-
-        {/* Call to Action Button */}
-        {/* <div className="relative h-full flex items-end justify-center pb-10 sm:pb-16 lg:pb-20 px-3 sm:px-4 z-0">
-          <Link
-            // href="/contact"
-            className="bg-[#FFD900] text-[#4D3F31] px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-3.5 text-sm sm:text-base lg:text-lg font-semibold sm:font-bold rounded-md sm:rounded-lg text-center shadow-md hover:shadow-lg hover:scale-105 transition-all"
-          >
-            <p className="leading-tight">Call for Reservation</p>
-            <p className="text-xs sm:text-sm lg:text-base font-medium">
-              8269245564
-            </p>
-          </Link>
-        </div> */}
       </div>
 
       {/* Section-2 */}

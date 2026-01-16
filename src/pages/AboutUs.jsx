@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import axios from "axios";
-import Logo2 from "../assets/icons/logo-2.svg?react";
-import video1 from "../assets/video/taj.mp4";
-import chef from "../assets/images/chef.jpg";
 import { useInView } from "react-intersection-observer";
+import { useQuery } from "@tanstack/react-query";
+import {
+  fetchDesktopBanners,
+  fetchMobileBanners,
+} from "../api/banner/bannerApi";
 
 const AboutUs = () => {
   const location = useLocation();
-  console.log(location);
-
-  const [desktopBanners, setDesktopBanners] = useState([]);
-  const [mobileBanner, setMobileBanner] = useState([]);
 
   const [current, setCurrent] = useState(0);
 
@@ -20,6 +18,17 @@ const AboutUs = () => {
   const [generalContent, setGeneralContent] = useState({});
 
   const page = location.pathname === "/about" && "about";
+
+  // =========BANNERs API'S=================
+
+  const { data: desktopBanners = [] } = useQuery({
+    queryKey: ["desktop-banners", page],
+    queryFn: () => fetchDesktopBanners(page),
+  });
+  const { data: mobileBanner = [] } = useQuery({
+    queryKey: ["mobile-banners", page],
+    queryFn: () => fetchMobileBanners(page),
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -48,36 +57,11 @@ const AboutUs = () => {
     triggerOnce: false,
   });
 
-  const fetchDesktopBanners = async () => {
-    const res = await axios.get(
-      `https://ba-dastoor-backend.onrender.com/api/banners/get-desktopBanner?page=${page}`
-    );
-    console.log(res?.data?.data);
-    setDesktopBanners(res?.data?.data);
-  };
-
-  useEffect(() => {
-    fetchDesktopBanners();
-  }, [page]);
-
-  const fetchMobileBanners = async () => {
-    const res = await axios.get(
-      `https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${page}`
-    );
-    console.log(res?.data?.data);
-    setMobileBanner(res?.data?.data);
-  };
-
-  useEffect(() => {
-    fetchMobileBanners();
-  }, [page]);
-
   const fetchAboutUs = async () => {
     try {
       const res = await axios.get(
         `https://ba-dastoor-backend.onrender.com/api/aboutUs/get-aboutus`
       );
-      console.log(res?.data?.data);
       setAboutUs(res?.data?.data);
     } catch (error) {
       console.log(error);
@@ -108,7 +92,6 @@ const AboutUs = () => {
       const res = await axios.get(
         `https://ba-dastoor-backend.onrender.com/api/generalContent/get-content?page=${p}`
       );
-      console.log(res?.data?.data);
       setGeneralContent(res?.data?.data);
     } catch (error) {
       console.log(error);
@@ -119,67 +102,102 @@ const AboutUs = () => {
     fetchGeneralContent(page);
   }, []);
 
-  const imageBanners = desktopBanners.filter(
+  const selectedDesktopBanners = desktopBanners.filter(
+    (item) => item.isSelected === true
+  );
+
+  const imageBanners = selectedDesktopBanners.filter(
     (item) => item.desktop?.mediaType === "image"
   );
   const hasDesktopImages =
     Array.isArray(imageBanners) && imageBanners.length > 0;
 
+  const videoBanner = selectedDesktopBanners.find(
+    (item) => item.desktop?.mediaType === "video"
+  );
+
+  // ==========MOBILE================
+
+  const selectedMobileBanners = mobileBanner.filter(
+    (item) => item.isSelected === true
+  );
+  const imageMobileBanners = selectedMobileBanners.filter(
+    (item) => item.mobile?.mediaType === "image"
+  );
+  const hasMobileImages =
+    Array.isArray(imageMobileBanners) && imageMobileBanners.length > 0;
+
+  const videoMobileBanner = selectedMobileBanners.find(
+    (item) => item.mobile?.mediaType === "video"
+  );
+
+  useEffect(() => {
+    const desktopVisible = window.matchMedia("(min-width: 1024px)").matches;
+    const banners = desktopVisible ? imageBanners : imageMobileBanners;
+
+    if (banners.length <= 1) return;
+
+    const id = setInterval(() => {
+      setCurrent((i) => (i + 1) % banners.length);
+    }, 3000); // ✅ now 8000 REALLY means 8 seconds
+
+    return () => clearInterval(id);
+  }, [imageBanners.length, imageMobileBanners.length]);
+
   return (
     <div className="w-full overflow-hidden bg-white">
       {/* ================= HERO ================= */}
-      <section className="relative h-[100vh] w-screen">
-        {/* <img
-                    src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb"
-                    alt="Luxury Hotel"
-                    className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black/40" />
-
-                <div className="relative z-10 h-full flex flex-col justify-end items-center pb-16">
-                    <h1 className="text-white text-4xl md:text-5xl font-[Playfair_Display] tracking-wide">
-                        About Us
-                    </h1>
-                    <span className="mt-4 h-[2px] w-20 bg-[#C6A15B]" />
-                </div> */}
-        {hasDesktopImages ? (
+      <section className="relative w-full h-screen overflow-hidden">
+        {hasDesktopImages &&
           imageBanners.map((item, index) => (
             <div
               key={`desktop-${item?._id || index}`}
-              className={`hidden md:block w-[100%] absolute inset-0 bg-no-repeat bg-center transition-opacity duration-700 ${
-                index === current ? "opacity-100" : "opacity-0"
-              } bg-cover`}
-              style={{
-                backgroundImage: item?.desktop?.url
-                  ? `url(${item.desktop.url})`
-                  : "none",
-              }}
-            />
-          ))
-        ) : (
-          <div className="hidden md:block absolute inset-0 bg-gray-400" />
+              className={`
+        w-full h-full hidden md:block absolute inset-0
+        transition-opacity duration-700
+        ${index === current ? "opacity-100" : "opacity-0"}
+    `}
+            >
+              <img
+                src={item?.desktop?.url}
+                loading="lazy"
+                alt="Banner"
+                className="w-full h-full  object-cover object-center        "
+              />
+            </div>
+          ))}
+        {/* 🎥 VIDEO (NO CAROUSEL AT ALL) */}
+        {!hasDesktopImages && videoBanner && (
+          <video
+            className="hidden md:block absolute inset-0 w-full h-full object-cover"
+            src={videoBanner.desktop.url}
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
         )}
         {/* 📱 MOBILE BANNER */}
-        {mobileBanner?.length > 0 ? (
-          mobileBanner.length === 1 ? (
+        {hasMobileImages ? (
+          imageMobileBanners.length === 1 ? (
             // ✅ SINGLE IMAGE (NO CAROUSEL)
             <div
               className="block md:hidden absolute inset-0 bg-no-repeat bg-center bg-cover"
               style={{
-                backgroundImage: mobileBanner[0]?.mobile?.url
-                  ? `url(${mobileBanner[0].mobile.url})`
+                backgroundImage: imageMobileBanners[0]?.mobile?.url
+                  ? `url(${imageMobileBanners[0].mobile.url})`
                   : "none",
               }}
             />
           ) : (
             // 🔁 MULTIPLE IMAGES (CAROUSEL)
-            mobileBanner.map((item, index) => (
+            imageMobileBanners.map((item, index) => (
               <div
                 key={`mobile-${item?._id || index}`}
                 className={`block md:hidden absolute inset-0
-                bg-no-repeat bg-center bg-cover
-                transition-opacity duration-700 ease-in-out
-                ${index === current ? "opacity-100" : "opacity-0"}`}
+                    bg-no-repeat bg-center bg-cover
+                    transition-opacity duration-700 ease-in-out
+                    ${index === current ? "opacity-100" : "opacity-0"}`}
                 style={{
                   backgroundImage: item?.mobile?.url
                     ? `url(${item.mobile.url})`
@@ -189,8 +207,19 @@ const AboutUs = () => {
             ))
           )
         ) : (
-          // ❌ NO IMAGE → FALLBACK
+          // ❌ NO MOBILE IMAGE → FALLBACK
           <div className="block md:hidden absolute inset-0 bg-gray-400" />
+        )}
+        {/* 🎥 VIDEO (NO CAROUSEL AT ALL) */}
+        {!hasMobileImages && videoMobileBanner && (
+          <video
+            className="block md:hidden absolute inset-0 w-full h-full object-cover"
+            src={videoMobileBanner.mobile.url}
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
         )}
       </section>
 
@@ -350,9 +379,6 @@ const AboutUs = () => {
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif tracking-wide text-[white] mb-6">
               {generalContent?.heading}
             </h1>
-            {/* <h1 className="text-white text-4xl md:text-5xl leading-tight mb-6 font-[Playfair_Display]">
-                        </h1> */}
-
             <p className="max-w-3xl mx-auto text-sm sm:text-base leading-relaxed text-[white] ">
               {generalContent?.description}
             </p>
@@ -361,31 +387,6 @@ const AboutUs = () => {
           {/* VIDEO BOX */}
           <div className="w-full max-w-5xl px-4">
             <div className="relative overflow-hidden rounded-2xl shadow-2xl   h-[220px] sm:h-[260px] md:h-[300px] lg:h-[340px]      ">
-              {/* <video
-                                className="w-full h-full object-cover"
-                                src={video1}
-                                poster="/images/video-poster.jpg"
-                                controls
-                                playsInline
-                                autoPlay
-                                loop
-                            // muted
-
-                            /> */}
-              {/* <video
-                                className=" w-full h-full object-cover"
-                                src={generalContent?.media?.url}
-                                controls
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                            /> */}
-              {/* <img
-                                src={generalContent?.media?.url}
-                                alt="Head Chef"
-                                className="w-full h-full md:h-full object-cover"
-                            /> */}
               {generalContent?.media?.mediaType === "video" ? (
                 <video
                   className="w-full h-full object-cover"
