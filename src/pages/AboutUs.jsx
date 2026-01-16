@@ -234,7 +234,7 @@ const AboutUs = () => {
               : "opacity-0 -translate-y-10"
           }`}
         >
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif text-[#2E2A27] mb-6">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif text-[#C9A24D] mb-6">
             {aboutUs?.aboutUsHeading}
           </h1>
           <p className="max-w-3xl mx-auto text-sm sm:text-base leading-relxed text-[#5A5551] mb-14">
@@ -376,7 +376,7 @@ const AboutUs = () => {
                 : "opacity-0 -translate-y-10"
             }`}
           >
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif tracking-wide text-[white] mb-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif tracking-wide text-[#C9A24D] mb-6">
               {generalContent?.heading}
             </h1>
             <p className="max-w-3xl mx-auto text-sm sm:text-base leading-relaxed text-[white] ">

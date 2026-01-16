@@ -268,6 +268,10 @@ const Header = () => {
 
   return (
     <header
+      // className={` w-full z-[999999999] transition-all duration-300 ${
+
+      //   scrolled ? "fixed top-0 left-0" : "bg-[#0f0802db] "
+      // }`}
       className={`fixed top-0 left-0 w-full z-[999999999] transition-all duration-300 ${
         scrolled ? "" : ""
       }`}

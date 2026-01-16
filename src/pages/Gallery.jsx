@@ -31,11 +31,11 @@ const Gallery = () => {
   const [activeTab, setActiveTab] = useState("image");
 
   // images
-  const [gallerySlots, setGallerySlots] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [imageLoading, setImageLoading] = useState(false);
-  const [pageLoading, setPageLoading] = useState(false);
+  // const [gallerySlots, setGallerySlots] = useState([]);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [totalPages, setTotalPages] = useState(1);
+  // const [imageLoading, setImageLoading] = useState(false);
+  // const [pageLoading, setPageLoading] = useState(false);
 
   // videos
   const [galleryVideoSlots, setGalleryVideoSlots] = useState([]);
@@ -60,13 +60,27 @@ const Gallery = () => {
     queryFn: () => fetchMobileBanners(page),
   });
 
-  // const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-  //   useInfiniteQuery({
-  //     queryKey: ["gallery-images"],
-  //     queryFn: fetchGalleryImg,
-  //     getNextPageParam: (lastPage) =>
-  //       lastPage.hasNextPage ? lastPage.page + 1 : undefined,
-  //   });
+  const {
+    data: imagePages,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: imageLoading,
+  } = useInfiniteQuery({
+    queryKey: ["gallery-images"],
+    queryFn: fetchGalleryImg,
+    enabled: activeTab === "image",
+    getNextPageParam: (lastPage) =>
+      lastPage.hasNextPage ? lastPage.page + 1 : undefined,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+
+  const gallerySlots = imagePages?.pages.flatMap((p) => p.data) ?? [];
+
+  const handleViewMore = () => {
+    if (hasNextPage) fetchNextPage();
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -156,7 +170,8 @@ const Gallery = () => {
                 )} */}
         {src.mediaType === "video" ? (
           <div
-          //  onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
+            className=""
+            //  onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
           >
             <video
               ref={videoRef}
@@ -302,23 +317,23 @@ const Gallery = () => {
   );
 
   /* ------------------ FETCH IMAGE GALLERY ------------------ */
-  const fetchGalleryImg = async (page = 1, isLoadMore = false) => {
-    try {
-      isLoadMore ? setPageLoading(true) : setImageLoading(true);
-      const res = await axios.get(
-        `https://ba-dastoor-backend.onrender.com/api/newGalleryImg/new-get-galleryImg?page=${page}`
-      );
-      const newData = res?.data?.data || [];
-      // console.log(newData)
-      // ✅ APPEND instead of replace
-      setGallerySlots((prev) => [...prev, ...newData]);
-      setTotalPages(res?.data?.totalPages || 1);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      isLoadMore ? setPageLoading(false) : setImageLoading(false);
-    }
-  };
+  // const fetchGalleryImg = async (page = 1, isLoadMore = false) => {
+  //   try {
+  //     isLoadMore ? setPageLoading(true) : setImageLoading(true);
+  //     const res = await axios.get(
+  //       `https://ba-dastoor-backend.onrender.com/api/newGalleryImg/new-get-galleryImg?page=${page}`
+  //     );
+  //     const newData = res?.data?.data || [];
+  //     // console.log(newData)
+  //     // ✅ APPEND instead of replace
+  //     setGallerySlots((prev) => [...prev, ...newData]);
+  //     setTotalPages(res?.data?.totalPages || 1);
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     isLoadMore ? setPageLoading(false) : setImageLoading(false);
+  //   }
+  // };
 
   /* ------------------ FETCH VIDEO GALLERY ------------------ */
   const fetchGalleryVideo = async (page = 1, isLoadMore = false) => {
@@ -339,13 +354,13 @@ const Gallery = () => {
     }
   };
 
-  const handleViewMore = () => {
-    if (currentPage < 10 && !imageLoading) {
-      const nextPage = currentPage + 1;
-      setCurrentPage(nextPage);
-      fetchGalleryImg(nextPage, true);
-    }
-  };
+  // const handleViewMore = () => {
+  //   if (currentPage < 10 && !imageLoading) {
+  //     const nextPage = currentPage + 1;
+  //     setCurrentPage(nextPage);
+  //     fetchGalleryImg(nextPage, true);
+  //   }
+  // };
   const handleViewMoreVideo = () => {
     if (videoCurrentPage < 10 && !videoLoading) {
       const nextPage = videoCurrentPage + 1;
@@ -546,13 +561,7 @@ const Gallery = () => {
 
                   return (
                     <div key={gallery._id} className="mb-10">
-                      <div
-                        className="                                                        grid gap-2                                                        grid-cols-2
-                                                        auto-rows-[140px]
-                                                        lg:grid-cols-3
-                                                        lg:auto-rows-[200px]
-                                                        "
-                      >
+                      <div className="grid gap-2 grid-cols-2 auto-rows-[140px] lg:grid-cols-3 lg:auto-rows-[200px]">
                         <GoldFrame className="col-span-2 lg:col-span-2 lg:row-span-2">
                           <ImageBox src={imageItems[0]} animation="left" />
                         </GoldFrame>
@@ -582,10 +591,10 @@ const Gallery = () => {
                 })}
 
                 {/* VIEW MORE (IMAGE ONLY) */}
-                <div className="flex justify-center mt-8">
+                {/* <div className="flex justify-center mt-8">
                   <button
                     onClick={handleViewMore}
-                    disabled={pageLoading || currentPage >= totalPages}
+                    // disabled={pageLoading || currentPage >= totalPages}
                     className="px-8 py-2 border border-[#C9A24D] text-[#bd9133] text-sm font-medium
       rounded-full transition hover:bg-[#C9A24D] hover:text-white
       flex items-center gap-2 cursor-pointer"
@@ -598,6 +607,16 @@ const Gallery = () => {
                     ) : (
                       "View More"
                     )}
+                  </button>
+                </div> */}
+                <div className="flex justify-center mt-8">
+                  <button
+                    onClick={handleViewMore}
+                    disabled={!hasNextPage || isFetchingNextPage}
+                    className="px-8 py-2 border border-[#C9A24D] text-[#bd9133]
+             rounded-full hover:bg-[#C9A24D] hover:text-white"
+                  >
+                    {isFetchingNextPage ? "Loading..." : "View More"}
                   </button>
                 </div>
               </>
