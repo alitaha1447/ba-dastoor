@@ -366,11 +366,11 @@ const AboutUs = () => {
         <div className="absolute inset-0 bg-black/50 backdrop-blur-[5px]" />
 
         {/* CONTENT */}
-        <div className="relative z-10 w-full flex flex-col items-center">
+        <div className="w-full max-w-6xl mx-auto relative z-10  flex flex-col items-center">
           {/* HEADING */}
           <div
             ref={headingSecondaryRef}
-            className={`max-w-3xl mx-auto mb-14 text-center px-4 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            className={` mb-14 text-center px-4 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
               headingSecondaryInView
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 -translate-y-10"
@@ -385,7 +385,7 @@ const AboutUs = () => {
           </div>
 
           {/* VIDEO BOX */}
-          <div className="w-full max-w-5xl px-4">
+          <div className="w-full max-w-6xl mx-auto px-4">
             <div className="relative overflow-hidden rounded-2xl shadow-2xl   h-[220px] sm:h-[260px] md:h-[300px] lg:h-[340px]      ">
               {generalContent?.media?.mediaType === "video" ? (
                 <video

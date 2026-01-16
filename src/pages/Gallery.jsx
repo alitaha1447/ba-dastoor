@@ -3,11 +3,12 @@ import { FaPlay } from "react-icons/fa";
 import galleryBg from "../assets/images/5317656.jpg";
 import { useLocation } from "react-router";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
   fetchDesktopBanners,
   fetchMobileBanners,
 } from "../api/banner/bannerApi";
+import { fetchGalleryImg } from "../api/gallerImage/galleryImgApi";
 
 /* ================== LOADER ================== */
 const Loader = () => (
@@ -43,7 +44,6 @@ const Gallery = () => {
   const [videoLoading, setVideoLoading] = useState(false);
   const [videoPageLoading, setVideoPageLoading] = useState(false);
 
-  const [activeIndex, setActiveIndex] = useState(0);
   const [zoomMedia, setZoomMedia] = useState(null); // 🔥 SINGLE MODAL STATE
 
   const imageFetchedRef = useRef(false);
@@ -59,6 +59,14 @@ const Gallery = () => {
     queryKey: ["mobile-banners", page],
     queryFn: () => fetchMobileBanners(page),
   });
+
+  // const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+  //   useInfiniteQuery({
+  //     queryKey: ["gallery-images"],
+  //     queryFn: fetchGalleryImg,
+  //     getNextPageParam: (lastPage) =>
+  //       lastPage.hasNextPage ? lastPage.page + 1 : undefined,
+  //   });
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -126,12 +134,6 @@ const Gallery = () => {
       top: "animate-slideInTop",
     }[animation];
 
-    // const isImage = src.mediaType !== "video";
-    // const handleClick = () => {
-    //   if (mediaType !== "image") return; // 🔥 image only zoom
-    //   setZoomMedia({ url: src.url, type: "image" });
-    // };
-
     const handleClick = () => {
       if (mediaType === "image") {
         setZoomMedia({ url: src.url, type: "image" });
@@ -178,15 +180,15 @@ const Gallery = () => {
               >
                 <div
                   className="
-                        w-16 h-16
+                        w-10 h-10
                         flex items-center justify-center
                         rounded-full
                         bg-black/50
-                        text-[#C9A24D]
+                        text-white/30
                         shadow-lg
                     "
                 >
-                  <FaPlay className="ml-1" size={20} />
+                  <FaPlay className="ml-1" size={10} />
                 </div>
               </div>
             )}
@@ -337,18 +339,6 @@ const Gallery = () => {
     }
   };
 
-  useEffect(() => {
-    if (activeTab === "image" && !imageFetchedRef.current) {
-      imageFetchedRef.current = true;
-      fetchGalleryImg(1);
-    }
-
-    if (activeTab === "video" && !videoFetchedRef.current) {
-      videoFetchedRef.current = true;
-      fetchGalleryVideo(1);
-    }
-  }, [activeTab]);
-
   const handleViewMore = () => {
     if (currentPage < 10 && !imageLoading) {
       const nextPage = currentPage + 1;
@@ -394,15 +384,6 @@ const Gallery = () => {
 
   /* ------------------ IMAGE DATA ------------------ */
 
-  /* ------------------ VIDEO DATA ------------------ */
-  // const activeVideoGallery = galleryVideoSlots[activeIndex];
-  // const videoItems = activeVideoGallery
-  //     ? [
-  //         activeVideoGallery.primaryVideo,
-  //         ...activeVideoGallery.siblings
-  //     ].map(v => ({ ...v, mediaType: "video" }))
-  //     : [];
-
   // -----------------
   const GoldFrame = ({ children, className = "" }) => {
     return (
@@ -440,12 +421,6 @@ const Gallery = () => {
   };
   // -----------------
 
-  // useEffect(() => {
-  //     if (!pageLoading && currentPage > 1) {
-  //         window.scrollBy({ top: 200, behavior: "smooth" });
-  //     }
-  // }, [pageLoading]);
-
   return (
     <>
       <div className="relative hidden lg:block h-[40vh] w-full overflow-hidden">
@@ -458,12 +433,6 @@ const Gallery = () => {
     ${loaded ? "opacity-100 blur-0" : "opacity-0 blur-md"}`}
               loading="eager"
             />
-
-            {/* <div className="absolute inset-0 bg-black/25" /> */}
-
-            {/* <div className="absolute inset-0 flex items-center justify-center">
-              <h1 className="text-white text-2xl font-semibold">Gallery</h1>
-            </div> */}
           </div>
         )}
       </div>
@@ -479,12 +448,6 @@ const Gallery = () => {
     ${loaded ? "opacity-100 blur-0" : "opacity-0 blur-md"}`}
               loading="eager"
             />
-
-            {/* <div className="absolute inset-0 bg-black/25" /> */}
-
-            {/* <div className="absolute bottom-4 w-full text-center">
-              <h1 className="text-white text-2xl font-semibold">Catering</h1>
-            </div> */}
           </div>
         )}
       </div>
@@ -716,39 +679,6 @@ const Gallery = () => {
             ) : (
               <EmptyState text="No videos found" />
             ))}
-
-          {/* {activeTab === "video" && (
-                        videoItems.length > 0 ? (
-                            <>
-                                <div className="grid grid-cols-3 gap-4">
-                                    <GoldFrame className="col-span-2 h-50">
-                                        <ImageBox src={videoItems[0]} animation="left" />
-                                    </GoldFrame>
-
-                                    <GoldFrame className="col-span-1 h-50">
-                                        <ImageBox src={videoItems[1]} animation="right" />
-                                    </GoldFrame>
-                                </div>
-
-                                <div className="grid grid-cols-3 gap-4 auto-rows-[110px]">
-                                    <GoldFrame className="row-span-2">
-                                        <ImageBox src={videoItems[2]} animation="top" />
-                                    </GoldFrame>
-
-                                    <GoldFrame className="row-span-2">
-                                        <ImageBox src={videoItems[3]} animation="left" />
-                                    </GoldFrame>
-
-                                    <GoldFrame className="row-span-2 grid grid-rows-2 gap-4">
-                                        <ImageBox src={videoItems[4]} animation="right" />
-                                        <ImageBox src={videoItems[5]} animation="top" />
-                                    </GoldFrame>
-                                </div>
-                            </>
-                        ) : (
-                            <EmptyState text="No videos found" />
-                        )
-                    )} */}
         </section>
 
         {/*  */}
@@ -763,17 +693,6 @@ const Gallery = () => {
               Every event is hosted with warmth, elegance, and attention to
               details making each occasion truly special.
             </p>
-            {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <button
-                                // onClick={() => setShowForm(true)}
-                                className="bg-[#8B4513] text-white py-3 px-8 rounded-lg hover:bg-[#A0522D] transition-colors duration-300 text-lg "
-                            >
-                                Submit General Application
-                            </button>
-                            <button className="bg-transparent border-2 border-[#8B4513] text-[#8B4513] font-semibold py-3 px-8 rounded-lg hover:bg-[#8B4513] hover:text-white transition-colors duration-300 text-lg">
-                                Meet Our Team
-                            </button>
-                        </div> */}
           </div>
         </div>
       </div>

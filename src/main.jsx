@@ -1,10 +1,10 @@
-import { StrictMode, useEffect } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import { BrowserRouter } from 'react-router'
-import App from './App.jsx'
-
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { StrictMode, useEffect } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import { BrowserRouter } from "react-router";
+import App from "./App.jsx";
+import { hideAppLoader } from "./utils/appLoader.js";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -16,8 +16,7 @@ const queryClient = new QueryClient({
       refetchOnReconnect: false,
     },
   },
-})
-
+});
 
 // createRoot(document.getElementById('root')).render(
 //   <StrictMode>
@@ -29,16 +28,17 @@ const queryClient = new QueryClient({
 
 const Root = () => {
   useEffect(() => {
-    const loader = document.getElementById("app-loader")
-    if (loader) {
-      loader.style.opacity = "0"
-      loader.style.transition = "opacity 0.8s ease"
+    // const loader = document.getElementById("app-loader")
+    // if (loader) {
+    //   loader.style.opacity = "0"
+    //   loader.style.transition = "opacity 0.8s ease"
 
-      setTimeout(() => {
-        loader.remove()
-      }, 800)
-    }
-  }, [])
+    //   setTimeout(() => {
+    //     loader.remove()
+    //   }, 800)
+    // }
+    hideAppLoader();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -46,12 +46,11 @@ const Root = () => {
         <App />
       </BrowserRouter>
     </QueryClientProvider>
-  )
-}
+  );
+};
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Root />
   </StrictMode>
-)
-
+);
