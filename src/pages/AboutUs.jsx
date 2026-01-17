@@ -60,7 +60,7 @@ const AboutUs = () => {
   const fetchAboutUs = async () => {
     try {
       const res = await axios.get(
-        `https://ba-dastoor-backend.onrender.com/api/aboutUs/get-aboutus`
+        `https://ba-dastoor-backend.onrender.com/api/aboutUs/get-aboutus`,
       );
       setAboutUs(res?.data?.data);
     } catch (error) {
@@ -75,7 +75,7 @@ const AboutUs = () => {
   const fetchTeam = async () => {
     try {
       const res = await axios.get(
-        `https://ba-dastoor-backend.onrender.com/api/team/get-team`
+        `https://ba-dastoor-backend.onrender.com/api/team/get-team`,
       );
       setTeam(res?.data?.data);
     } catch (error) {
@@ -90,8 +90,9 @@ const AboutUs = () => {
   const fetchGeneralContent = async (p) => {
     try {
       const res = await axios.get(
-        `https://ba-dastoor-backend.onrender.com/api/generalContent/get-content?page=${p}`
+        `https://ba-dastoor-backend.onrender.com/api/generalContent/get-content?page=${p}`,
       );
+      console.log("RES --> ", res);
       setGeneralContent(res?.data?.data);
     } catch (error) {
       console.log(error);
@@ -103,32 +104,32 @@ const AboutUs = () => {
   }, []);
 
   const selectedDesktopBanners = desktopBanners.filter(
-    (item) => item.isSelected === true
+    (item) => item.isSelected === true,
   );
 
   const imageBanners = selectedDesktopBanners.filter(
-    (item) => item.desktop?.mediaType === "image"
+    (item) => item.desktop?.mediaType === "image",
   );
   const hasDesktopImages =
     Array.isArray(imageBanners) && imageBanners.length > 0;
 
   const videoBanner = selectedDesktopBanners.find(
-    (item) => item.desktop?.mediaType === "video"
+    (item) => item.desktop?.mediaType === "video",
   );
 
   // ==========MOBILE================
 
   const selectedMobileBanners = mobileBanner.filter(
-    (item) => item.isSelected === true
+    (item) => item.isSelected === true,
   );
   const imageMobileBanners = selectedMobileBanners.filter(
-    (item) => item.mobile?.mediaType === "image"
+    (item) => item.mobile?.mediaType === "image",
   );
   const hasMobileImages =
     Array.isArray(imageMobileBanners) && imageMobileBanners.length > 0;
 
   const videoMobileBanner = selectedMobileBanners.find(
-    (item) => item.mobile?.mediaType === "video"
+    (item) => item.mobile?.mediaType === "video",
   );
 
   useEffect(() => {
@@ -235,10 +236,10 @@ const AboutUs = () => {
           }`}
         >
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif text-[#C9A24D] mb-6">
-            {aboutUs?.aboutUsHeading}
+            {generalContent?.heading}
           </h1>
           <p className="max-w-3xl mx-auto text-sm sm:text-base leading-relxed text-[#5A5551] mb-14">
-            {aboutUs?.aboutUsPara}
+            {generalContent?.description}
           </p>
         </div>
 
@@ -377,10 +378,10 @@ const AboutUs = () => {
             }`}
           >
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif tracking-wide text-[#C9A24D] mb-6">
-              {generalContent?.heading}
+              {generalContent?.secondaryHeading}
             </h1>
             <p className="max-w-3xl mx-auto text-sm sm:text-base leading-relaxed text-[white] ">
-              {generalContent?.description}
+              {generalContent?.secondaryDescription}
             </p>
           </div>
 
