@@ -60,17 +60,17 @@ const Franchise = () => {
   });
 
   const selectedDesktopBanners = desktopBanner.filter(
-    (item) => item.isSelected === true
+    (item) => item.isSelected === true,
   );
   const imageBanners = selectedDesktopBanners.filter(
-    (item) => item.desktop?.mediaType === "image"
+    (item) => item.desktop?.mediaType === "image",
   );
 
   const selectedMobileBanners = mobileBanner.filter(
-    (item) => item.isSelected === true
+    (item) => item.isSelected === true,
   );
   const imageMobileBanners = selectedMobileBanners.filter(
-    (item) => item.mobile?.mediaType === "image"
+    (item) => item.mobile?.mediaType === "image",
   );
 
   const handleChange = (e) => {
@@ -134,8 +134,8 @@ const Franchise = () => {
       };
 
       const res = await axios.post(
-        `https://ba-dastoor-backend.onrender.com/api/enquirys/create-enquiry`,
-        payload
+        `http://localhost:3000/api/enquirys/create-enquiry`,
+        payload,
       );
       // console.log(res)
       // alert("Your enquiry has been submitted successfully!");

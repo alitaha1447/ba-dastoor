@@ -73,7 +73,7 @@ const Header = () => {
   useEffect(() => {
     const fetchBranches = async () => {
       const res = await axios.get(
-        "https://ba-dastoor-backend.onrender.com/api/branches/get-branches"
+        "https://ba-dastoor-backend.onrender.com/api/branches/get-branches",
       );
       setBranches(res?.data?.data);
     };
@@ -83,7 +83,7 @@ const Header = () => {
   useEffect(() => {
     const fetchReview = async () => {
       const res = await axios(
-        "https://featurable.com/api/v1/widgets/11b960ce-b735-4b9a-9cb1-808b4a28c17c"
+        "https://featurable.com/api/v1/widgets/11b960ce-b735-4b9a-9cb1-808b4a28c17c",
       );
       setAvgRating(res?.data?.averageRating);
       setTotalReviewCount(res?.data?.totalReviewCount);
@@ -590,7 +590,7 @@ const Header = () => {
                       <span
                         onClick={() =>
                           setOpenMapBranchId(
-                            openMapBranchId === branch._id ? null : branch._id
+                            openMapBranchId === branch._id ? null : branch._id,
                           )
                         }
                         className="flex flex-row items-center gap-2 border border-gray-200 rounded-sm px-3 py-1 cursor-pointer"

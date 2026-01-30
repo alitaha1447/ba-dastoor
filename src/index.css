@@ -197,3 +197,35 @@
 .franchise-btn {
     @apply px-8 py-2 rounded-full border border-white text-white text-sm tracking-wide hover:bg-white hover:text-black transition;
 }
+
+/* auto flip animation */
+@keyframes autoFlip {
+    0% {
+        transform: rotateY(0deg);
+    }
+
+    50% {
+        transform: rotateY(180deg);
+    }
+
+    100% {
+        transform: rotateY(0deg);
+    }
+}
+
+/* animation applied */
+.auto-flip {
+    animation: autoFlip 3s ease-in-out infinite;
+    transform-style: preserve-3d;
+}
+
+/* pause animation when hovering wrapper */
+.flip-wrapper:hover .auto-flip {
+    animation-play-state: paused;
+}
+
+/* hide backside */
+.backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}

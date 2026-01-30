@@ -4,6 +4,7 @@ import bannerImg3 from "../assets/images/bannerImage3.jpg";
 import underLine from "../assets/images/underLine.png";
 import menuBG from "../assets/images/menuBG.jpeg";
 import frame2 from "../assets/images/frame2.jpeg";
+import RuhCafeLogo from "../assets/images/RuhCafeLogo.png";
 
 import GoogleReviewsCarousel from "../components/googleReview/GoogleReviewWidget";
 import axios from "axios";
@@ -96,7 +97,7 @@ const Home = () => {
   const fetchMainContent = async () => {
     try {
       const res = await axios.get(
-        `https://ba-dastoor-backend.onrender.com/api/content/get-content`
+        `https://ba-dastoor-backend.onrender.com/api/content/get-content`,
       );
       setMainContent(res?.data?.data);
     } catch (error) {
@@ -112,10 +113,10 @@ const Home = () => {
   useEffect(() => {
     Promise.all([
       axios.get(
-        `https://ba-dastoor-backend.onrender.com/api/generalContent/get-content?page=${page}`
+        `https://ba-dastoor-backend.onrender.com/api/generalContent/get-content?page=${page}`,
       ),
       axios.get(
-        `https://ba-dastoor-backend.onrender.com/api/categories/get-categorywithdishes`
+        `https://ba-dastoor-backend.onrender.com/api/categories/get-categorywithdishes`,
       ),
     ]).then(([contentRes, menuRes]) => {
       setContent(contentRes.data.data);
@@ -128,7 +129,7 @@ const Home = () => {
   useEffect(() => {
     const fetchReview = async () => {
       const res = await axios(
-        "https://featurable.com/api/v1/widgets/11b960ce-b735-4b9a-9cb1-808b4a28c17c"
+        "https://featurable.com/api/v1/widgets/11b960ce-b735-4b9a-9cb1-808b4a28c17c",
       );
       setAvgRating(res?.data?.averageRating);
       setTotalReviewCount(res?.data?.totalReviewCount);
@@ -138,31 +139,31 @@ const Home = () => {
   }, []);
 
   const selectedDesktopBanners = desktopBanner.filter(
-    (item) => item.isSelected === true
+    (item) => item.isSelected === true,
   );
 
   const imageBanners = selectedDesktopBanners.filter(
-    (item) => item.desktop?.mediaType === "image"
+    (item) => item.desktop?.mediaType === "image",
   );
   const hasDesktopImages =
     Array.isArray(imageBanners) && imageBanners.length > 0;
 
   const videoBanner = selectedDesktopBanners.find(
-    (item) => item.desktop?.mediaType === "video"
+    (item) => item.desktop?.mediaType === "video",
   );
   console.log("desktop video --> ", videoBanner);
   // Mobile
   const selectedMobileBanners = mobileBanner.filter(
-    (item) => item.isSelected === true
+    (item) => item.isSelected === true,
   );
   const imageMobileBanners = selectedMobileBanners.filter(
-    (item) => item.mobile?.mediaType === "image"
+    (item) => item.mobile?.mediaType === "image",
   );
   const hasMobileImages =
     Array.isArray(imageMobileBanners) && imageMobileBanners.length > 0;
 
   const videoMobileBanner = selectedMobileBanners.find(
-    (item) => item.mobile?.mediaType === "video"
+    (item) => item.mobile?.mediaType === "video",
   );
   console.log("mobile video --> ", videoMobileBanner);
   const [current, setCurrent] = useState(0);
@@ -237,7 +238,6 @@ const Home = () => {
             playsInline
           />
         )}
-
         {hasMobileImages ? (
           imageMobileBanners.length === 1 ? (
             // ✅ SINGLE IMAGE (NO CAROUSEL)
@@ -281,6 +281,64 @@ const Home = () => {
             playsInline
           />
         )}
+      </div>
+      {/* ANIMATED RUH CAFE LOGO */}
+      <div className="fixed top-34 right-20 z-50 flip-wrapper">
+        <div className="group w-24 h-24 sm:w-32 sm:h-32 md:w-35 md:h-35 lg:w-35 lg:h-35 [perspective:1000px] cursor-pointer">
+          <div className="relative w-full h-full transition-transform duration-700 ease-in-out auto-flip">
+            {/* FRONT */}
+            <div className="backface-hidden rounded-full w-full h-full bg-[#c47e39]/80">
+              <a
+                href="https://ruh-cafe-webpage.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={RuhCafeLogo}
+                  alt="RuhCafeLogo"
+                  className="w-full h-full object-contain rounded-full"
+                />
+              </a>
+            </div>
+
+            {/* BACK */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-[#c47e39]/80 text-center px-3 [transform:rotateY(180deg)] backface-hidden overflow-hidden">
+              <a
+                href="https://ruh-cafe-webpage.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <h1 className="text-sm sm:text-lg md:text-xl text-white">
+                  Welcome
+                </h1>
+
+                <h2 className="text-xs sm:text-sm md:text-base font-semibold text-white mt-1">
+                  Ruh Cafe
+                </h2>
+              </a>
+
+              {/* Bottom Circular Text */}
+              <div className="absolute inset-0 pointer-events-none">
+                <svg viewBox="0 0 200 200" className="w-full h-full">
+                  <defs>
+                    {/* Move circle center down */}
+                    <path id="bottomCircle" d="M 30,135 a 70,70 0 1,0 140,0" />
+                  </defs>
+
+                  <text fill="white" fontSize="10" letterSpacing="2">
+                    <textPath
+                      href="#bottomCircle"
+                      startOffset="50%"
+                      textAnchor="middle"
+                    >
+                      Powered By Ba-Dastoor
+                    </textPath>
+                  </text>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Section-2 */}
