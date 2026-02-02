@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Logo from "../assets/icons/Ba-Dastoor_Logo.svg?react";
 import cateringBg from "../assets/images/cateringBg.jpeg";
-import axios from "axios";
+import api from "../api/axios";
 import { toast } from "react-toastify";
 import { useLocation } from "react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -29,7 +29,7 @@ const CateringEnquiry = () => {
   const location = useLocation();
   const page = location.pathname === "/catering-enquiry" && "catering";
   const [mapUrl, setMapUrl] = useState(
-    "https://www.google.com/maps?q=Kohefiza+Bhopal&output=embed"
+    "https://www.google.com/maps?q=Kohefiza+Bhopal&output=embed",
   );
   const [loaded, setLoaded] = useState(false);
 
@@ -62,17 +62,17 @@ const CateringEnquiry = () => {
   // useEffect(() => { fetchMobileBanners() }, [page]);
 
   const selectedDesktopBanners = desktopBanner.filter(
-    (item) => item.isSelected === true
+    (item) => item.isSelected === true,
   );
   const imageBanners = selectedDesktopBanners.filter(
-    (item) => item.desktop?.mediaType === "image"
+    (item) => item.desktop?.mediaType === "image",
   );
 
   const selectedMobileBanners = mobileBanner.filter(
-    (item) => item.isSelected === true
+    (item) => item.isSelected === true,
   );
   const imageMobileBanners = selectedMobileBanners.filter(
-    (item) => item.mobile?.mediaType === "image"
+    (item) => item.mobile?.mediaType === "image",
   );
 
   // CARAOUSEL
@@ -96,9 +96,7 @@ const CateringEnquiry = () => {
 
   useEffect(() => {
     const fetchBranches = async () => {
-      const res = await axios.get(
-        "https://ba-dastoor-backend.onrender.com/api/branches/get-branches"
-      );
+      const res = await api.get("/api/branches/get-branches");
       setBranches(res?.data?.data);
     };
     fetchBranches();
@@ -142,10 +140,7 @@ const CateringEnquiry = () => {
         ...formData,
       };
 
-      const res = await axios.post(
-        `https://ba-dastoor-backend.onrender.com/api/enquirys/create-enquiry`,
-        payload
-      );
+      const res = await api.post(`/api/enquirys/create-enquiry`, payload);
       console.log(res);
       // alert("Your enquiry has been submitted successfully!");
       toast.update(toastId, {

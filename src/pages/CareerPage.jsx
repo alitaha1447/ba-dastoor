@@ -6,7 +6,7 @@ import { SquareArrowOutUpRight } from "lucide-react";
 import careerBg from "../assets/images/careerBg.jpeg";
 import jobImg from "../assets/images/jobImg.jpeg";
 
-import axios from "axios";
+import api from "../api/axios";
 import { toast } from "react-toastify";
 import { useLocation } from "react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -84,10 +84,10 @@ const CareerPage = () => {
   // }, [page]);
 
   const selectedDesktopBanners = desktopBanner.filter(
-    (item) => item.isSelected === true
+    (item) => item.isSelected === true,
   );
   const imageBanners = selectedDesktopBanners.filter(
-    (item) => item.desktop?.mediaType === "image"
+    (item) => item.desktop?.mediaType === "image",
   );
   const hasDesktopImages =
     Array.isArray(imageBanners) && imageBanners.length > 0;
@@ -97,10 +97,10 @@ const CareerPage = () => {
   // );
   // Mobile
   const selectedMobileBanners = mobileBanner.filter(
-    (item) => item.isSelected === true
+    (item) => item.isSelected === true,
   );
   const imageMobileBanners = selectedMobileBanners.filter(
-    (item) => item.mobile?.mediaType === "image"
+    (item) => item.mobile?.mediaType === "image",
   );
   // const hasMobileImages = Array.isArray(imageMobileBanners) && imageMobileBanners.length > 0;
 
@@ -124,9 +124,7 @@ const CareerPage = () => {
 
   const fetchJobList = async () => {
     try {
-      const res = await axios.get(
-        "https://ba-dastoor-backend.onrender.com/api/jobs/all-jobs"
-      );
+      const res = await api.get("/api/jobs/all-jobs");
       // console.log(res?.data?.data)
       setOpenPositions(res?.data?.data);
     } catch (error) {
@@ -172,10 +170,7 @@ const CareerPage = () => {
         enquiryType: "career",
         ...formData,
       };
-      const res = await axios.post(
-        "https://ba-dastoor-backend.onrender.com/api/enquirys/create-enquiry",
-        payload
-      );
+      const res = await api.post("/api/enquirys/create-enquiry", payload);
 
       toast.update(toastId, {
         render: "Your enquiry has been submitted successfully!",

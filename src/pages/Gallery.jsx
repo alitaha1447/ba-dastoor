@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { FaPlay } from "react-icons/fa";
 import galleryBg from "../assets/images/5317656.jpg";
 import { useLocation } from "react-router";
-import axios from "axios";
+import api from "../api/axios";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
   fetchDesktopBanners,
@@ -29,13 +29,6 @@ const Gallery = () => {
   const page = location.pathname === "/gallery" && "gallery";
   const [current, setCurrent] = useState(0);
   const [activeTab, setActiveTab] = useState("image");
-
-  // images
-  // const [gallerySlots, setGallerySlots] = useState([]);
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [totalPages, setTotalPages] = useState(1);
-  // const [imageLoading, setImageLoading] = useState(false);
-  // const [pageLoading, setPageLoading] = useState(false);
 
   // videos
   const [galleryVideoSlots, setGalleryVideoSlots] = useState([]);
@@ -87,17 +80,17 @@ const Gallery = () => {
   }, []);
 
   const selectedDesktopBanners = desktopBanner.filter(
-    (item) => item.isSelected === true
+    (item) => item.isSelected === true,
   );
   const imageBanners = selectedDesktopBanners.filter(
-    (item) => item.desktop?.mediaType === "image"
+    (item) => item.desktop?.mediaType === "image",
   );
 
   const selectedMobileBanners = mobileBanner.filter(
-    (item) => item.isSelected === true
+    (item) => item.isSelected === true,
   );
   const imageMobileBanners = selectedMobileBanners.filter(
-    (item) => item.mobile?.mediaType === "image"
+    (item) => item.mobile?.mediaType === "image",
   );
 
   useEffect(() => {
@@ -128,19 +121,6 @@ const Gallery = () => {
     const mediaType = getMediaType(src.url);
     const videoRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
-
-    // const handleMouseEnter = () => {
-    //   if (!videoRef.current) return;
-    //   videoRef.current.play();
-    //   setIsPlaying(true);
-    // };
-
-    // const handleMouseLeave = () => {
-    //   if (!videoRef.current) return;
-    //   videoRef.current.pause();
-    //   videoRef.current.currentTime = 0;
-    //   setIsPlaying(false);
-    // };
 
     const animationClass = {
       left: "animate-slideInLeft",
@@ -316,32 +296,12 @@ const Gallery = () => {
     </div>
   );
 
-  /* ------------------ FETCH IMAGE GALLERY ------------------ */
-  // const fetchGalleryImg = async (page = 1, isLoadMore = false) => {
-  //   try {
-  //     isLoadMore ? setPageLoading(true) : setImageLoading(true);
-  //     const res = await axios.get(
-  //       `https://ba-dastoor-backend.onrender.com/api/newGalleryImg/new-get-galleryImg?page=${page}`
-  //     );
-  //     const newData = res?.data?.data || [];
-  //     // console.log(newData)
-  //     // ✅ APPEND instead of replace
-  //     setGallerySlots((prev) => [...prev, ...newData]);
-  //     setTotalPages(res?.data?.totalPages || 1);
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //     isLoadMore ? setPageLoading(false) : setImageLoading(false);
-  //   }
-  // };
-
   /* ------------------ FETCH VIDEO GALLERY ------------------ */
   const fetchGalleryVideo = async (page = 1, isLoadMore = false) => {
     try {
       isLoadMore ? setVideoPageLoading(true) : setVideoLoading(true);
-      const res = await axios.get(
-        // `http://localhost:3000/api/newGalleryVideo/new-get-galleryVideoByPage?page=${page}`
-        `https://ba-dastoor-backend.onrender.com/api/newGalleryVideo/new-get-galleryVideoByPage?page=${page}`
+      const res = await api.get(
+        `/api/newGalleryVideo/new-get-galleryVideoByPage?page=${page}`,
       );
       console.log("gallery video --> ", res?.data);
       const newData = res?.data?.data || [];
@@ -354,13 +314,6 @@ const Gallery = () => {
     }
   };
 
-  // const handleViewMore = () => {
-  //   if (currentPage < 10 && !imageLoading) {
-  //     const nextPage = currentPage + 1;
-  //     setCurrentPage(nextPage);
-  //     fetchGalleryImg(nextPage, true);
-  //   }
-  // };
   const handleViewMoreVideo = () => {
     if (videoCurrentPage < 10 && !videoLoading) {
       const nextPage = videoCurrentPage + 1;

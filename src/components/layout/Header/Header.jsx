@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 import axios from "axios";
+import api from "../../../api/axios";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -72,9 +73,7 @@ const Header = () => {
 
   useEffect(() => {
     const fetchBranches = async () => {
-      const res = await axios.get(
-        "https://ba-dastoor-backend.onrender.com/api/branches/get-branches",
-      );
+      const res = await api.get("/api/branches/get-branches");
       setBranches(res?.data?.data);
     };
     fetchBranches();

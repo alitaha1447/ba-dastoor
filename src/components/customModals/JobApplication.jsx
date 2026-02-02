@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Logo from "../../assets/icons/Ba-Dastoor_Logo.svg?react";
 import { X, Upload, User, Plus } from "lucide-react";
 import axios from "axios";
+import api from "../../api/axios";
 import { toast } from "react-toastify";
 
 const JobApplication = ({ closeModal, isModalOpen }) => {
@@ -42,10 +43,7 @@ const JobApplication = ({ closeModal, isModalOpen }) => {
         ...formData,
       };
       console.log(payload);
-      const res = await axios.post(
-        "https://ba-dastoor-backend.onrender.com/api/enquirys/create-enquiry",
-        payload
-      );
+      const res = await api.post("/api/enquirys/create-enquiry", payload);
       toast.update(toastId, {
         render: "Your enquiry has been submitted successfully!",
         type: "success",

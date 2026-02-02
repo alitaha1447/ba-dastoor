@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Logo from "../assets/icons/Ba-Dastoor_Logo.svg?react";
 import formBg2 from "../assets/images/formBg2.jpeg";
-import axios from "axios";
+import api from "../api/axios";
 import { toast } from "react-toastify";
 import { useLocation } from "react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -34,20 +34,6 @@ const Franchise = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  // const fetchSelectedDesktopBanners = async () => {
-  //     const res = await axios.get(`http://localhost:3000/api/banners/get-selected-desktopBanner?page=home`);
-  //     setDesktopBanners(res?.data?.data);
-  // }
-
-  // useEffect(() => { fetchSelectedDesktopBanners() }, []);
-
-  // const fetchMobileBanners = async () => {
-  //     const res = await axios.get(`http://localhost:3000/api/banners/mobile/get-mobileBanner?page=home`);
-  //     setMobileBanner(res?.data?.data)
-  // }
-  // console.log(mobileBanner)
-  // useEffect(() => { fetchMobileBanners() }, []);
 
   const { data: desktopBanner = [] } = useQuery({
     queryKey: ["desktop-banners", page],
@@ -133,10 +119,7 @@ const Franchise = () => {
         ...formData,
       };
 
-      const res = await axios.post(
-        `http://localhost:3000/api/enquirys/create-enquiry`,
-        payload,
-      );
+      const res = await api.post(`/api/enquirys/create-enquiry`, payload);
       // console.log(res)
       // alert("Your enquiry has been submitted successfully!");
       toast.update(toastId, {

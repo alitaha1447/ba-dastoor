@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router";
-import axios from "axios";
+import api from "../api/axios";
 import { useInView } from "react-intersection-observer";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -59,9 +59,7 @@ const AboutUs = () => {
 
   const fetchAboutUs = async () => {
     try {
-      const res = await axios.get(
-        `https://ba-dastoor-backend.onrender.com/api/aboutUs/get-aboutus`,
-      );
+      const res = await api.get(`/api/aboutUs/get-aboutus`);
       setAboutUs(res?.data?.data);
     } catch (error) {
       console.log(error);
@@ -74,9 +72,7 @@ const AboutUs = () => {
 
   const fetchTeam = async () => {
     try {
-      const res = await axios.get(
-        `https://ba-dastoor-backend.onrender.com/api/team/get-team`,
-      );
+      const res = await api.get(`/api/team/get-team`);
       setTeam(res?.data?.data);
     } catch (error) {
       console.log(error);
@@ -89,9 +85,7 @@ const AboutUs = () => {
 
   const fetchGeneralContent = async (p) => {
     try {
-      const res = await axios.get(
-        `https://ba-dastoor-backend.onrender.com/api/generalContent/get-content?page=${p}`,
-      );
+      const res = await api.get(`/api/generalContent/get-content?page=${p}`);
       console.log("RES --> ", res);
       setGeneralContent(res?.data?.data);
     } catch (error) {

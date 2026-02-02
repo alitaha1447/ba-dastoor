@@ -8,6 +8,7 @@ import RuhCafeLogo from "../assets/images/RuhCafeLogo.png";
 
 import GoogleReviewsCarousel from "../components/googleReview/GoogleReviewWidget";
 import axios from "axios";
+import api from "../api/axios";
 import { useQuery } from "@tanstack/react-query";
 import {
   fetchDesktopBanners,
@@ -96,9 +97,7 @@ const Home = () => {
 
   const fetchMainContent = async () => {
     try {
-      const res = await axios.get(
-        `https://ba-dastoor-backend.onrender.com/api/content/get-content`,
-      );
+      const res = await api.get(`/api/content/get-content`);
       setMainContent(res?.data?.data);
     } catch (error) {
       console.log(error);
@@ -112,12 +111,8 @@ const Home = () => {
 
   useEffect(() => {
     Promise.all([
-      axios.get(
-        `https://ba-dastoor-backend.onrender.com/api/generalContent/get-content?page=${page}`,
-      ),
-      axios.get(
-        `https://ba-dastoor-backend.onrender.com/api/categories/get-categorywithdishes`,
-      ),
+      api.get(`/api/generalContent/get-content?page=${page}`),
+      api.get(`/api/categories/get-categorywithdishes`),
     ]).then(([contentRes, menuRes]) => {
       setContent(contentRes.data.data);
       setMenuLists(menuRes.data.data || []);
