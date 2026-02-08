@@ -1,16 +1,10 @@
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import "./App.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Routes, Route } from "react-router";
+import { Routes, Route, Navigate } from "react-router";
 import MainLayout from "./components/layout/MainLayout";
 import { showAppLoader, hideAppLoader } from "./utils/appLoader";
-// import Home from "./pages/Home";
-// import AboutUs from "./pages/AboutUs";
-// import Gallery from "./pages/Gallery";
-// import CareerPage from "./pages/CareerPage";
-// import CateringEnquiry from "./pages/CateringEnquiry";
-// import Franchise from "./pages/Franchise";
 
 const Home = lazy(() => import("./pages/Home"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
@@ -18,6 +12,7 @@ const Gallery = lazy(() => import("./pages/Gallery"));
 const CareerPage = lazy(() => import("./pages/CareerPage"));
 const CateringEnquiry = lazy(() => import("./pages/CateringEnquiry"));
 const Franchise = lazy(() => import("./pages/Franchise"));
+const ContactUs = lazy(() => import("./pages/ContactUs"));
 
 const LoaderFallback = () => {
   useEffect(() => {
@@ -25,10 +20,26 @@ const LoaderFallback = () => {
     return () => hideAppLoader();
   }, []);
 
-  return null; // loader lives outside React
+  return null;
 };
 
 function App() {
+  // const [allSEO, setAllSEO] = useState([]);
+
+  // ✅ CALL API ONCE WHEN APP LOADS
+  // const fetchAllSEO = async () => {
+  //   try {
+  //     const res = await api.get("/api/seo/get-all-seo");
+  //     console.log(res.data.data);
+  //     setAllSEO(res?.data?.data || []);
+  //   } catch (error) {
+  //     console.error("Failed to load SEO:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchAllSEO();
+  // }, []);
   return (
     <>
       <Suspense fallback={<LoaderFallback />}>
@@ -36,17 +47,14 @@ function App() {
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<AboutUs />} />
-            {/* <Route path="/contact" element={<Contact />} /> */}
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/career" element={<CareerPage />} />
             <Route path="/catering-enquiry" element={<CateringEnquiry />} />
             <Route path="/franchise" element={<Franchise />} />
+            <Route path="/contact" element={<ContactUs />} />
           </Route>
         </Routes>
-        <ToastContainer
-          position="top-right"
-          style={{ top: "90px" }} // 👈 adjust based on header height
-        />
+        <ToastContainer position="top-right" style={{ top: "90px" }} />
       </Suspense>
     </>
   );

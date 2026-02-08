@@ -292,7 +292,7 @@ const AboutUs = () => {
                   </h3>
                 </div>
                 <h2
-                  class="text-xl md:text-xl  mb-3"
+                  className="text-xl md:text-xl  mb-3"
                   style={{ color: "#faffce" }}
                 >
                   {aboutUs?.heading}

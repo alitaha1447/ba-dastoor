@@ -1,19 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
-import { NavLink, Link, useNavigate, useLocation } from "react-router";
+import { useState, useEffect, useRef } from "react";
+import { NavLink, useNavigate, useLocation } from "react-router";
 import Logo from "../../../assets/icons/Ba-Dastoor_Logo.svg?react";
 import { FaPhoneAlt } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import {
   Plus,
-  X,
   Home,
   Compass,
   Heart,
   User,
   Camera,
-  MessageCircle,
-  MapPin,
-  Pizza,
   Store,
   HandPlatter,
 } from "lucide-react";
@@ -69,6 +65,7 @@ const Header = () => {
     { label: "Catering", path: "/catering-enquiry", type: "route" },
     { label: "Franchise", path: "/franchise", type: "route" },
     { label: "Career", path: "/career", type: "route" }, // ✅ ADDED
+    { label: "Contact Us", path: "/contact", type: "route" }, // ✅ ADDED
   ];
 
   useEffect(() => {
@@ -94,7 +91,6 @@ const Header = () => {
     e.preventDefault();
 
     if (location.pathname === "/") {
-      // If already on homepage, scroll smoothly to menu section
       const menuSection = document.getElementById("menu");
       if (menuSection) {
         menuSection.scrollIntoView({
@@ -103,28 +99,19 @@ const Header = () => {
         });
       }
     } else {
-      // If on another page, navigate to home with scroll state
       navigate("/", {
         state: { scrollTo: "menu" },
-        // This ensures the browser doesn't try to scroll immediately
         replace: true,
       });
     }
-    setOpen(false); // close mobile menu if open
-    setOpenBranches(false); // close branches dropdown if open
-  };
-
-  const handleActionClick = (id) => {
-    setActiveItem(id);
-    setIsOpen(false);
+    setOpen(false);
+    setOpenBranches(false);
   };
 
   const handleLogoClick = () => {
     if (location.pathname === "/") {
-      // Already on home → just scroll to top
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      // Navigate to home, then scroll to top
       navigate("/", { replace: false });
       setTimeout(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -136,29 +123,8 @@ const Header = () => {
     setIsOpen(false);
   };
 
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     if (
-  //       openBranches &&
-  //       branchRef.current &&
-  //       !branchRef.current.contains(event.target)
-  //     ) {
-  //       setOpenBranches(false);
-  //     }
-  //   };
-
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   document.addEventListener("touchstart", handleClickOutside);
-
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //     document.removeEventListener("touchstart", handleClickOutside);
-  //   };
-  // }, [openBranches]);
-
   /* ------------------ ZOOM MODAL ------------------ */
   const ZoomModal = ({ media, onClose }) => {
-    console.log("media --> ", media?.url);
     useEffect(() => {
       const handleEsc = (e) => {
         if (e.key === "Escape") onClose();
@@ -186,22 +152,8 @@ const Header = () => {
             {/* ❌ CLOSE BUTTON INSIDE MEDIA */}
             <button
               onClick={onClose}
-              className="
-                              absolute
-                              top-2
-                              right-2
-                              z-20
-                              w-9
-                              h-9
-                              rounded-full
-                              bg-black/70
-                              text-white
-                              flex
-                              items-center
-                              justify-center
-                              hover:bg-black
-                              transition
-                          "
+              className="absolute top-2 right-2 z-20 w-9 h-9 rounded-full    bg-black/70   text-white
+                              flex items-center justify-center   hover:bg-black    transition                          "
             >
               ✕
             </button>
@@ -209,50 +161,8 @@ const Header = () => {
             <img
               src={media.url}
               alt="Zoomed"
-              className="
-                                  block
-                                  max-w-full
-                                  max-h-[60vh]
-                                  w-auto
-                                  h-auto
-                                  object-contain
-                                  rounded-lg
-                                  animate-zoomIn
-                              "
+              className="block max-w-full    max-h-[60vh]                                  w-auto                                 h-auto                                  object-contain                                 rounded-lg                                  animate-zoomIn                              "
             />
-
-            {/* {media.type === "image" ? (
-              <img
-                src={media.url}
-                alt="Zoomed"
-                className="
-                                  block
-                                  max-w-full
-                                  max-h-[60vh]
-                                  w-auto
-                                  h-auto
-                                  object-contain
-                                  rounded-lg
-                                  animate-zoomIn
-                              "
-              />
-            ) : (
-              <video
-                src={media.url}
-                controls
-                autoPlay
-                className="
-                                  block
-                                  max-w-full
-                                  max-h-[60vh]
-                                  w-auto
-                                  h-auto
-                                  object-contain
-                                  rounded-lg
-                                  bg-black
-                              "
-              />
-            )} */}
           </div>
         </div>
       </div>
@@ -260,17 +170,11 @@ const Header = () => {
   };
 
   const handleClick = (url) => {
-    console.log("clicked");
-    console.log(url);
     setZoomMedia({ url: url });
   };
 
   return (
     <header
-      // className={` w-full z-[999999999] transition-all duration-300 ${
-
-      //   scrolled ? "fixed top-0 left-0" : "bg-[#0f0802db] "
-      // }`}
       className={`fixed top-0 left-0 w-full z-[999999999] transition-all duration-300 ${
         scrolled ? "" : ""
       }`}
@@ -420,14 +324,6 @@ const Header = () => {
                           {branch?.address}
                         </p>
                       </div>
-                      {/* <div
-                        className="flex items-center gap-2 border border-white p-3 rounded-lg"
-                      >
-                        <span>
-                          <FaPhoneAlt />
-                        </span>
-                        <p>{branch?.contact}</p>
-                      </div> */}
                       <a
                         href="tel:+919981341447"
                         className="flex items-center gap-2 border border-white p-3 rounded-lg
@@ -528,16 +424,6 @@ const Header = () => {
               return (
                 <div key={branch?._id}>
                   <div className="flex flex-col w-full ">
-                    {/* <div className="w-full p-4">
-                      <div className="h-[100px] bg-gray-400 rounded-lg overflow-hidden flex items-center justify-center">
-                        <div
-                          className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
-                          dangerouslySetInnerHTML={{
-                            __html: branch?.embedUrl,
-                          }}
-                        />
-                      </div>
-                    </div> */}
                     <div className="flex flex-col gap-2">
                       <div className="flex-1">
                         <div>
@@ -553,15 +439,6 @@ const Header = () => {
                             {branch?.address}
                           </p>
                         </div>
-                        {/* <div className="flex flex-row justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <span>
-                              <FaPhoneAlt />
-                            </span>
-                            <p>{branch?.contact}</p>
-                          </div>
-                          <MapPin />
-                        </div> */}
                       </div>
                       {/* ===== Right Side: Small Google-style Image Strip ===== */}
                       <div className="flex-1 overflow-x-auto scrollbar-hide">
@@ -595,34 +472,8 @@ const Header = () => {
                         className="flex flex-row items-center gap-2 border border-gray-200 rounded-sm px-3 py-1 cursor-pointer"
                       >
                         Location
-                        {/* <MapPin
-                          style={{ cursor: "pointer" }}
-                          className={`transition-transform duration-300 ${
-                            openMapBranchId === branch._id
-                              ? "rotate-180 text-[#C9A24D]"
-                              : ""
-                          }`}
-                          size={20}
-                          onClick={() =>
-                            setOpenMapBranchId(
-                              openMapBranchId === branch._id ? null : branch._id
-                            )
-                          }
-                        /> */}
                       </span>
                     </div>
-                    {/* {openMap && (
-                      <div className="w-full p-4">
-                        <div className="h-[100px] bg-gray-400 rounded-lg overflow-hidden flex items-center justify-center">
-                          <div
-                            className={`w-full h-full [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0 `}
-                            dangerouslySetInnerHTML={{
-                              __html: branch?.embedUrl,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    )} */}
                     <div
                       className={`
     overflow-hidden

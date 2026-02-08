@@ -114,7 +114,6 @@ const Gallery = () => {
 
   /* ------------------ IMAGE / VIDEO BOX ------------------ */
   const ImageBox = ({ src, animation = "left" }) => {
-    console.log("src", src);
     const [loaded, setLoaded] = useState(false);
     if (!src?.url) return null;
 
@@ -303,7 +302,6 @@ const Gallery = () => {
       const res = await api.get(
         `/api/newGalleryVideo/new-get-galleryVideoByPage?page=${page}`,
       );
-      console.log("gallery video --> ", res?.data);
       const newData = res?.data?.data || [];
       setGalleryVideoSlots((prev) => [...prev, ...newData]);
       setVideoTotalPages(res?.data?.totalPages || 1);
@@ -584,7 +582,6 @@ const Gallery = () => {
             ) : galleryVideoSlots.length > 0 ? (
               <>
                 {galleryVideoSlots.map((gallery) => {
-                  console.log("--->", gallery.primaryVideo.url);
                   const videoItems = [
                     gallery.primaryVideo,
                     ...(Array.isArray(gallery.siblings)

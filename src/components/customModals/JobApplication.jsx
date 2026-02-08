@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Logo from "../../assets/icons/Ba-Dastoor_Logo.svg?react";
 import { X, Upload, User, Plus } from "lucide-react";
 import axios from "axios";
 import api from "../../api/axios";
 import { toast } from "react-toastify";
 
-const JobApplication = ({ closeModal, isModalOpen }) => {
+const JobApplication = ({ closeModal, isModalOpen, selectedJob = null }) => {
   if (!isModalOpen) return null;
   const [isLoading, setisLoading] = useState(false);
 
@@ -17,6 +17,15 @@ const JobApplication = ({ closeModal, isModalOpen }) => {
     experience: "",
     message: "",
   });
+
+  useEffect(() => {
+    if (selectedJob) {
+      setFormData((prev) => ({
+        ...prev,
+        position: selectedJob.jobTitle ?? "",
+      }));
+    }
+  }, [selectedJob]);
 
   const handleChange = async (e) => {
     setFormData({

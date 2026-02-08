@@ -35,6 +35,7 @@ const CareerPage = () => {
   // const [mobileBanner, setMobileBanner] = useState([])
   const [activeJobId, setActiveJobId] = useState(null);
   const [openJobModal, setOpenJobModal] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
 
   const location = useLocation();
 
@@ -137,6 +138,10 @@ const CareerPage = () => {
     fetchJobList();
   }, []);
 
+  const filteredJobByStatus = openPositions.filter(
+    (job, _) => job.status === true,
+  );
+
   const handlePositionClick = (position) => {
     setSelectedPosition(position);
     setShowForm(true);
@@ -206,7 +211,8 @@ const CareerPage = () => {
     }
   };
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (position) => {
+    setSelectedJob(position);
     setOpenJobModal(true);
   };
 
@@ -289,7 +295,7 @@ const CareerPage = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mb-8">
-                  {openPositions.map((position) => (
+                  {filteredJobByStatus.map((position) => (
                     <div
                       key={position._id}
                       className="relative w-full min-h-[220px] cursor-pointer overflow-hidden rounded-lg"
@@ -342,7 +348,7 @@ const CareerPage = () => {
 
                         <button
                           // onClick={() => handlePositionClick(position)}
-                          onClick={() => handleOpenModal(true)}
+                          onClick={() => handleOpenModal(position)}
                           className="relative top-2 mt-6 px-8 border border-[#C9A24D] text-[#C9A24D] text-sm font-medium py-1.5 rounded-md hover:bg-[#C9A24D] hover:text-black transition-colors duration-200 cursor-pointer"
                         >
                           Apply Now
@@ -526,6 +532,7 @@ const CareerPage = () => {
         <JobApplication
           isModalOpen={openJobModal}
           closeModal={() => setOpenJobModal(false)}
+          selectedJob={selectedJob}
           // selectedImg={selectedImg}
           // refreshList={fetchGalleyImg}
         />

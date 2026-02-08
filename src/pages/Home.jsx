@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import bannerImg3 from "../assets/images/bannerImage3.jpg";
 import underLine from "../assets/images/underLine.png";
 import menuBG from "../assets/images/menuBG.jpeg";
@@ -107,8 +107,6 @@ const Home = () => {
     fetchMainContent();
   }, []);
 
-  console.log("==>", mainContent);
-
   useEffect(() => {
     Promise.all([
       api.get(`/api/generalContent/get-content?page=${page}`),
@@ -146,7 +144,6 @@ const Home = () => {
   const videoBanner = selectedDesktopBanners.find(
     (item) => item.desktop?.mediaType === "video",
   );
-  console.log("desktop video --> ", videoBanner);
   // Mobile
   const selectedMobileBanners = mobileBanner.filter(
     (item) => item.isSelected === true,
@@ -160,7 +157,6 @@ const Home = () => {
   const videoMobileBanner = selectedMobileBanners.find(
     (item) => item.mobile?.mediaType === "video",
   );
-  console.log("mobile video --> ", videoMobileBanner);
   const [current, setCurrent] = useState(0);
   // const activeBanners = isMobileView ? imageMobileBanners : imageBanners;
 
@@ -278,11 +274,18 @@ const Home = () => {
         )}
       </div>
       {/* ANIMATED RUH CAFE LOGO */}
-      <div className="fixed top-34 right-20 z-50 flip-wrapper">
+      {/* <div className="fixed top-25 right-10 sm:right-6 md:right-20 z-50 flip-wrapper"> */}
+      <div
+        className="fixed top-20 md:top-24 right-4 md:right-10
+-translate-x-1 md:translate-x-0
+translate-y-1 md:translate-y-0
+z-50 flip-wrapper
+"
+      >
         <div className="group w-24 h-24 sm:w-32 sm:h-32 md:w-35 md:h-35 lg:w-35 lg:h-35 [perspective:1000px] cursor-pointer">
           <div className="relative w-full h-full transition-transform duration-700 ease-in-out auto-flip">
             {/* FRONT */}
-            <div className="backface-hidden rounded-full w-full h-full bg-[#c47e39]/80">
+            <div className="backface-hidden rounded-full w-full h-full bg-[#e3780fd4]">
               <a
                 href="https://ruh-cafe-webpage.vercel.app/"
                 target="_blank"
@@ -297,7 +300,7 @@ const Home = () => {
             </div>
 
             {/* BACK */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-[#c47e39]/80 text-center px-3 [transform:rotateY(180deg)] backface-hidden overflow-hidden">
+            <div className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-[#e3780fd4] text-center px-3 [transform:rotateY(180deg)] backface-hidden overflow-hidden">
               <a
                 href="https://ruh-cafe-webpage.vercel.app/"
                 target="_blank"
@@ -313,14 +316,15 @@ const Home = () => {
               </a>
 
               {/* Bottom Circular Text */}
+              {/* Bottom Circular Text */}
               <div className="absolute inset-0 pointer-events-none">
                 <svg viewBox="0 0 200 200" className="w-full h-full">
                   <defs>
-                    {/* Move circle center down */}
-                    <path id="bottomCircle" d="M 30,135 a 70,70 0 1,0 140,0" />
+                    {/* Better positioned circle path */}
+                    <path id="bottomCircle" d="M 20,120 a 80,65 0 1,0 160,0" />
                   </defs>
 
-                  <text fill="white" fontSize="10" letterSpacing="2">
+                  <text fill="#EFBF04" fontSize="14" letterSpacing="4">
                     <textPath
                       href="#bottomCircle"
                       startOffset="50%"
