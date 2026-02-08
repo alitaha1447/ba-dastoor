@@ -10,6 +10,10 @@ import {
   fetchMobileBanners,
 } from "../api/banner/bannerApi";
 
+const validatePhone = (phone) => {
+  return /^\d{10}$/.test(phone);
+};
+
 const CateringEnquiry = () => {
   const [isLoading, setisLoading] = useState(false);
   const initialState = {
@@ -124,6 +128,11 @@ const CateringEnquiry = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // ✅ PHONE VALIDATION
+    if (!validatePhone(formData.phone)) {
+      toast.error("Phone number must be exactly 10 digits");
+      return;
+    }
     setisLoading(true);
     const toastId = toast.loading("Processing...", {
       style: {
@@ -286,11 +295,15 @@ const CateringEnquiry = () => {
                 placeholder="Enter your Name"
               />
               <input
-                type="number"
+                type="tel"
                 name="phone"
                 value={formData.phone}
                 required
-                onChange={handleChange}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, ""); // allow digits only
+                  setFormData({ ...formData, phone: value });
+                }}
+                maxLength={10}
                 className="catering-input"
                 placeholder="Mobile Number"
               />
