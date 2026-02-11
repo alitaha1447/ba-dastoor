@@ -17,6 +17,8 @@ import {
 import { useInView } from "react-intersection-observer";
 
 const Home = () => {
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const [totalReviewCount, setTotalReviewCount] = useState(null);
   const [avgRating, setAvgRating] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -195,7 +197,8 @@ const Home = () => {
     `}
             >
               <img
-                src={item?.desktop?.url}
+                // src={item?.desktop?.url}
+                src={`${BASE_URL}${item?.desktop?.url}`}
                 loading="lazy"
                 alt="Banner"
                 className="
@@ -222,7 +225,8 @@ const Home = () => {
         {!hasDesktopImages && videoBanner && (
           <video
             className="hidden md:block absolute inset-0 w-full h-full object-cover"
-            src={videoBanner.desktop.url}
+            // src={videoBanner.desktop.url}
+            src={`${BASE_URL}${videoBanner.desktop.url}`}
             autoPlay
             loop
             muted
@@ -235,8 +239,11 @@ const Home = () => {
             <div
               className="block md:hidden absolute inset-0 bg-no-repeat bg-center bg-cover"
               style={{
+                // backgroundImage: imageMobileBanners[0]?.mobile?.url
+                //   ? `url(${imageMobileBanners[0].mobile.url})`
+                //   : "none",
                 backgroundImage: imageMobileBanners[0]?.mobile?.url
-                  ? `url(${imageMobileBanners[0].mobile.url})`
+                  ? `url(${BASE_URL}${imageMobileBanners[0].mobile.url})`
                   : "none",
               }}
             />
@@ -250,8 +257,11 @@ const Home = () => {
                     transition-opacity duration-700 ease-in-out
                     ${index === current ? "opacity-100" : "opacity-0"}`}
                 style={{
+                  // backgroundImage: item?.mobile?.url
+                  //   ? `url(${item.mobile.url})`
+                  //   : "none",
                   backgroundImage: item?.mobile?.url
-                    ? `url(${item.mobile.url})`
+                    ? `url(${BASE_URL}${item?.mobile.url})`
                     : "none",
                 }}
               />
@@ -265,7 +275,8 @@ const Home = () => {
         {!hasMobileImages && videoMobileBanner && (
           <video
             className="block md:hidden absolute inset-0 w-full h-full object-cover"
-            src={videoMobileBanner.mobile.url}
+            // src={videoMobileBanner.mobile.url}
+            src={`${BASE_URL}${videoMobileBanner.mobile.url}`}
             autoPlay
             loop
             muted
@@ -287,7 +298,7 @@ z-50 flip-wrapper
             {/* FRONT */}
             <div className="backface-hidden rounded-full w-full h-full bg-[#e3780fd4]">
               <a
-                href="https://ruh-cafe-webpage.vercel.app/"
+                href="https://ruhcafe.in/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -354,7 +365,8 @@ z-50 flip-wrapper
           >
             {/* <Logo2 className="h-32 w-auto" /> */}
             <img
-              src={content?.logo?.url} // replace with your image import
+              // src={content?.logo?.url}
+              src={`${BASE_URL}${content?.logo?.url}`} // replace with your image import
               alt="Ba-Dastoor Heritage"
               className=" h-32 object-fill"
             />
@@ -403,7 +415,8 @@ z-50 flip-wrapper
           >
             {content?.media?.url && (
               <img
-                src={content.media.url}
+                // src={content.media.url}
+                src={`${BASE_URL}${content.media.url}`}
                 alt="Ba-Dastoor Heritage"
                 className="w-full h-full object-cover"
               />

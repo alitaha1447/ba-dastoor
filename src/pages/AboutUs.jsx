@@ -9,6 +9,8 @@ import {
 } from "../api/banner/bannerApi";
 
 const AboutUs = () => {
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const location = useLocation();
 
   const [current, setCurrent] = useState(0);
@@ -154,7 +156,8 @@ const AboutUs = () => {
     `}
             >
               <img
-                src={item?.desktop?.url}
+                // src={item?.desktop?.url}
+                src={`${BASE_URL}${item?.desktop?.url}`}
                 loading="lazy"
                 alt="Banner"
                 className="w-full h-full  object-cover object-center        "
@@ -165,7 +168,8 @@ const AboutUs = () => {
         {!hasDesktopImages && videoBanner && (
           <video
             className="hidden md:block absolute inset-0 w-full h-full object-cover"
-            src={videoBanner.desktop.url}
+            // src={videoBanner.desktop.url}
+            src={`${BASE_URL}${videoBanner.desktop.url}`}
             autoPlay
             loop
             muted
@@ -179,8 +183,11 @@ const AboutUs = () => {
             <div
               className="block md:hidden absolute inset-0 bg-no-repeat bg-center bg-cover"
               style={{
+                // backgroundImage: imageMobileBanners[0]?.mobile?.url
+                //   ? `url(${imageMobileBanners[0].mobile.url})`
+                //   : "none",
                 backgroundImage: imageMobileBanners[0]?.mobile?.url
-                  ? `url(${imageMobileBanners[0].mobile.url})`
+                  ? `url(${BASE_URL}${imageMobileBanners[0].mobile.url})`
                   : "none",
               }}
             />
@@ -194,8 +201,11 @@ const AboutUs = () => {
                     transition-opacity duration-700 ease-in-out
                     ${index === current ? "opacity-100" : "opacity-0"}`}
                 style={{
+                  // backgroundImage: item?.mobile?.url
+                  //   ? `url(${item.mobile.url})`
+                  //   : "none",
                   backgroundImage: item?.mobile?.url
-                    ? `url(${item.mobile.url})`
+                    ? `url(${BASE_URL}${item.mobile.url})`
                     : "none",
                 }}
               />
@@ -209,7 +219,8 @@ const AboutUs = () => {
         {!hasMobileImages && videoMobileBanner && (
           <video
             className="block md:hidden absolute inset-0 w-full h-full object-cover"
-            src={videoMobileBanner.mobile.url}
+            // src={videoMobileBanner.mobile.url}
+            src={`${BASE_URL}${videoMobileBanner.mobile.url}`}
             autoPlay
             loop
             muted
@@ -252,7 +263,12 @@ const AboutUs = () => {
               {/* IMAGE */}
               <div className="relative w-full md:w-[70%] md:ml-auto">
                 <img
-                  src={aboutUs?.ownerImage?.url}
+                  // src={aboutUs?.ownerImage?.url}
+                  src={
+                    aboutUs?.ownerImage?.url
+                      ? `${BASE_URL}${aboutUs.ownerImage.url}`
+                      : ""
+                  }
                   alt="Owner"
                   className="w-full h-[400px] md:h-[540px]  object-cover shadow-xl"
                 />
@@ -320,7 +336,10 @@ const AboutUs = () => {
           >
             {/* Chef Image */}
             <img
-              src={team?.teamImage?.url}
+              // src={team?.teamImage?.url}
+              src={
+                team?.teamImage?.url ? `${BASE_URL}${team.teamImage.url}` : ""
+              }
               alt="Head Chef"
               className="w-full h-[420px] md:h-full object-cover"
             />
@@ -385,7 +404,12 @@ const AboutUs = () => {
               {generalContent?.media?.mediaType === "video" ? (
                 <video
                   className="w-full h-full object-cover"
-                  src={generalContent?.media?.url}
+                  // src={generalContent?.media?.url}
+                  src={
+                    generalContent?.media?.url
+                      ? `${BASE_URL}${generalContent.media.url}`
+                      : ""
+                  }
                   controls
                   autoPlay
                   loop

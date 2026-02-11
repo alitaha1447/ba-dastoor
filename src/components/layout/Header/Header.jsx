@@ -18,6 +18,8 @@ import axios from "axios";
 import api from "../../../api/axios";
 
 const Header = () => {
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);
@@ -170,7 +172,8 @@ const Header = () => {
   };
 
   const handleClick = (url) => {
-    setZoomMedia({ url: url });
+    // setZoomMedia({ url: url });
+    setZoomMedia({ url: `${BASE_URL}${url}` });
   };
 
   return (
@@ -325,12 +328,12 @@ const Header = () => {
                         </p>
                       </div>
                       <a
-                        href="tel:+919981341447"
+                        href={`tel:${branch?.contact}`}
                         className="flex items-center gap-2 border border-white p-3 rounded-lg
              cursor-pointer hover:bg-white/10 transition"
                       >
                         <FaPhoneAlt />
-                        <p>+91 99813 41447</p>
+                        <p>{branch?.contact}</p>
                       </a>
                     </div>
                   </div>
@@ -342,7 +345,8 @@ const Header = () => {
                           className="w-[65%] h-full overflow-hidden rounded-md cursor-pointer"
                         >
                           <img
-                            src={branch?.images[0]?.url}
+                            // src={branch?.images[0]?.url}
+                            src={`${BASE_URL}${branch?.images[0]?.url}`}
                             alt="Ba-Dastoor Interior"
                             className="w-full h-full object-cover"
                           />
@@ -354,7 +358,8 @@ const Header = () => {
                             className="flex-1 overflow-hidden rounded-md"
                           >
                             <img
-                              src={branch?.images[1]?.url}
+                              // src={branch?.images[1]?.url}
+                              src={`${BASE_URL}${branch?.images[1]?.url}`}
                               alt="Dish 1"
                               className="w-full h-full object-cover"
                             />
@@ -364,7 +369,8 @@ const Header = () => {
                             className="flex-1 overflow-hidden rounded-md"
                           >
                             <img
-                              src={branch?.images[2]?.url}
+                              // src={branch?.images[2]?.url}
+                              src={`${BASE_URL}${branch?.images[2]?.url}`}
                               alt="Dish 2"
                               className="w-full h-full object-cover"
                             />
@@ -447,7 +453,8 @@ const Header = () => {
                             <img
                               onClick={() => handleClick(img?.url)}
                               key={i}
-                              src={img?.url}
+                              // src={img?.url}
+                              src={`${BASE_URL}${img?.url}`}
                               alt={`branch-${i}`}
                               className="w-[88px] h-[88px] object-cover rounded-lg flex-shrink-0 border border-white/10"
                             />

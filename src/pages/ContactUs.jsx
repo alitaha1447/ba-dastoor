@@ -10,6 +10,8 @@ const validatePhone = (phone) => {
 };
 
 const ContactUs = () => {
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const [isLoading, setisLoading] = useState(false);
 
   const initialState = {

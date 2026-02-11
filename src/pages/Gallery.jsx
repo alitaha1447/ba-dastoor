@@ -1,14 +1,18 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { FaPlay } from "react-icons/fa";
 import galleryBg from "../assets/images/5317656.jpg";
 import { useLocation } from "react-router";
-import api from "../api/axios";
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import {
+  useQuery,
+  useInfiniteQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   fetchDesktopBanners,
   fetchMobileBanners,
 } from "../api/banner/bannerApi";
 import { fetchGalleryImg } from "../api/gallerImage/galleryImgApi";
+import { fetchGalleryVideo } from "../api/gallerVideo/galleryVideoApi";
 
 /* ================== LOADER ================== */
 const Loader = () => (
@@ -17,41 +21,47 @@ const Loader = () => (
   </div>
 );
 
-/* ================== EMPTY STATE ================== */
-const EmptyState = ({ text }) => (
-  <div className="flex justify-center items-center py-20">
-    <p className="text-gray-500 text-lg">{text}</p>
-  </div>
-);
-
 const Gallery = () => {
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const queryClient = useQueryClient();
+
   const location = useLocation();
   const page = location.pathname === "/gallery" && "gallery";
   const [current, setCurrent] = useState(0);
   const [activeTab, setActiveTab] = useState("image");
 
-  // videos
-  const [galleryVideoSlots, setGalleryVideoSlots] = useState([]);
-  const [videoCurrentPage, setVideoCurrentPage] = useState(1);
-  const [videoTotalPages, setVideoTotalPages] = useState(1);
-  const [videoLoading, setVideoLoading] = useState(false);
-  const [videoPageLoading, setVideoPageLoading] = useState(false);
-
   const [zoomMedia, setZoomMedia] = useState(null); // 🔥 SINGLE MODAL STATE
 
-  const imageFetchedRef = useRef(false);
-  const videoFetchedRef = useRef(false);
   const [loaded, setLoaded] = useState(false);
+
+  /* ================= PREFETCH VIDEOS ONLY WHEN IDLE ================= */
+  useEffect(() => {
+    const prefetch = () =>
+      queryClient.prefetchInfiniteQuery({
+        queryKey: ["gallery-videos"],
+        queryFn: fetchGalleryVideo,
+        initialPageParam: 1,
+      });
+
+    const id = setTimeout(prefetch, 1500);
+    return () => clearTimeout(id);
+  }, [queryClient]);
+
+  /* ================= BANNERS ================= */
 
   const { data: desktopBanner = [] } = useQuery({
     queryKey: ["desktop-banners", page],
     queryFn: () => fetchDesktopBanners(page),
+    staleTime: 15 * 60 * 1000,
   });
 
   const { data: mobileBanner = [] } = useQuery({
     queryKey: ["mobile-banners", page],
     queryFn: () => fetchMobileBanners(page),
+    staleTime: 15 * 60 * 1000,
   });
+
+  /* ================= IMAGES ================= */
 
   const {
     data: imagePages,
@@ -62,14 +72,60 @@ const Gallery = () => {
   } = useInfiniteQuery({
     queryKey: ["gallery-images"],
     queryFn: fetchGalleryImg,
+
     enabled: activeTab === "image",
+
+    initialPageParam: 1,
+
+    staleTime: 15 * 60 * 1000,
+    gcTime: 45 * 60 * 1000,
+
+    keepPreviousData: true,
+
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+
     getNextPageParam: (lastPage) =>
       lastPage.hasNextPage ? lastPage.page + 1 : undefined,
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
   });
 
-  const gallerySlots = imagePages?.pages.flatMap((p) => p.data) ?? [];
+  const gallerySlots = useMemo(
+    () => imagePages?.pages.flatMap((p) => p.data) ?? [],
+    [imagePages],
+  );
+
+  /* ================= VIDEOS ================= */
+
+  const {
+    data: videoPages,
+    fetchNextPage: fetchNextVideoPage,
+    hasNextPage: hasNextVideoPage,
+    isFetchingNextPage: isFetchingNextVideoPage,
+    isLoading: videoLoading,
+  } = useInfiniteQuery({
+    queryKey: ["gallery-videos"],
+    queryFn: fetchGalleryVideo,
+
+    enabled: activeTab === "video",
+
+    initialPageParam: 1,
+
+    staleTime: 15 * 60 * 1000,
+    gcTime: 45 * 60 * 1000,
+
+    keepPreviousData: true,
+
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+
+    getNextPageParam: (lastPage) =>
+      lastPage.hasNextPage ? lastPage.page + 1 : undefined,
+  });
+
+  const galleryVideoSlots = useMemo(
+    () => videoPages?.pages.flatMap((p) => p.data) ?? [],
+    [videoPages],
+  );
 
   const handleViewMore = () => {
     if (hasNextPage) fetchNextPage();
@@ -117,6 +173,8 @@ const Gallery = () => {
     const [loaded, setLoaded] = useState(false);
     if (!src?.url) return null;
 
+    const fullUrl = `${BASE_URL}${src.url}`;
+
     const mediaType = getMediaType(src.url);
     const videoRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -129,11 +187,11 @@ const Gallery = () => {
 
     const handleClick = () => {
       if (mediaType === "image") {
-        setZoomMedia({ url: src.url, type: "image" });
+        setZoomMedia({ url: fullUrl, type: "image" });
       }
 
       if (mediaType === "video") {
-        setZoomMedia({ url: src.url, type: "video" });
+        setZoomMedia({ url: fullUrl, type: "video" });
       }
     };
 
@@ -144,23 +202,21 @@ const Gallery = () => {
       >
         {/* 🔄 SPINNER (stays until FULLY loaded) */}
         {/* ================= SKELETON / LOADER ================= */}
-        {/* {!loaded && (
-                    <div className="absolute inset-0 z-10 bg-gray-100 animate-pulse" />
-                )} */}
+        {!loaded && (
+          <div className="absolute inset-0 bg-gray-100 animate-pulse z-10" />
+        )}
         {src.mediaType === "video" ? (
-          <div
-            className=""
-            //  onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
-          >
+          <div className="">
             <video
               ref={videoRef}
-              src={src.url}
+              // src={src.url}
+              src={fullUrl}
+              preload="metadata"
               muted
               loop
-              // autoPlay
               playsInline
-              // onLoad={() => setLoaded(true)}
               className={`w-full h-full object-cover ${animationClass}`}
+              onLoadedData={() => setLoaded(true)}
             />
             {/* ▶ PLAY BUTTON (VISIBLE ONLY WHEN PAUSED) */}
             {!isPlaying && (
@@ -189,10 +245,12 @@ const Gallery = () => {
           </div>
         ) : (
           <img
-            src={src.url}
+            // src={src.url}
+            src={fullUrl}
             loading="lazy"
             decoding="async"
-            // onLoad={() => setLoaded(true)}
+            fetchPriority="low"
+            onLoad={() => setLoaded(true)}
             className={`w-full h-full object-cover transition-opacity       duration-500      ${animationClass} `}
             alt=""
           />
@@ -295,43 +353,6 @@ const Gallery = () => {
     </div>
   );
 
-  /* ------------------ FETCH VIDEO GALLERY ------------------ */
-  const fetchGalleryVideo = async (page = 1, isLoadMore = false) => {
-    try {
-      isLoadMore ? setVideoPageLoading(true) : setVideoLoading(true);
-      const res = await api.get(
-        `/api/newGalleryVideo/new-get-galleryVideoByPage?page=${page}`,
-      );
-      const newData = res?.data?.data || [];
-      setGalleryVideoSlots((prev) => [...prev, ...newData]);
-      setVideoTotalPages(res?.data?.totalPages || 1);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      isLoadMore ? setVideoPageLoading(false) : setVideoLoading(false);
-    }
-  };
-
-  const handleViewMoreVideo = () => {
-    if (videoCurrentPage < 10 && !videoLoading) {
-      const nextPage = videoCurrentPage + 1;
-      setVideoCurrentPage(nextPage);
-      fetchGalleryVideo(nextPage, true);
-    }
-  };
-  /* ================== TAB BASED FETCH ================== */
-  useEffect(() => {
-    if (activeTab === "image" && !imageFetchedRef.current) {
-      imageFetchedRef.current = true;
-      fetchGalleryImg(1);
-    }
-
-    if (activeTab === "video" && !videoFetchedRef.current) {
-      videoFetchedRef.current = true;
-      fetchGalleryVideo(1);
-    }
-  }, [activeTab]);
-
   /* ------------------ AUTO SLIDER ------------------ */
   // CARAOUSEL
 
@@ -385,7 +406,6 @@ const Gallery = () => {
       </div>
     );
   };
-  // -----------------
 
   return (
     <>
@@ -393,7 +413,8 @@ const Gallery = () => {
         {imageBanners?.length > 0 && imageBanners[current] && (
           <div className="absolute inset-0">
             <img
-              src={imageBanners[current].desktop.url}
+              // src={imageBanners[current].desktop.url}
+              src={`${BASE_URL}${imageBanners[current].desktop.url}`}
               onLoad={() => setLoaded(true)}
               className={`w-full h-full object-cover transition-all duration-700
     ${loaded ? "opacity-100 blur-0" : "opacity-0 blur-md"}`}
@@ -407,7 +428,8 @@ const Gallery = () => {
         {imageMobileBanners?.length > 0 && imageMobileBanners[current] && (
           <div className="absolute inset-0">
             <img
-              src={imageMobileBanners[current].mobile.url}
+              // src={imageMobileBanners[current].mobile.url}
+              src={`${BASE_URL}${imageMobileBanners[current].mobile.url}`}
               onLoad={() => setLoaded(true)}
               alt="Catering Banner"
               className={`w-full h-full object-cover transition-all duration-700
@@ -541,25 +563,6 @@ const Gallery = () => {
                   );
                 })}
 
-                {/* VIEW MORE (IMAGE ONLY) */}
-                {/* <div className="flex justify-center mt-8">
-                  <button
-                    onClick={handleViewMore}
-                    // disabled={pageLoading || currentPage >= totalPages}
-                    className="px-8 py-2 border border-[#C9A24D] text-[#bd9133] text-sm font-medium
-      rounded-full transition hover:bg-[#C9A24D] hover:text-white
-      flex items-center gap-2 cursor-pointer"
-                  >
-                    {pageLoading ? (
-                      <>
-                        <span className="w-4 h-4 border-2 border-[#C9A24D] border-t-transparent rounded-full animate-spin" />
-                        Loading...
-                      </>
-                    ) : (
-                      "View More"
-                    )}
-                  </button>
-                </div> */}
                 <div className="flex justify-center mt-8">
                   <button
                     onClick={handleViewMore}
@@ -626,22 +629,12 @@ const Gallery = () => {
                 })}
                 <div className="flex justify-center mt-8">
                   <button
-                    onClick={handleViewMoreVideo}
-                    disabled={
-                      videoPageLoading || videoCurrentPage >= videoTotalPages
-                    }
-                    className="px-8 py-2 border border-[#C9A24D] text-[#bd9133] text-sm font-medium
-      rounded-full transition hover:bg-[#C9A24D] hover:text-white
-      flex items-center gap-2 cursor-pointer"
+                    onClick={() => hasNextVideoPage && fetchNextVideoPage()}
+                    disabled={!hasNextVideoPage || isFetchingNextVideoPage}
+                    className="px-8 py-2 border border-[#C9A24D] text-[#bd9133]
+             rounded-full hover:bg-[#C9A24D] hover:text-white"
                   >
-                    {videoPageLoading ? (
-                      <>
-                        <span className="w-4 h-4 border-2 border-[#C9A24D] border-t-transparent rounded-full animate-spin" />
-                        Loading...
-                      </>
-                    ) : (
-                      "View More"
-                    )}
+                    {isFetchingNextVideoPage ? "Loading..." : "View More"}
                   </button>
                 </div>
               </>
@@ -669,37 +662,6 @@ const Gallery = () => {
       {zoomMedia && (
         <ZoomModal media={zoomMedia} onClose={() => setZoomMedia(null)} />
       )}
-
-      {/* Pagination */}
-      {/* {totalPages >= 1 && (
-                <div className="flex items-center justify-between px-6 py-4 border-t bg-white">
-                    <p className="text-sm text-gray-600">
-                        Page {currentPage} of {totalPages}
-                    </p>
-
-                    <div className="flex gap-2">
-                        <button
-                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                            disabled={currentPage === 1}
-                            className="px-3 py-1.5 text-sm rounded-lg border
-                disabled:opacity-50 disabled:cursor-not-allowed
-                hover:bg-gray-100"
-                        >
-                            Prev
-                        </button>
-
-                        <button
-                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                            disabled={currentPage === totalPages}
-                            className="px-3 py-1.5 text-sm rounded-lg border
-                disabled:opacity-50 disabled:cursor-not-allowed
-                hover:bg-gray-100"
-                        >
-                            Next
-                        </button>
-                    </div>
-                </div>
-            )} */}
     </>
   );
 };

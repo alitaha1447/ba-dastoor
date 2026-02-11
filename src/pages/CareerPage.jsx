@@ -17,6 +17,8 @@ import {
 } from "../api/banner/bannerApi";
 
 const CareerPage = () => {
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const [isLoading, setisLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState(null);
@@ -229,7 +231,8 @@ const CareerPage = () => {
         {imageBanners?.length > 0 && imageBanners[current] && (
           <div className="absolute inset-0">
             <img
-              src={imageBanners[current].desktop.url}
+              // src={imageBanners[current].desktop.url}
+              src={`${BASE_URL}${imageBanners[current].desktop.url}`}
               onLoad={() => setLoaded(true)}
               className={`w-full h-full object-cover transition-all duration-700
     ${loaded ? "opacity-100 blur-0" : "opacity-0 blur-md"}`}
@@ -249,7 +252,8 @@ const CareerPage = () => {
         {imageMobileBanners?.length > 0 && imageMobileBanners[current] && (
           <div className="absolute inset-0">
             <img
-              src={imageMobileBanners[current].mobile.url}
+              // src={imageMobileBanners[current].mobile.url}
+              src={`${BASE_URL}${imageMobileBanners[current].mobile.url}`}
               onLoad={() => setLoaded(true)}
               alt="Catering Banner"
               className={`w-full h-full object-cover transition-all duration-700
