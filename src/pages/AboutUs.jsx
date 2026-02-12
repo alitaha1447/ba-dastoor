@@ -418,7 +418,12 @@ const AboutUs = () => {
                 />
               ) : generalContent?.media?.mediaType === "image" ? (
                 <img
-                  src={generalContent?.media?.url}
+                  // src={generalContent?.media?.url}
+                  src={
+                    generalContent?.media?.url
+                      ? `${BASE_URL}${generalContent.media.url}`
+                      : ""
+                  }
                   alt={generalContent?.heading || "Content media"}
                   className="w-full h-full object-cover"
                 />
