@@ -229,3 +229,21 @@
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
 }
+
+/* 🔥 TOAST Only apply changes on mobile */
+@media(max-width: 640px) {
+    .custom-toast-container {
+        right: auto !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: auto !important;
+    }
+
+    .Toastify__toast {
+        width: 80% !important;
+        /* not full width */
+        max-width: 380px;
+        margin: 0 auto !important;
+        border-radius: 12px !important;
+    }
+}

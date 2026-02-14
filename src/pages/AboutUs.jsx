@@ -267,7 +267,7 @@ const AboutUs = () => {
                   src={
                     aboutUs?.ownerImage?.url
                       ? `${BASE_URL}${aboutUs.ownerImage.url}`
-                      : ""
+                      : null
                   }
                   alt="Owner"
                   className="w-full h-[400px] md:h-[540px]  object-cover shadow-xl"
@@ -338,7 +338,7 @@ const AboutUs = () => {
             <img
               // src={team?.teamImage?.url}
               src={
-                team?.teamImage?.url ? `${BASE_URL}${team.teamImage.url}` : ""
+                team?.teamImage?.url ? `${BASE_URL}${team.teamImage.url}` : null
               }
               alt="Head Chef"
               className="w-full h-[420px] md:h-full object-cover"

@@ -2,7 +2,8 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import "./App.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Routes, Route, Navigate } from "react-router";
+import { Routes, Route, Navigate, useLocation } from "react-router";
+import { useIsFetching } from "@tanstack/react-query";
 import MainLayout from "./components/layout/MainLayout";
 import { showAppLoader, hideAppLoader } from "./utils/appLoader";
 
@@ -40,6 +41,7 @@ function App() {
   // useEffect(() => {
   //   fetchAllSEO();
   // }, []);
+
   return (
     <>
       <Suspense fallback={<LoaderFallback />}>
@@ -54,7 +56,11 @@ function App() {
             <Route path="/contact" element={<ContactUs />} />
           </Route>
         </Routes>
-        <ToastContainer position="top-right" style={{ top: "90px" }} />
+        <ToastContainer
+          position="top-right"
+          style={{ top: "90px" }}
+          containerClassName="custom-toast-container"
+        />
       </Suspense>
     </>
   );

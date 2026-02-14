@@ -122,10 +122,10 @@ const Gallery = () => {
       lastPage.hasNextPage ? lastPage.page + 1 : undefined,
   });
 
-  const galleryVideoSlots = useMemo(
-    () => videoPages?.pages.flatMap((p) => p.data) ?? [],
-    [videoPages],
-  );
+  // const galleryVideoSlots = useMemo(
+  //   () => videoPages?.pages.flatMap((p) => p.data) ?? [],
+  //   [videoPages],
+  // );
 
   const handleViewMore = () => {
     if (hasNextPage) fetchNextPage();
@@ -521,7 +521,7 @@ const Gallery = () => {
 
         <section className="relative px-4 py-6 max-w-6xl mx-auto">
           {/* ================= IMAGE TAB ================= */}
-          {activeTab === "image" &&
+          {/* {activeTab === "image" &&
             (imageLoading ? (
               <Loader />
             ) : gallerySlots.length > 0 ? (
@@ -576,10 +576,70 @@ const Gallery = () => {
               </>
             ) : (
               <EmptyState text="No images found" />
+            ))} */}
+          {activeTab === "image" &&
+            (imageLoading ? (
+              <Loader />
+            ) : imagePages?.pages?.length > 0 ? (
+              <>
+                {imagePages.pages.map((page, pageIndex) => (
+                  <div key={pageIndex}>
+                    {page.data.map((gallery) => {
+                      const imageItems = [
+                        gallery.primaryImage,
+                        ...gallery.siblings,
+                      ];
+
+                      return (
+                        <div key={gallery._id} className="mb-10">
+                          <div className="grid gap-2 grid-cols-2 auto-rows-[140px] lg:grid-cols-3 lg:auto-rows-[200px]">
+                            <GoldFrame className="col-span-2 lg:col-span-2 lg:row-span-2">
+                              <ImageBox src={imageItems[0]} animation="left" />
+                            </GoldFrame>
+
+                            <GoldFrame>
+                              <ImageBox src={imageItems[1]} animation="right" />
+                            </GoldFrame>
+
+                            <GoldFrame>
+                              <ImageBox src={imageItems[2]} animation="top" />
+                            </GoldFrame>
+
+                            <GoldFrame className="col-span-2 lg:col-span-1 lg:row-span-1">
+                              <ImageBox src={imageItems[3]} animation="left" />
+                            </GoldFrame>
+
+                            <GoldFrame>
+                              <ImageBox src={imageItems[4]} animation="top" />
+                            </GoldFrame>
+
+                            <GoldFrame>
+                              <ImageBox src={imageItems[5]} animation="right" />
+                            </GoldFrame>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+
+                <div className="flex justify-center mt-8">
+                  <button
+                    onClick={handleViewMore}
+                    disabled={!hasNextPage || isFetchingNextPage}
+                    className="px-8 py-2 border border-[#C9A24D] text-[#bd9133]
+          rounded-full hover:bg-[#C9A24D] hover:text-white"
+                  >
+                    {isFetchingNextPage ? "Loading..." : "View More"}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <EmptyState text="No images found" />
             ))}
 
           {/* ================= VIDEO TAB ================= */}
-          {activeTab === "video" &&
+          {/* {activeTab === "video" &&
             (videoLoading ? (
               <Loader />
             ) : galleryVideoSlots.length > 0 ? (
@@ -633,6 +693,130 @@ const Gallery = () => {
                     disabled={!hasNextVideoPage || isFetchingNextVideoPage}
                     className="px-8 py-2 border border-[#C9A24D] text-[#bd9133]
              rounded-full hover:bg-[#C9A24D] hover:text-white"
+                  >
+                    {isFetchingNextVideoPage ? "Loading..." : "View More"}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <EmptyState text="No videos found" />
+            ))} */}
+          {/* {activeTab === "video" &&
+            (videoLoading ? (
+              <Loader />
+            ) : videoPages?.pages.length > 0 ? (
+              <>
+                {videoPages?.pages.map((gallery) => {
+                  const videoItems = [
+                    gallery.primaryVideo,
+                    ...(Array.isArray(gallery.siblings)
+                      ? gallery.siblings
+                      : []),
+                  ].map((v) => ({ ...v, mediaType: "video" }));
+
+                  return (
+                    <div key={gallery._id} className="mb-10">
+                      <div
+                        className="     grid gap-2                            grid-cols-2                            auto-rows-[140px]
+                            lg:grid-cols-3
+                            lg:auto-rows-[200px]
+                            "
+                      >
+                        <GoldFrame className="col-span-2 lg:col-span-2 lg:row-span-2">
+                          <ImageBox src={videoItems[0]} animation="left" />
+                        </GoldFrame>
+
+                        <GoldFrame>
+                          <ImageBox src={videoItems[1]} animation="right" />
+                        </GoldFrame>
+
+                        <GoldFrame>
+                          <ImageBox src={videoItems[2]} animation="top" />
+                        </GoldFrame>
+
+                        <GoldFrame className="col-span-2 lg:col-span-1 lg:row-span-1">
+                          <ImageBox src={videoItems[3]} animation="left" />
+                        </GoldFrame>
+
+                        <GoldFrame>
+                          <ImageBox src={videoItems[4]} animation="top" />
+                        </GoldFrame>
+
+                        <GoldFrame>
+                          <ImageBox src={videoItems[5]} animation="right" />
+                        </GoldFrame>
+                      </div>
+                    </div>
+                  );
+                })}
+                <div className="flex justify-center mt-8">
+                  <button
+                    onClick={() => hasNextVideoPage && fetchNextVideoPage()}
+                    disabled={!hasNextVideoPage || isFetchingNextVideoPage}
+                    className="px-8 py-2 border border-[#C9A24D] text-[#bd9133]
+             rounded-full hover:bg-[#C9A24D] hover:text-white"
+                  >
+                    {isFetchingNextVideoPage ? "Loading..." : "View More"}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <EmptyState text="No videos found" />
+            ))} */}
+          {activeTab === "video" &&
+            (videoLoading ? (
+              <Loader />
+            ) : videoPages?.pages?.length > 0 ? (
+              <>
+                {videoPages.pages.map((page, pageIndex) => (
+                  <div key={pageIndex}>
+                    {page.data.map((gallery) => {
+                      const videoItems = [
+                        gallery.primaryVideo,
+                        ...(Array.isArray(gallery.siblings)
+                          ? gallery.siblings
+                          : []),
+                      ].map((v) => ({ ...v, mediaType: "video" }));
+
+                      return (
+                        <div key={gallery._id} className="mb-10">
+                          <div className="grid gap-2 grid-cols-2 auto-rows-[140px] lg:grid-cols-3 lg:auto-rows-[200px]">
+                            <GoldFrame className="col-span-2 lg:col-span-2 lg:row-span-2">
+                              <ImageBox src={videoItems[0]} animation="left" />
+                            </GoldFrame>
+
+                            <GoldFrame>
+                              <ImageBox src={videoItems[1]} animation="right" />
+                            </GoldFrame>
+
+                            <GoldFrame>
+                              <ImageBox src={videoItems[2]} animation="top" />
+                            </GoldFrame>
+
+                            <GoldFrame className="col-span-2 lg:col-span-1 lg:row-span-1">
+                              <ImageBox src={videoItems[3]} animation="left" />
+                            </GoldFrame>
+
+                            <GoldFrame>
+                              <ImageBox src={videoItems[4]} animation="top" />
+                            </GoldFrame>
+
+                            <GoldFrame>
+                              <ImageBox src={videoItems[5]} animation="right" />
+                            </GoldFrame>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+
+                <div className="flex justify-center mt-8">
+                  <button
+                    onClick={() => hasNextVideoPage && fetchNextVideoPage()}
+                    disabled={!hasNextVideoPage || isFetchingNextVideoPage}
+                    className="px-8 py-2 border border-[#C9A24D] text-[#bd9133]
+          rounded-full hover:bg-[#C9A24D] hover:text-white"
                   >
                     {isFetchingNextVideoPage ? "Loading..." : "View More"}
                   </button>

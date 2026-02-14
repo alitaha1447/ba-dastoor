@@ -4,6 +4,12 @@ import formBg2 from "../assets/images/formBg2.jpeg";
 import contactUs from "../assets/images/contactUs.jpg";
 import { toast } from "react-toastify";
 import api from "../api/axios";
+import { useLocation } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import {
+  fetchDesktopBanners,
+  fetchMobileBanners,
+} from "../api/banner/bannerApi";
 
 const validatePhone = (phone) => {
   return /^\d{10}$/.test(phone);
@@ -11,7 +17,7 @@ const validatePhone = (phone) => {
 
 const ContactUs = () => {
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
+  const [current, setCurrent] = useState(0);
   const [isLoading, setisLoading] = useState(false);
 
   const initialState = {
@@ -24,6 +30,10 @@ const ContactUs = () => {
   const [formData, setFormData] = useState(initialState);
   const [loaded, setLoaded] = useState(false);
 
+  const location = useLocation();
+
+  const page = location.pathname === "/contact" && "contact";
+
   const resetForm = () => {
     setFormData(initialState);
   };
@@ -31,6 +41,42 @@ const ContactUs = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const { data: desktopBanner = [] } = useQuery({
+    queryKey: ["desktop-banners", page],
+    queryFn: () => fetchDesktopBanners(page),
+  });
+
+  const { data: mobileBanner = [] } = useQuery({
+    queryKey: ["mobile-banners", page],
+    queryFn: () => fetchMobileBanners(page),
+  });
+
+  const selectedDesktopBanners = desktopBanner.filter(
+    (item) => item.isSelected === true,
+  );
+  const imageBanners = selectedDesktopBanners.filter(
+    (item) => item.desktop?.mediaType === "image",
+  );
+  // Mobile
+  const selectedMobileBanners = mobileBanner.filter(
+    (item) => item.isSelected === true,
+  );
+  const imageMobileBanners = selectedMobileBanners.filter(
+    (item) => item.mobile?.mediaType === "image",
+  );
+  useEffect(() => {
+    const desktopVisible = window.matchMedia("(min-width: 1024px)").matches;
+    const banners = desktopVisible ? imageBanners : imageMobileBanners;
+
+    if (banners.length <= 1) return;
+
+    const id = setInterval(() => {
+      setCurrent((i) => (i + 1) % banners.length);
+    }, 3000); // ✅ now 8000 REALLY means 8 seconds
+
+    return () => clearInterval(id);
+  }, [imageBanners.length, imageMobileBanners.length]);
 
   const handleChange = (e) => {
     setFormData({
@@ -93,7 +139,7 @@ const ContactUs = () => {
 
   return (
     <>
-      <div className="relative hidden lg:block h-[40vh] w-full overflow-hidden">
+      {/* <div className="relative hidden lg:block h-[40vh] w-full overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={contactUs}
@@ -114,6 +160,48 @@ const ContactUs = () => {
             loading="eager"
           />
         </div>
+      </div> */}
+      <div className="relative hidden lg:block h-[40vh] w-full overflow-hidden">
+        {imageBanners?.length > 0 && imageBanners[current] && (
+          <div className="absolute inset-0">
+            <img
+              // src={imageBanners[current].desktop.url}
+              src={`${BASE_URL}${imageBanners[current].desktop.url}`}
+              onLoad={() => setLoaded(true)}
+              className={`w-full h-full object-cover transition-all duration-700
+    ${loaded ? "opacity-100 blur-0" : "opacity-0 blur-md"}`}
+              loading="eager"
+            />
+
+            {/* <div className="absolute inset-0 bg-black/25" /> */}
+
+            {/* <div className="absolute inset-0 flex items-center justify-center">
+              <h1 className="text-white text-2xl font-semibold">Catering</h1>
+            </div> */}
+          </div>
+        )}
+      </div>
+
+      <div className="relative block lg:hidden h-[180px] w-full overflow-hidden">
+        {imageMobileBanners?.length > 0 && imageMobileBanners[current] && (
+          <div className="absolute inset-0">
+            <img
+              // src={imageMobileBanners[current].mobile.url}
+              src={`${BASE_URL}${imageMobileBanners[current].mobile.url}`}
+              onLoad={() => setLoaded(true)}
+              alt="Catering Banner"
+              className={`w-full h-full object-cover transition-all duration-700
+    ${loaded ? "opacity-100 blur-0" : "opacity-0 blur-md"}`}
+              loading="eager"
+            />
+
+            {/* <div className="absolute inset-0 bg-black/25" /> */}
+
+            {/* <div className="absolute bottom-4 w-full text-center">
+              <h1 className="text-white text-2xl font-semibold">Catering</h1>
+            </div> */}
+          </div>
+        )}
       </div>
       <section className="w-full py-8 px-4 relative">
         <div
